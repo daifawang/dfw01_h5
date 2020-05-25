@@ -34,12 +34,3 @@ if (process.env.VUE_APP_ENV === 'development') {
     'token=E2A63658C5B61D3EF404175429381C760C0A363B0F8571CFF050C93BAD8D296F'
 }
 
-router.beforeEach(function (to, from, next) {
-  console.log('store.state.routerFlag', store.state.routerFlag)
-  if (!store.state.routerFlag) {
-    // 禁用路由返回，保存到vuex内的
-    next(false)
-  } else {
-    next()
-  }
-})

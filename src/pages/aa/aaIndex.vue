@@ -23,23 +23,6 @@ export default {
     methods:{
         goServer(){
           console.log('333');
-          this.$http({
-              url:'/tsp/ans/html/post/v1/getQuestions?t='+new Date().getTime(),
-              data:{
-                  data:{}
-              }
-          })
-          .then((res) => {
-              console.log(res);
-              if(res.result.req_code === Const.serverCode.SUCCESS_CODE_200){
-                  console.log('success');
-              }else{
-                  console.log(res.result.reInfo);
-              }
-          })
-          .catch((error) => {
-              console.log("更新数据异常:"+error);
-          }); 
         }
     }
 }
