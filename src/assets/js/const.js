@@ -1,22 +1,27 @@
 'use strict'
 const TOKEN_KEY = 'token';
 let SERVER_URL;
+let GATEWAY_BASE_URL;
 let APP_RUL;
 switch (process.env.VUE_APP_ENV) {
   case 'development':
-    SERVER_URL = 'api/hyb-task-microserver';
+    SERVER_URL = 'api/';
+    GATEWAY_BASE_URL = '/wgfw';
     APP_RUL = 'http://kyapptest.log56.com/';
     break;
   case 'testing':
-    SERVER_URL = 'https://test-xxx.log56.com/hyb-task-microserver';
+    SERVER_URL = 'http://test-hybtask.log56.com/hyb-task-microserver';
+    GATEWAY_BASE_URL = 'http://test-api-chpp.log56.com/luge';
     APP_RUL = 'http://kyapptest.log56.com/';
     break;
   case 'prepub':
-    SERVER_URL = 'https://pre-xxx.log56.com/hyb-task-microserver';
+    SERVER_URL = 'https://pre-hybtask.log56.com/hyb-task-microserver';
+    GATEWAY_BASE_URL = 'http://pre-api-chpp.log56.com/luge';
     APP_RUL = 'http://pre-kyapp.log56.com/';
     break;
   case 'production':
-    SERVER_URL = 'https://xxx.log56.com/hyb-task-microserver';
+    SERVER_URL = 'https://hybtask.log56.com/hyb-task-microserver';
+    GATEWAY_BASE_URL = 'http://api-chpp.log56.com/luge';
     APP_RUL = 'http://kyapp.log56.com/';
     break;
   default:
@@ -41,6 +46,7 @@ const SERVER_MSG = {
 export default {
     TOKEN_KEY,
     SERVER_URL, 
+    GATEWAY_BASE_URL,
     APP_RUL,
     SERVER_CODE, 
     SERVER_MSG

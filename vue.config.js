@@ -42,12 +42,19 @@ module.exports = {
         }, // 错误、警告在页面弹出
         proxy:{
             '/api': {
-                target: 'http://kyapptest.log56.com/aps_shq',
+                target: 'http://test-hybtask.log56.com/hyb-task-microserver',
                 changeOrigin: true,//// 允许websockets跨域
                 pathRewrite: {
                     '^/api': ''
                 }
-            }  
+            },
+            "/wgfw": {
+                target: "http://test-api-chpp.log56.com/luge",
+                changeOrigin: true, // 改变源
+                pathRewrite: {
+                    "^/wgfw": '' // 路径重写
+                }
+            }
         }
     }
 }

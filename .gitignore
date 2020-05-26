@@ -1,5 +1,6 @@
 .DS_Store
 node_modules/
+/hyb_task_h5/
 /dist/
 
 # local env files

@@ -2,13 +2,18 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import "./plugins/vant.js";
 import './assets/font/iconfont.css'
 import FastClick from 'fastclick'
 import Confirm from '@/components/confirm'
 import './assets/js/rem'
 import Utils from './assets/js/utils'
+import Server from './assets/js/ajax'
+import "vant/lib/index.css";
 
 Vue.use(Utils)
+// 绑定axios组件
+Vue.use(Server)
 Vue.$confirm = Vue.prototype.$confirm = Confirm.ConfirmOpen
 Vue.config.productionTip = false
 FastClick.attach(document.body)
