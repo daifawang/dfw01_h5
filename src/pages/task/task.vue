@@ -1,5 +1,5 @@
 <template>
-    <div id="taskMode">
+    <div id="task">
         <keep-alive>
             <router-view v-if="$route.meta.keepAlive"></router-view>
         </keep-alive>
@@ -17,7 +17,7 @@ export default {
 };
 </script>
 <style scoped>
-#taskMode {
+#task {
   height: 100vh;
   box-sizing: border-box;
   background-color: #fff;
