@@ -1,13 +1,16 @@
 <template>
-    <div id="taskTemp" class="wapperTask">
-    <div  class="wapperTask" :class="{guideBg:showGuide}">
-      <div v-if="showGuide === '1'" class="task-guide">
-        <div class="guide-text">完成任务领取的元宝在这里~</div>
-        <div class="guide-bttn" @click="guideTo('1')">知道啦</div>
+    <div id="taskIndex" class="wapperTask">
+      <div class="wapperTaskGuide" :class="{guideBg:showGuide}">
+        <div v-if="showGuide" class="task-guide" :style="{top:guideObj.guidePosition.top,left:guideObj.guidePosition.left}">
+          <div>
+            <div class="guide-text">{{ guideObj.text }}</div>
+          </div>
+          <div class="guide-bttn" @click="guideTo(showGuide+1)">知道啦</div>
+        </div>
       </div>
       <van-skeleton title avatar :row="2" avatar-shape="square" :loading="loadingFlag1">
         <div class="task-main">
-          <div class="task-title" ref="zsGuide" :class="{guideQuan:showGuide === '1'}">专属任务</div>
+          <div class="task-title"><span ref="zsGuide" :class="{guideQuan:showGuide === 3}">专属任务</span></div>
           <div class="task-li">
             <div class="task-li-t">
               <img class="task-t-icon" src="../../assets/images/task/daka@2x.png" />
@@ -20,7 +23,7 @@
                   <img src="../../assets/images/task/xiaoyuanbao@2x.png" /><span>+5</span>
                 </div>
               </div>
-              <div class="right-bttn">
+              <div class="right-bttn" :class="{guideQuan:showGuide === 4}" @click="storeInfo()">
                 <span class="bttn-span" ref="guideFour">去接单</span>
               </div>
             </div>
@@ -34,7 +37,7 @@
         </div>
       </van-skeleton>
       <van-skeleton title avatar :row="3" avatar-shape="square" :loading="loadingFlag2">
-        <div class="task-main">
+        <div v-if="newTask === 1" class="task-main">
           <div class="task-title">新手任务</div>
           <div class="task-li">
             <div class="task-li-t">
@@ -49,7 +52,7 @@
                 </div>
               </div>
               <div class="right-bttn">
-                <span class="bttn-span" ref="guideFour">去接单</span>
+                <span class="bttn-span" @click="getCurrency('10')">领取元宝</span>
               </div>
             </div>
           </div>
@@ -69,8 +72,8 @@
                   <img src="../../assets/images/task/xiaoyuanbao@2x.png" /><span>+5</span>
                 </div>
               </div>
-              <div class="right-bttn">
-                <span class="bttn-span" ref="guideFour">去接单</span>
+              <div class="right-bttn" @click="getStoreInfo()">
+                <span class="bttn-span">去接单</span>
               </div>
             </div>
           </div>
@@ -83,12 +86,21 @@
 import Const from "@/assets/js/const" 
 import { AppJsBridge, hybappObj } from "@/assets/js/hybApp_api.js";
 export default {
+    name: "taskIndex",
     data() {
         return {
           loadingFlag1: true,
           loadingFlag2: true,
           loadingFlag3: true,
-          showGuide: '1'
+          showGuide: '',
+          guideObj: {
+            text: '关于任务，你想了解的都在这里，快去 看看吧！',
+            guidePosition: {
+              top: '50px',
+              left: '20px'
+            }
+          },
+          newTask: 1
         }
     },
     created() {
@@ -100,7 +112,27 @@ export default {
         this.loadingFlag1 = false;
         this.loadingFlag2 = false;
         this.loadingFlag3 = false;
+        setTimeout(() => {
+          this.showGuide = 3; 
+          this.guideObj = {
+            text: '这里是发货方派发的一些任务 例如接单、传回单等，需要您及时完成哦~',
+            guidePosition: {
+              top: this.$refs.zsGuide.getBoundingClientRect().top+50 + 'px',
+              left: this.$refs.zsGuide.getBoundingClientRect().left+ 'px'
+            }
+          }
+        }, 100)
+        this.getStoreInfo();
+        // 回调获取客户端返回的任务成功信息,taskType：1.专属任务 2.新手任务 3.每日任务
+        window['AppJSApi_BackH5Data'] = (_json) => {
+            console.log("客户端返回的任务成功信息>>",JSON.parse(_json));
+        }
+        // 回调获取客户端返回的任务Tab点击通知
+        window['AppJSApi_BackH5TaskTabClick'] = (_json) => {
+            console.log("客户端返回的任务Tab点击通知>>",_json);
+        }
       }, 1000)
+
     },
     methods:{
       GoDaily(){
@@ -150,30 +182,79 @@ export default {
             console.log(e);
           });
       },
+      storeInfo(){
+        var json_str = JSON.stringify({
+          type: '1',
+          data: {
+            showGuide: '1',
+            homePos: '400'
+          }
+        })
+        if(typeof(AndroidAppCommonJs)!=='undefined'){
+          AndroidAppCommonJs.manageH5Data(json_str)
+        }else if(typeof(window.webkit) !== 'undefined'){
+          window.webkit.messageHandlers.manageH5Data.postMessage(json_str);
+        }
+      },
+      getStoreInfo(){
+        var json_str = JSON.stringify({
+          type: '2',
+          data: {}
+        })
+        if(typeof(AndroidAppCommonJs)!=='undefined'){
+          AndroidAppCommonJs.manageH5Data(json_str)
+        }else if(typeof(window.webkit) !== 'undefined'){
+          window.webkit.messageHandlers.manageH5Data.postMessage(json_str);
+        }
+        setTimeout(() => {
+          // 回调获取客户端返回的H5存储的数据
+          window['AppJSApi_BackH5Data'] = (_json) => {
+              console.log("客户端返回的H5存储的数据>>",JSON.parse(_json));
+          }
+        }, 80)
+      },
+      getCurrency(num){
+        var json_str = JSON.stringify({
+          addCount: num,
+          taskId:'1001'
+        })
+        if(typeof(AndroidAppCommonJs)!=='undefined'){
+          AndroidAppCommonJs.openIngotsReceiveDlg(json_str)
+        }else if(typeof(window.webkit) !== 'undefined'){
+          window.webkit.messageHandlers.openIngotsReceiveDlg.postMessage(json_str);
+        }
+        setTimeout(() => {
+          this.newTask = 0;
+        }, 1800)
+      },
       guideTo(num){
-        this.showGuide = num;
-        if(num === '2'){
+        console.log(num);
+        this.showGuide = num > 4 ? '' : num;
+        if(num === 2){
           AppJsBridge.guideTask(JSON.stringify({
             navMaskShow: '1',
             navBtnEmpty: '1',
             tabMaskShow: '0',
             taskTabBtnEmpty: '0'
           }));
-        }else if(num === '3'){
+        }else if(num === 3){
           AppJsBridge.guideTask(JSON.stringify({
             navMaskShow: '0',
             navBtnEmpty: '0',
             tabMaskShow: '1',
             taskTabBtnEmpty: '1'
           }));
-        }else if(num === '4'){
+        }else if(num === 4){
           AppJsBridge.guideTask(JSON.stringify({
             navMaskShow: '1',
             navBtnEmpty: '0',
             tabMaskShow: '1',
             taskTabBtnEmpty: '0'
           }));
-        }else if(num === ''){
+          console.log(this.$refs.guideFour.getBoundingClientRect().top);
+          this.guideObj.text = '关于任务，你想了解的都在这里，快去 看看吧！';
+          this.guideObj.guidePosition.top = this.$refs.guideFour.getBoundingClientRect().top+90 + 'px';
+        }else if(num > 4){
           AppJsBridge.guideTask(JSON.stringify({
             navMaskShow: '0',
             navBtnEmpty: '0',
@@ -366,6 +447,16 @@ export default {
       -webkit-transform-origin: 0 0;
       transform-origin: 0 0;
     }
+  }
+  .guideQuan {
+    background-color: #fff;
+    /* height: 40px;
+    width: 116px; */
+    border-radius: 60%;
+    position: relative;
+    top: 0px;
+    z-index: 9990;
+    padding: 5px;
   }
 }
 
