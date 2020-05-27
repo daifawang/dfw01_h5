@@ -1,5 +1,6 @@
 <template>
     <div id="taskTemp" class="wapperTask">
+      <router-link to="/task/dailyTask" tag="a">每日任务</router-link><br>
       <van-skeleton title avatar :row="2" avatar-shape="square" :loading="loadingFlag1">
         <div>任务列表1...</div>
         <div @click="toastD()">ddd</div>
