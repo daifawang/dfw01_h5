@@ -1,12 +1,12 @@
 <template>
  <div class="my-currency">
-   <div class="header">
+    <div class="header">
         <div class="header-top">
             <div @click="goBack" class="back-icon">
                 <img src="../../assets/images/task/fanhui_jiantou.png">
             </div>
             <div>我的元宝</div>
-              <div @click="goRule" class="rule-icon">
+            <div @click="goRule" class="rule-icon">
                 <img src="../../assets/images/task/wenhao.png">
             </div>
         </div>
@@ -15,9 +15,9 @@
             <span class="num">178789</span>
             <img src="../../assets/images/task/yuanbao.png" class="yb-icon">
         </div>
-   </div>
+    </div>
    <div class="currency-detail">
-       <div class="total-box">
+       <div class="total-box" ref="zsGuide">
             <div>
                 <div class="total-desc">总获取</div>
                 <div class="had-num">178789</div>
@@ -47,6 +47,8 @@
  </div>
 </template>
 <script>
+import { AppJsBridge, hybappObj } from "@/assets/js/hybApp_api.js"
+import Const from "@/assets/js/const" 
 export default {
    name: "myCurrency",
    data() {
@@ -57,6 +59,7 @@ export default {
                {name:'已使用',id:'2'}
            ], 
            activeTag:0, //全部 已获取 已使用 被选中状态
+           headerLoading:true,
            loadText:'加载中~',
            coinDetail:[
                {goodsName:'签到',createdTime:'2019.11.12    12:09:53',coinNum:'+100'},
@@ -79,18 +82,49 @@ export default {
    },
    created() {
        document.title = '我的元宝';
+       AppJsBridge.hidenNavigation();
+   },
+   mounted(){
+       console.log(  this.$refs.zsGuide.getBoundingClientRect());
+       
+     
    },
    methods: {
+       initSignData(dataJson,sid){// 【JS2053】接口签名
+        //  dataJson 业务参数 sid 接口  
+           var signData = "";
+            var _data=JSON.stringify({dataJson})
+            var _json=JSON.stringify({
+                data:_data,
+                sid: sid
+            })
+            if(typeof(AndroidAppCommonJs)!=='undefined'){
+                signData=AndroidAppCommonJs.signRequestBody(_json)
+            }else if(typeof(window.webkit) !== 'undefined'){
+                window.webkit.messageHandlers.signRequestBody.postMessage(_json);
+                window.AppJSApi_BackSignRequestBody=(signData) => {
+                    signData=signData;
+                }
+            }
+            setTimeout(() => {
+                console.log('signData--',signData);
+                var decodeJson=decodeURI(signData);
+                return decodeJson;
+                // this.goSignData(decodeJson);            
+            }, 200);
+       },
        changeTab(id){   //切换tab
            this.activeTag=id;
        },
        goBack(){    //返回
-       console.log("返回");
-       
+            console.log("返回");
+            AppJsBridge.close();
        },
        goRule(){    //规则
             console.log("规则");
-            this.$router.push({ path: '/task/myCurrencyRule' })
+            window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/myCurrencyRule?&NEW_WVW_HYB&t=${new Date().getTime()}`;
+            console.log(`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/myCurrencyRule?&NEW_WVW_HYB&t=${new Date().getTime()}`);
+            // this.$router.push({ path: '/task/myCurrencyRule' })
        },
    },
 }
