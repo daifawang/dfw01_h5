@@ -78,6 +78,7 @@
         </div>
       </van-skeleton>
     </div>
+    </div>
 </template>
 <script>
 import Const from "@/assets/js/const" 
