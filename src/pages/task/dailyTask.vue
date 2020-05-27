@@ -1,6 +1,40 @@
 <template>
     <div class="daily-task">
         <div class="task-title" @click="openVideoDetail"> 【JS2060】任务-跳转视频详情页</div>
+        <div class="task-title" @click="refresh('0')"> 【JS2063】关闭0下拉刷新控件</div>
+        <div class="task-title" @click="refresh('1')"> 【JS2063】打开1下拉刷新控件</div>
+        <div class="task-title" >默认0-看下下拉刷新： {{count}}</div>
+        <div class="task-title">新手任务</div>
+        <div class="task-wrapper">
+            <div class="task-box">
+                <div class="task-icon">
+                    <img src="../../assets/images/task/daka@2x.png">
+                </div>
+                <div class="task-main">
+                    <div class="task-main-title">
+                        <div>去制作一张你的专属名片</div>
+                        <div>热门</div>
+                    </div>
+                    <div class="task-main-info">一分钟了解打卡</div>
+                    <div class="task-main-desc">
+                        <img src="../../assets/images/task/xiaoyuanbao@2x.png">
+                        <div class="task-main-desc-num">+10</div>
+                        <div class="task-main-desc-text">
+                            <span>已完成</span>
+                            <span :class="{'red-font':Number(taskNowSum) > 0}">1</span><span>/{{taskNeedSum}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="task-btn-div">
+                    <div class="task-btn">
+                        <div :class="{'to-do':status=='0','doing':status=='1','done':status=='2',}">已完成</div>
+                    </div>
+                    <div class="task-btn-text">
+                        <div>2.5W人已观看</div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="task-title">每日任务</div>
         <div class="task-wrapper">
             <div class="task-box">
@@ -35,44 +69,50 @@
     </div>
 </template>
 <script>
+import { AppJsBridge, hybappObj } from "@/assets/js/hybApp_api.js"
 export default {
     data() {
         return {
             status:0,
             taskNeedSum:3,
             taskNowSum:1,
+            count:0,
         }
     },
     created() {
         // this.openVideoDetail();
+       setInterval(() => {
+           this.count++;
+       }, 2000);
     },
     methods: {
         taskOpenVideoDetails(jsonStr){
             console.log('【JS2060】任务-跳转视频详情页');
-            
-             let _json= JSON.stringify({jsonStr});
-             console.log(_json);
-             
-        try {
-            if(typeof(AndroidAppGoodsJs) != 'undefined'){
-                console.log('----进入AndroidAppCommonJs.taskOpenVideoDetails----');
-                AndroidAppCommonJs.taskOpenVideoDetails(_json)
-            }else if(typeof(window.webkit) !== 'undefined'){
-                console.log('----进入window.webkit.messageHandlers.taskOpenVideoDetails.postMessage----');
-                window.webkit.messageHandlers.taskOpenVideoDetails.postMessage(_json);  
+            let _json= JSON.stringify({jsonStr});
+            console.log(_json);
+            try {
+                if(typeof(AndroidAppGoodsJs) != 'undefined'){
+                    console.log('----进入AndroidAppCommonJs.taskOpenVideoDetails----');
+                    AndroidAppCommonJs.taskOpenVideoDetails(_json)
+                }else if(typeof(window.webkit) !== 'undefined'){
+                    console.log('----进入window.webkit.messageHandlers.taskOpenVideoDetails.postMessage----');
+                    window.webkit.messageHandlers.taskOpenVideoDetails.postMessage(_json);  
+                }
+                window.AppJSApi_BackH5TaskOrdersInfo=(string) => {
+                    // taskType：1.专属任务 2.新手任务 3.每日任务
+                    console.log('----进入AppJSApi_BackH5TaskOrdersInfo----');
+                    console.log('string:'+string);
+                }
+            } catch (error) {
+                console.log(JSON.stringify(error));
             }
-            window.AppJSApi_BackH5TaskOrdersInfo=(string) => {
-                // taskType：1.专属任务 2.新手任务 3.每日任务
-                console.log('----进入AppJSApi_BackH5TaskOrdersInfo----');
-                console.log('string:'+string);
-            }
-        } catch (error) {
-            console.log(JSON.stringify(error));
-        }
         },
         openVideoDetail(){
             console.log('openVideoDetail');
             this.taskOpenVideoDetails({});
+        },
+        refresh(type){
+            AppJsBridge.setClientRefresh(type);
         }
     },
 }
@@ -187,9 +227,11 @@ export default {
                 position: absolute;
                 bottom: 2px;
                 text-align: center;
+                // .font(12px,#D11414,17px);
                 &>div{
-                     .font(12px,#D11414,17px);
+                    font-size: 12px;
                     transform: scale(0.9);
+                    color: #D11414;
                 }
             }
         }

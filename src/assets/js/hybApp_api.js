@@ -72,6 +72,47 @@ let AppJsBridge = {
         } catch (error) {
             console.log(JSON.stringify(error));
         }
+    },
+    // 【JS1011】h5关闭当前窗口
+    close(){
+        try {
+            if(typeof(AndroidAppGoodsJs) !== 'undefined'){
+                AndroidAppGoodsJs.finish()
+            }else if(typeof(window.webkit) !== 'undefined'){
+                window.webkit.messageHandlers.finish.postMessage("");
+            }     
+        } catch (error) {
+            console.log(JSON.stringify(error));
+        }
+    },
+    //  【JS2018】隐藏原生头部
+    hidenNavigation(){
+        try {
+            if(typeof(AndroidAppGoodsJs) !== 'undefined'){
+                AndroidAppCommonJs.hidenNavigationView()
+            }else if(typeof(window.webkit) !== 'undefined'){
+                window.webkit.messageHandlers.hidenNavigationView.postMessage('');
+            }     
+        } catch (error) {
+            console.log(JSON.stringify(error));
+        }
+    },
+    // 【JS2063】H5是否使用客户端下拉刷新控件
+    setClientRefresh(type){
+        let _json= JSON.stringify({
+            'isOpenRefreshView':type
+        });
+        console.log(_json);
+        
+        try {
+            if(typeof(AndroidAppGoodsJs) !== 'undefined'){
+                AndroidAppCommonJs.setWebUseClientRefresh(_json)
+            }else if(typeof(window.webkit) !== 'undefined'){
+                window.webkit.messageHandlers.setWebUseClientRefresh.postMessage(_json);
+            }     
+        } catch (error) {
+            console.log(JSON.stringify(error));
+        }
     }
 }
 export {

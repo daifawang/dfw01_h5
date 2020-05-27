@@ -1,6 +1,6 @@
 <template>
     <div id="taskTemp" class="wapperTask">
-    <div id="taskTemp" class="wapperTask" :class="{guideBg:showGuide}">
+    <div  class="wapperTask" :class="{guideBg:showGuide}">
       <div v-if="showGuide === '1'" class="task-guide">
         <div class="guide-text">完成任务领取的元宝在这里~</div>
         <div class="guide-bttn" @click="guideTo('1')">知道啦</div>
@@ -104,7 +104,8 @@ export default {
     },
     methods:{
       GoDaily(){
-         this.$router.push({ path: '/task/dailyTask' })
+        //  this.$router.push({ path: '/task/dailyTask' })
+         window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/dailyTask?&NEW_WVW_HYB&t=${new Date().getTime()}`;
       },
       initMedth(){
         var signData = "";
