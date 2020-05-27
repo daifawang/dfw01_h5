@@ -1,6 +1,5 @@
 <template>
     <div id="taskTemp" class="wapperTask">
-    <router-link to="/task/dailyTask" tag="a">每日任务</router-link><br>
     <div id="taskTemp" class="wapperTask" :class="{guideBg:showGuide}">
       <div v-if="showGuide === '1'" class="task-guide">
         <div class="guide-text">完成任务领取的元宝在这里~</div>
@@ -58,7 +57,7 @@
       </van-skeleton>
       <van-skeleton title avatar :row="4" avatar-shape="square" :loading="loadingFlag3">
         <div class="task-main">
-          <div class="task-title">每日任务</div>
+          <div class="task-title" @click="GoDaily">每日任务</div>
           <div class="task-li">
             <div class="task-li-t">
               <img class="task-t-icon" src="../../assets/images/task/daka@2x.png" />
@@ -104,6 +103,9 @@ export default {
       }, 1000)
     },
     methods:{
+      GoDaily(){
+         this.$router.push({ path: '/task/dailyTask' })
+      },
       initMedth(){
         var signData = "";
         var _data=JSON.stringify({
