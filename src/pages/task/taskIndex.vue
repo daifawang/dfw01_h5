@@ -60,7 +60,7 @@
       </van-skeleton>
       <van-skeleton title avatar :row="4" avatar-shape="square" :loading="loadingFlag3">
         <div class="task-main">
-          <div class="task-title">每日任务</div>
+          <div class="task-title" @click="GoDaily">每日任务</div>
           <div class="task-li">
             <div class="task-li-t">
               <img class="task-t-icon" src="../../assets/images/task/daka@2x.png" />
@@ -79,6 +79,7 @@
           </div>
         </div>
       </van-skeleton>
+    </div>
     </div>
 </template>
 <script>
@@ -134,6 +135,10 @@ export default {
 
     },
     methods:{
+      GoDaily(){
+        //  this.$router.push({ path: '/task/dailyTask' })
+         window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/dailyTask?&NEW_WVW_HYB&t=${new Date().getTime()}`;
+      },
       initMedth(){
         var signData = "";
         var _data=JSON.stringify({
