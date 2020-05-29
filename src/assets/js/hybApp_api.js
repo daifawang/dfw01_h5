@@ -153,6 +153,7 @@ let AppJsBridge = {
     // 【JS2053】接口签名
     initSignData(dataJson,sid,callback){
         let signData = "";
+        let param = '';
         let _data=JSON.stringify(dataJson)
         let _json=JSON.stringify({
             data:_data,
@@ -162,22 +163,20 @@ let AppJsBridge = {
         try {
             if(typeof(AndroidAppGoodsJs) !== 'undefined'){
                 signData=AndroidAppCommonJs.signRequestBody(_json);
-                return signData;
+                console.log(signData);
+                param = JSON.parse(decodeURI(signData));
+                if( typeof callback === 'function' ){
+                    callback(param);
+                }
             }else if(typeof(window.webkit) !== 'undefined'){
                 let decodeJson = "";
                 window.webkit.messageHandlers.signRequestBody.postMessage(_json);
                 window.AppJSApi_BackSignRequestBody=(signData) => {
-                    console.log('AppJSApi_BackSignRequestBody');
-                    signData=signData;
-                    console.log(signData);
-                    console.log(111111);
-                    // if( typeof callback === 'function' )
-                    return signData; 
-                    
-                    setTimeout(() => {
-                        decodeJson=decodeURI(signData);
-                        // console.log(JSON.parse(decodeJson));
-                    }, 50);
+                    console.log('AppJSApi_BackSignRequestBody>>'+signData);
+                    param = JSON.parse(decodeURI(signData));
+                    if( typeof callback === 'function' ){
+                        callback(param);
+                    }
                 } 
             }    
         } catch (error) {

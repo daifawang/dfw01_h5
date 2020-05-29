@@ -304,6 +304,23 @@ export default {
           var decodeJson=decodeURI(signData)
           this.goSignData(decodeJson);            
         }, 200);
+        // AppJsBridge.initSignData(_data,sid,function(param){
+        //   console.log('---param---',param);
+        //   this.$http({
+        //       apiType: '2',
+        //       headers: {
+        //           "Content-Type": "application/json"
+        //       },
+        //       url: "/gateway.do",
+        //       data:  param
+        //     })
+        //     .then(res => {
+        //       console.log(res);
+        //     })
+        //     .catch(e => {
+        //       console.log(e);
+        //     });
+        // });
       },
       goSignData(decodeJson){
         console.log('decodeJson--',decodeJson);
