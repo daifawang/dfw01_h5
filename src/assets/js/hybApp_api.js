@@ -64,8 +64,8 @@ let AppJsBridge = {
     // 新手引导调试
     guideTask(json_str){
         try {
-            if(typeof(AndroidAppGoodsJs) !== 'undefined'){
-                AndroidAppGoodsJs.showTaskMask(json_str)
+            if(typeof(AndroidAppCommonJs) !== 'undefined'){
+                AndroidAppCommonJs.showTaskMask(json_str)
             }else if(typeof(window.webkit) !== 'undefined'){
                 window.webkit.messageHandlers.showTaskMask.postMessage(json_str);
             }     
@@ -110,6 +110,42 @@ let AppJsBridge = {
             }else if(typeof(window.webkit) !== 'undefined'){
                 window.webkit.messageHandlers.setWebUseClientRefresh.postMessage(_json);
             }     
+        } catch (error) {
+            console.log(JSON.stringify(error));
+        }
+    },
+    // 【JS2058】H5数据存取---存数据
+    storeInfo(key,value){
+        let _json = JSON.stringify({
+            type: '1',
+            key: key, //key：数据的key,命名以KEY结尾 例如：TASK_GUIDE_KEY
+            data: value
+        })
+        console.log(_json);
+        try {
+            if(typeof(AndroidAppCommonJs)!=='undefined'){
+                AndroidAppCommonJs.manageH5Data(_json)
+            }else if(typeof(window.webkit) !== 'undefined'){
+                window.webkit.messageHandlers.manageH5Data.postMessage(_json);
+            }
+        } catch (error) {
+            console.log(JSON.stringify(error));
+        }
+    },
+    // 【JS2058】H5数据存取---取数据 ---注意需要回调获取数据
+    getStoreInfo(key){
+        let _json = JSON.stringify({
+            type: '2',
+            key: key,
+            data: ''
+        })
+        console.log(_json);
+        try {
+            if(typeof(AndroidAppCommonJs)!=='undefined'){
+                AndroidAppCommonJs.manageH5Data(_json)
+            }else if(typeof(window.webkit) !== 'undefined'){
+                window.webkit.messageHandlers.manageH5Data.postMessage(_json);
+            }
         } catch (error) {
             console.log(JSON.stringify(error));
         }
