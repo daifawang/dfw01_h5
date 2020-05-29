@@ -169,7 +169,6 @@ let AppJsBridge = {
                     callback(param);
                 }
             }else if(typeof(window.webkit) !== 'undefined'){
-                let decodeJson = "";
                 window.webkit.messageHandlers.signRequestBody.postMessage(_json);
                 window.AppJSApi_BackSignRequestBody=(signData) => {
                     console.log('AppJSApi_BackSignRequestBody>>'+signData);

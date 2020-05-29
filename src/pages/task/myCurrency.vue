@@ -12,7 +12,7 @@
         </div>
         <div class="header-middle">
             <span class="desc">可用元宝</span>
-            <span class="num">178789</span>
+            <span class="num">{{coinNewCount}}</span>
             <img src="../../assets/images/task/yuanbao.png" class="yb-icon">
         </div>
     </div>
@@ -20,11 +20,11 @@
        <div class="total-box" ref="zsGuide">
             <div>
                 <div class="total-desc">总获取</div>
-                <div class="had-num">178789</div>
+                <div class="had-num">{{coinSum}}</div>
             </div>
             <div >
                 <div class="total-desc">已使用</div>
-                <div class="used-num">789</div>
+                <div class="used-num">{{coinPoints}}</div>
             </div>
         </div>
         <div class="coin-list">
@@ -59,8 +59,11 @@ export default {
                {name:'已获取',id:'1'},
                {name:'已使用',id:'2'}
            ], 
-           headerAjaxData:'',
-           activeTag:0, //全部 已获取 已使用 被选中状态
+           ajaxData:'',
+           activeTag:0, //0 全部 1 已获取  2 已使用 被选中状态
+           coinNewCount:'', //可使用元宝数目
+           coinPoints:'', //已消费元宝数目
+           coinSum:'', //累计获得元宝数目
            headerLoading:true,
            loadText:'加载中~',
            coinDetail:[
@@ -85,34 +88,34 @@ export default {
    created() {
        document.title = '我的元宝';
        AppJsBridge.hidenNavigation();
-    //    this.initSignData({"type":"0"},954003)
+       this.initData();
+    //    this.getSignData({},954001);     
    },
    mounted(){
-       this.getSignData({},954001);
-     
+    //    setTimeout(() => {
+        //    this.getSignData({"type":this.activeTag},954003);
+    //    }, 200);
    },
    methods: {
+       
        getSignData(dataJson,sid){
            console.log('------getSignData---------');
-           let signData=AppJsBridge.initSignData(dataJson,sid,callBack);
-            setTimeout(() => {
-            console.log(signData);   
-            }, 5000);
+           this.ajaxData=AppJsBridge.initSignData(dataJson,sid);
            if(this.$utils.isHybAppIos){
-             window.AppJSApi_BackSignRequestBody=(signData) => {
-                    console.log('AppJSApi_BackSignRequestBody');
+                window.AppJSApi_BackSignRequestBody=(signData) => {
                     signData=signData;
-                    this.headerAjaxData=decodeURI(signData);
-                    console.log(this.headerAjaxData);
-                    console.log(111111);
-                    
-                    return signData; 
-                    
-                    setTimeout(() => {
-                        // console.log(JSON.parse(decodeJson));
-                    }, 50);
+                    this.ajaxData=decodeURI(signData);
                 } 
            }
+           setTimeout(() => {
+               if(sid=='954001'){
+                    console.log(954001);
+                    this.initData(this.ajaxData);
+                }else if(sid=='954003'){
+                    console.log(954003);
+                    this.initListData(this.ajaxData);
+            }
+           }, 50);
        },
        initSignData(dataJson,sid){// 【JS2053】接口签名
         //  dataJson 业务参数 sid 接口  
@@ -142,32 +145,36 @@ export default {
             var decodeJson=decodeURI(signData);
             console.log('decodeJson');
             // console.log(JSON.parse(decodeJson));
-            if(sid=='954001'){
-                this.initData(decodeJson);
-            }else if(sid=='954003'){
-                console.log(954003);
-                this.initListData(decodeJson);
-            }
+            
         }, 2000);
        },
-       initData(param){  //数据初始化
-            this.$http({
-                apiType: '2',
-                headers: {"Content-Type": "application/json"},
-                url: "/gateway.do",
-                data:param
-            })
-            .then(res => {
-                console.log(res);
-            })
-            .catch(e => {
-                console.log(e);
-            });
+       //数据初始化
+       initData(){
+           AppJsBridge.initSignData({},954001,(param)=>{
+               this.$http({
+                   apiType: '2',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    url: "/gateway.do",
+                    data:  param
+                })
+                .then(res => {
+                    console.log(res);
+                    if(res.reCode=='0'){
+                        this.coinNewCount=res.result.coinNewCount;
+                        this.coinPoints=res.result.coinPoints;
+                        this.coinSum=res.result.coinSum;
+                    }else{
+     }
+                })
+                .catch(e => {
+                    console.log(e);
+                });
+                });
+
        },
        initListData(param){ //元宝使用列表
-       console.log('元宝使用列表');
-       console.log(param);
-       
            this.$http({
                 apiType: '2',
                 headers: {"Content-Type": "application/json"},
@@ -176,6 +183,13 @@ export default {
             })
             .then(res => {
                 console.log(res);
+                if(res.reCode=='0'){
+                    this.coinNewCount=res.result.coinNewCount;
+                    this.coinPoints=res.result.coinPoints;
+                    this.coinSum=res.result.coinSum;
+                }else{
+
+                }
             })
             .catch(e => {
                 console.log(e);
