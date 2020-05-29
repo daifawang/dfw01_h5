@@ -149,6 +149,40 @@ let AppJsBridge = {
         } catch (error) {
             console.log(JSON.stringify(error));
         }
+    },
+    // 【JS2053】接口签名
+    initSignData(dataJson,sid,callback){
+        let signData = "";
+        let _data=JSON.stringify(dataJson)
+        let _json=JSON.stringify({
+            data:_data,
+            sid: sid
+        })
+        console.log(_json);
+        try {
+            if(typeof(AndroidAppGoodsJs) !== 'undefined'){
+                signData=AndroidAppCommonJs.signRequestBody(_json);
+                return signData;
+            }else if(typeof(window.webkit) !== 'undefined'){
+                let decodeJson = "";
+                window.webkit.messageHandlers.signRequestBody.postMessage(_json);
+                window.AppJSApi_BackSignRequestBody=(signData) => {
+                    console.log('AppJSApi_BackSignRequestBody');
+                    signData=signData;
+                    console.log(signData);
+                    console.log(111111);
+                    // if( typeof callback === 'function' )
+                    return signData; 
+                    
+                    setTimeout(() => {
+                        decodeJson=decodeURI(signData);
+                        // console.log(JSON.parse(decodeJson));
+                    }, 50);
+                } 
+            }    
+        } catch (error) {
+            console.log(JSON.stringify(error));
+        }
     }
 }
 export {
