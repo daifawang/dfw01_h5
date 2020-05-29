@@ -49,6 +49,7 @@
 <script>
 import { AppJsBridge, hybappObj } from "@/assets/js/hybApp_api.js"
 import Const from "@/assets/js/const" 
+
 export default {
    name: "myCurrency",
    data() {
@@ -58,6 +59,7 @@ export default {
                {name:'已获取',id:'1'},
                {name:'已使用',id:'2'}
            ], 
+           headerAjaxData:'',
            activeTag:0, //全部 已获取 已使用 被选中状态
            headerLoading:true,
            loadText:'加载中~',
@@ -83,35 +85,101 @@ export default {
    created() {
        document.title = '我的元宝';
        AppJsBridge.hidenNavigation();
+    //    this.initSignData({"type":"0"},954003)
    },
    mounted(){
-       console.log(  this.$refs.zsGuide.getBoundingClientRect());
-       
+       this.getSignData({},954001);
      
    },
    methods: {
+       getSignData(dataJson,sid){
+           console.log('------getSignData---------');
+           let signData=AppJsBridge.initSignData(dataJson,sid,callBack);
+            setTimeout(() => {
+            console.log(signData);   
+            }, 5000);
+           if(this.$utils.isHybAppIos){
+             window.AppJSApi_BackSignRequestBody=(signData) => {
+                    console.log('AppJSApi_BackSignRequestBody');
+                    signData=signData;
+                    this.headerAjaxData=decodeURI(signData);
+                    console.log(this.headerAjaxData);
+                    console.log(111111);
+                    
+                    return signData; 
+                    
+                    setTimeout(() => {
+                        // console.log(JSON.parse(decodeJson));
+                    }, 50);
+                } 
+           }
+       },
        initSignData(dataJson,sid){// 【JS2053】接口签名
         //  dataJson 业务参数 sid 接口  
-           var signData = "";
-            var _data=JSON.stringify({dataJson})
-            var _json=JSON.stringify({
-                data:_data,
-                sid: sid
-            })
-            if(typeof(AndroidAppCommonJs)!=='undefined'){
-                signData=AndroidAppCommonJs.signRequestBody(_json)
-            }else if(typeof(window.webkit) !== 'undefined'){
-                window.webkit.messageHandlers.signRequestBody.postMessage(_json);
+        console.log(dataJson);
+        var signData = "";
+        var _data=JSON.stringify(dataJson)
+        console.log(_data);
+        var _json=JSON.stringify({
+            data:_data,
+            sid: sid
+        })
+        if(typeof(AndroidAppCommonJs)!=='undefined'){
+            signData=AndroidAppCommonJs.signRequestBody(_json)
+        }else if(typeof(window.webkit) !== 'undefined'){
+            window.webkit.messageHandlers.signRequestBody.postMessage(_json);
                 window.AppJSApi_BackSignRequestBody=(signData) => {
+                    console.log('AppJSApi_BackSignRequestBody');
+                    console.log(signData);
                     signData=signData;
-                }
+                     var decodeJson=decodeURI(signData);
+                    console.log('decodeJson');
+                    console.log(JSON.parse(decodeJson));
+                }   
+        }
+        setTimeout(() => {
+            console.log('signData--',signData);
+            var decodeJson=decodeURI(signData);
+            console.log('decodeJson');
+            // console.log(JSON.parse(decodeJson));
+            if(sid=='954001'){
+                this.initData(decodeJson);
+            }else if(sid=='954003'){
+                console.log(954003);
+                this.initListData(decodeJson);
             }
-            setTimeout(() => {
-                console.log('signData--',signData);
-                var decodeJson=decodeURI(signData);
-                return decodeJson;
-                // this.goSignData(decodeJson);            
-            }, 200);
+        }, 2000);
+       },
+       initData(param){  //数据初始化
+            this.$http({
+                apiType: '2',
+                headers: {"Content-Type": "application/json"},
+                url: "/gateway.do",
+                data:param
+            })
+            .then(res => {
+                console.log(res);
+            })
+            .catch(e => {
+                console.log(e);
+            });
+       },
+       initListData(param){ //元宝使用列表
+       console.log('元宝使用列表');
+       console.log(param);
+       
+           this.$http({
+                apiType: '2',
+                headers: {"Content-Type": "application/json"},
+                url: "/gateway.do",
+                data:param
+            })
+            .then(res => {
+                console.log(res);
+            })
+            .catch(e => {
+                console.log(e);
+            });
        },
        changeTab(id){   //切换tab
            this.activeTag=id;
@@ -121,10 +189,7 @@ export default {
             AppJsBridge.close();
        },
        goRule(){    //规则
-            console.log("规则");
             window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/myCurrencyRule?&NEW_WVW_HYB&t=${new Date().getTime()}`;
-            console.log(`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/myCurrencyRule?&NEW_WVW_HYB&t=${new Date().getTime()}`);
-            // this.$router.push({ path: '/task/myCurrencyRule' })
        },
    },
 }
