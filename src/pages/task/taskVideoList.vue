@@ -1,10 +1,10 @@
 <template>
   <div class="task-video">
     <div class="video-wrapper" v-for="(item,index) in videoList" :key="index"
-      :style="{backgroundImage:'url('+item.coverUrl+')'}">
-      <div class="video-title">快速玩转任务了</div>
+      :style="{backgroundImage:'url('+item.coverUrl+')'}" @click="openVideoDetails(item)">
+      <div class="video-title">{{item.videoTitle}}</div>
       <img src="../../assets/images/task/bofang@2x.png">
-      <div class="video-time">3:00</div>
+      <div class="video-time">{{item.duration | formatSeconds}}</div>
     </div>
   </div>
 </template>
@@ -13,25 +13,29 @@ import { AppJsBridge, hybappObj } from "@/assets/js/hybApp_api.js";
 export default {
   data() {
     return {
-      videoList: [
-        {
-          coverUrl:
-            "https://live-ol-cdn.log56.com/nsq/topics/20191115/e682abae-e1e7-4732-a10c-394e0221fa15.jpg"
-        },
-        {
-          coverUrl:
-            "https://live-ol-cdn.log56.com/nsq/topics/20191115/e682abae-e1e7-4732-a10c-394e0221fa15.jpg"
-        },
-        {
-          coverUrl:
-            "https://live-ol-cdn.log56.com/nsq/topics/20191115/e682abae-e1e7-4732-a10c-394e0221fa15.jpg"
-        }
-      ]
+      videoList: []
     };
   },
   created() {},
   mounted() {
       this.initData();
+  },
+  computed: {
+      
+  },
+  filters:{
+      formatSeconds:function(value){
+          let result = parseInt(value);
+          let h = Math.floor(result / 3600) < 10 ? '0' + Math.floor(result / 3600) : Math.floor(result / 3600);
+          let m = Math.floor((result / 60 % 60)) < 10 ? '0' + Math.floor((result / 60 % 60)) : Math.floor((result / 60 % 60));
+          let s = Math.floor((result % 60)) < 10 ? '0' + Math.floor((result % 60)) : Math.floor((result % 60));
+          if (h>0){
+              result = `${h}:${m}:${s}`;
+          }else{
+              result = `${m}:${s}`;
+          }
+          return result
+      }
   },
   methods: {
     initData() {
@@ -47,7 +51,7 @@ export default {
           .then(res => {
             console.log(res);
             if (res.reCode == "0") {
-                
+                this.videoList=res.result;
             } else {
               this.$toast(res.reInfo);
             }
@@ -56,7 +60,13 @@ export default {
             console.log(e);
           });
       });
-    }
+    },
+    openVideoDetails(jsonStr){
+       AppJsBridge.taskOpenVideoDetails(jsonStr,param => {
+           console.log("openVideoDetails---------"+param);
+           
+       })
+    },
   }
 };
 </script>

@@ -268,9 +268,7 @@ export default {
     },
     goRule() {
       //规则
-      window.location.href = `${
-        Const.APP_RUL
-      }hyb_task_h5/dist/index.html#/task/myCurrencyRule?&NEW_WVW_HYB&t=${new Date().getTime()}`;
+      window.location.href = `${Const.APP_RUL}hyb_task_h5/dist/index.html?&t=${new Date().getTime()}/#/task/myCurrencyRule&NEW_WVW_HYB`;
     }
   }
 };

@@ -1,6 +1,5 @@
 <template>
     <div class="daily-task">
-        <div class="task-title" @click="openVideoDetail"> 【JS2060】任务-跳转视频详情页</div>
         <div class="task-title" @click="refresh('0')"> 【JS2063】关闭0下拉刷新控件</div>
         <div class="task-title" @click="refresh('1')"> 【JS2063】打开1下拉刷新控件</div>
         <div class="task-title" >默认0-看下下拉刷新： {{count}}</div>
@@ -154,43 +153,13 @@ export default {
             ]
         }
     },
-    created() {
-        // this.openVideoDetail();
-    //    setInterval(() => {
-    //        this.count++;
-    //    }, 2000);
-    },
+    created() {},
     methods: {
-        taskOpenVideoDetails(jsonStr){
-            console.log('【JS2060】任务-跳转视频详情页');
-            let _json= JSON.stringify({jsonStr});
-            console.log(_json);
-            try {
-                if(typeof(AndroidAppGoodsJs) != 'undefined'){
-                    console.log('----进入AndroidAppCommonJs.taskOpenVideoDetails----');
-                    AndroidAppCommonJs.taskOpenVideoDetails(_json)
-                }else if(typeof(window.webkit) !== 'undefined'){
-                    console.log('----进入window.webkit.messageHandlers.taskOpenVideoDetails.postMessage----');
-                    window.webkit.messageHandlers.taskOpenVideoDetails.postMessage(_json);  
-                }
-                window.AppJSApi_BackH5TaskOrdersInfo=(string) => {
-                    // taskType：1.专属任务 2.新手任务 3.每日任务
-                    console.log('----进入AppJSApi_BackH5TaskOrdersInfo----');
-                    console.log('string:'+string);
-                }
-            } catch (error) {
-                console.log(JSON.stringify(error));
-            }
-        },
-        openVideoDetail(){
-            console.log('openVideoDetail');
-            this.taskOpenVideoDetails({});
-        },
         goVideoList(){  //新手任务挑战
-         this.$router.push({
-        name: "taskVideoList"
-      });
-            // window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/taskVideoList?&NEW_WVW_HYB&t=${new Date().getTime()}`;
+    //      this.$router.push({
+    //     name: "taskVideoList"
+    //   });
+            window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html?&t=${new Date().getTime()}/#/task/taskVideoList&NEW_WVW_HYB`;
             // console.log(`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/taskVideoList?&NEW_WVW_HYB&t=${new Date().getTime()}`);
         },
         refresh(type){
