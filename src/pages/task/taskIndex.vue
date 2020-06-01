@@ -274,7 +274,7 @@ export default {
     },
     methods:{
       GoDaily(){
-        window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html?&t=${new Date().getTime()}/#/task/dailyTask&NEW_WVW_HYB`;
+        window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html?t=${new Date().getTime()}/#/task/dailyTask?&NEW_WVW_HYB`;
       },
       initMedth(){
         var _data={
