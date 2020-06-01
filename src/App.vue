@@ -1,13 +1,16 @@
 <template>
     <div id="app">
-        <router-view></router-view>
+      <keep-alive>
+        <router-view v-if="$route.meta.keepAlive"></router-view>
+      </keep-alive>
+      <router-view v-if="!$route.meta.keepAlive"></router-view>
     </div>
 </template>
 
 <script>
 import Const from "@/config/const"
 export default {
-    name: 'App',
+    name: 'app',
     data() {
         return {}
     }
@@ -18,17 +21,16 @@ export default {
 * {
   margin: 0;
   padding: 0;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  -webkit-user-select: auto!important;
+  -khtml-user-select: auto!important;
+  -moz-user-select: auto!important;
+  -ms-user-select: auto!important;
+  -o-user-select: auto!important;
+  user-select: auto!important;
 }
 html,
 body {
   width: 100vw;
-  overflow-x: hidden;
 }
 html {
   -ms-text-size-adjust: 100%;

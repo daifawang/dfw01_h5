@@ -15,7 +15,8 @@
       </div>
     </div>
     <van-skeleton title avatar :row="2" avatar-shape="square" :loading="loadingFlag1">
-      <div class="task-main">
+      <transition name="taskFade">
+      <div v-show="show_exclusiveList" class="task-main">
         <div class="task-title">
           <span ref="zsGuide" :class="{guideQuan:showGuide === 3}">专属任务</span>
           <div v-if="showGuide === 3" class="task-guide">
@@ -24,39 +25,42 @@
             <div class="guide-bttn" @click="guideTo(4)"><img src="../../assets/images/task/task_know.png" /></div>
           </div>
         </div>
-        <div v-for="(item, index) in exclusiveList" :key="index" class="task-li">
-          <div class="task-li-t">
-            <img class="task-t-icon" :src="item.taskHeadImgUrl" />
-            <div class="task-t-div">
-              <div class="task-t-name">
-                <span>{{ item.taskName }}</span><img v-for="(item1, index1) in item.miniTagList" :key="index1" :src="item1.tagImgUrl" />
+        <transition-group appear name="taskList" tag="div">
+          <div v-for="(item, index) in exclusiveList" :key="item.taskId" class="task-li">
+            <div class="task-li-t">
+              <img class="task-t-icon" :src="item.taskHeadImgUrl" />
+              <div class="task-t-div">
+                <div class="task-t-name">
+                  <span>{{ item.taskName }}</span><img v-for="(item1, index1) in item.miniTagList" :key="index1" :src="item1.tagImgUrl" />
+                </div>
+                <!-- <div class="task-t-note">完善证件信息后可结算运费</div> -->
+                <div class="task-t-currency">
+                  <img src="../../assets/images/task/xiaoyuanbao@2x.png" /><span>+{{ item.reawrdNum }}</span>
+                </div>
               </div>
-              <!-- <div class="task-t-note">完善证件信息后可结算运费</div> -->
-              <div class="task-t-currency">
-                <img src="../../assets/images/task/xiaoyuanbao@2x.png" /><span>+{{ item.reawrdNum }}</span>
+            </div>
+            <div class="task-li-content">
+              <img class="task-comp-img" src="../../assets/images/task/dingyi@2x.png" />
+              <div class="task-li-line">{{ item.showScriptOne }}</div>
+              <div class="task-li-line">{{ item.showScriptTwo }}</div>
+              <div class="task-li-line">{{ item.showScriptThree }}</div>
+            </div>
+            <div v-if="item.status === '2' && showFirstGetCury" @click="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
+            <div class="right-bttn" ref="guideFour" :class="{guideQuan2:showGuide === 4 && index === 0}">
+              <span v-if="item.status === '0' || item.status === '1'" class="bttn-span" @click="goTaskUrl(item.jumpUrl)">{{ item.taskAction }}</span>
+              <span v-else-if="item.status === '2'" class="bttn-span bttn-success" @click="getCurrency('1',index,'10')">领取元宝</span>
+            </div>
+            <div v-if="showGuide === 4 && index === 0" class="right-bttn-guide" >
+              <div class="task-guide task-guide-four">
+                <img class="guide-four-jt" src="../../assets/images/task/task_jian_l1.png" />
+                <div class="guide-text"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
+                <div class="guide-bttn" @click="guideTo('')"><img src="../../assets/images/task/task_know.png" /></div>
               </div>
             </div>
           </div>
-          <div v-if="item.status === '2' && showFirstGetCury" @click="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
-          <div class="right-bttn" ref="guideFour" :class="{guideQuan2:showGuide === 4 && index === 0}">
-            <span v-if="item.status === '0' || item.status === '1'" class="bttn-span" @click="goTaskUrl(item.jumpUrl)">{{ item.taskAction }}</span>
-            <span v-else-if="item.status === '2'" class="bttn-span bttn-success" @click="getCurrency('10')">领取元宝</span>
-          </div>
-          <div v-if="showGuide === 4 && index === 0" class="right-bttn-guide" >
-            <div class="task-guide task-guide-four">
-              <img class="guide-four-jt" src="../../assets/images/task/task_jian_l1.png" />
-              <div class="guide-text"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
-              <div class="guide-bttn" @click="guideTo('')"><img src="../../assets/images/task/task_know.png" /></div>
-            </div>
-          </div>
-          <div class="task-li-content">
-            <img class="task-comp-img" src="../../assets/images/task/dingyi@2x.png" />
-            <div class="task-li-line">{{ item.showScriptOne }}</div>
-            <div class="task-li-line">{{ item.showScriptTwo }}</div>
-            <div class="task-li-line">{{ item.showScriptThree }}</div>
-          </div>
-        </div>
+        </transition-group>
       </div>
+      </transition>
     </van-skeleton>
     <van-skeleton title avatar :row="3" avatar-shape="square" :loading="loadingFlag2">
       <div v-if="newTask === 1" ref="newComer" class="task-main">
@@ -85,7 +89,7 @@
             </div>
           </div>
         </div>
-        <div class="task-li">
+        <!-- <div class="task-li">
           <div class="task-li-t">
             <img class="task-t-icon" src="../../assets/images/task/daka@2x.png" />
             <div class="task-t-div">
@@ -118,24 +122,7 @@
           <div class="right-bttn">
             <span class="bttn-span" @click="getCurrency('10')">领取元宝</span>
           </div>
-        </div>
-        <div class="task-li">
-          <div class="task-li-t">
-            <img class="task-t-icon" src="../../assets/images/task/daka@2x.png" />
-            <div class="task-t-div">
-              <div class="task-t-name">
-                <span>完成接单</span><img src="../../assets/images/task/huoqu@2x.png" />
-              </div>
-              <div class="task-t-note">完善证件信息后可结算运费</div>
-              <div class="task-t-currency">
-                <img src="../../assets/images/task/xiaoyuanbao@2x.png" /><span>+5</span>
-              </div>
-            </div>
-          </div>
-          <div class="right-bttn">
-            <span class="bttn-span" @click="getCurrency('10')">领取元宝</span>
-          </div>
-        </div>
+        </div> -->
       </div>
     </van-skeleton>
     <van-skeleton title avatar :row="4" avatar-shape="square" :loading="loadingFlag3">
@@ -223,6 +210,7 @@ export default {
           showGuide: '', //是否显示引导页
           showFirstGetCury: false, //是否有领取过元宝
           clientWid: document.documentElement.clientWidth,
+          show_exclusiveList: true,
           guideObj: {
             text: '关于任务，你想了解的都在这里，快去看看吧！',
             guidePosition: {
@@ -237,8 +225,8 @@ export default {
               miniTagList: [
                 {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
               ],
-              taskAction: '去接单',status: '0',jumpUrl: '',reawrdNum: '6',
-              showScriptOne: '北京昌平区1⇀上海浦东区2',showScriptTwo: '普货【30吨】',showScriptThree: '1800元【到付】'
+              taskAction: '去接单',status: '1',jumpUrl: '',reawrdNum: '6',
+              showScriptOne: '北京昌平区⇀上海浦东',showScriptTwo: '普货【20吨】',showScriptThree: '1800元【到付】'
             },
             {
               taskId: '12',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '货到了，我要运费',
@@ -247,6 +235,14 @@ export default {
               ],
               taskAction: '去传回单',status: '2',jumpUrl: '',reawrdNum: '10',
               showScriptOne: '北京昌平区2⇀上海浦东区1',showScriptTwo: '普货【20吨】',showScriptThree: '1400元【到付】'
+            },
+            {
+              taskId: '13',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '提前收款，立马拿运费！',
+              miniTagList: [
+                {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
+              ],
+              taskAction: '提前收款',status: '0',jumpUrl: '',reawrdNum: '12',
+              showScriptOne: '北京昌平区1⇀上海浦东区1',showScriptTwo: '普货【30吨】',showScriptThree: '1900元【到付】'
             }
           ],
           tt: Math.floor(Math.random()*10),
@@ -273,79 +269,35 @@ export default {
         window['AppJSApi_BackH5TaskTabClick'] = (_json) => {
             console.log("客户端返回的任务Tab点击通知>>",_json);
         }
-      }, 100000)
+      }, 1000)
 
     },
     methods:{
       GoDaily(){
-        //  this.$router.push({ path: '/task/dailyTask' })
-         window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/dailyTask?&NEW_WVW_HYB&t=${new Date().getTime()}`;
+        window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/dailyTask?&NEW_WVW_HYB&t=${new Date().getTime()}`;
       },
       initMedth(){
-        var signData = "";
-        var _data=JSON.stringify({
+        var _data={
           'source':'0',
           'channel':'1'
-        })
-        var _json=JSON.stringify({
-          data:_data,
-          sid: '954000'
-        })
-        if(typeof(AndroidAppCommonJs)!=='undefined'){
-          signData=AndroidAppCommonJs.signRequestBody(_json)
-        }else if(typeof(window.webkit) !== 'undefined'){
-          window.webkit.messageHandlers.signRequestBody.postMessage(_json);
-          window.AppJSApi_BackSignRequestBody=(signData) => {
-            signData=signData;
-          }
         }
-        setTimeout(() => {
-          console.log('signData--',signData);
-          var decodeJson=decodeURI(signData)
-          this.goSignData(decodeJson);            
-        }, 200);
-        // AppJsBridge.initSignData(_data,sid,function(param){
-        //   console.log('---param---',param);
-        //   this.$http({
-        //       apiType: '2',
-        //       headers: {
-        //           "Content-Type": "application/json"
-        //       },
-        //       url: "/gateway.do",
-        //       data:  param
-        //     })
-        //     .then(res => {
-        //       console.log(res);
-        //     })
-        //     .catch(e => {
-        //       console.log(e);
-        //     });
-        // });
-      },
-      goSignData(decodeJson){
-        console.log('decodeJson--',decodeJson);
-        var param = JSON.parse(decodeJson);
-        console.log('---param---',param);
-        this.$http({
-            apiType: '2',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            url: "/gateway.do",
-            data:  param
-          })
-          .then(res => {
-            console.log(res);
-          })
-          .catch(e => {
-            console.log(e);
-          });
-      },
-      storeInfo(key,value){
-        if(this.showGuide && this.showGuide >0){
-          return;
-        }
-        console.log(12121);
+        AppJsBridge.initSignData(_data,'954000',function(param){
+          console.log('---param---',param);
+          this.$http({
+              apiType: '2',
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              url: "/gateway.do",
+              data:  param
+            })
+            .then(res => {
+              console.log(res);
+            })
+            .catch(e => {
+              console.log(e);
+            });
+        });
       },
       getStoreInfoBack(){
         // 回调获取客户端返回的H5存储的数据
@@ -359,10 +311,6 @@ export default {
               if(this.tt > 5){
                 console.log(this.$refs.newComer.offsetTop);
                 document.getElementById('taskIndex').scrollTop = this.$refs.newComer.offsetTop;
-                window.scrollTo({
-                    top: this.$refs.newComer.offsetTop - 46,
-                    behavior: 'smooth'
-                })
               }
               AppJsBridge.guideTask(JSON.stringify({
                 navMaskShow: '1',
@@ -379,7 +327,7 @@ export default {
           }
         }
       },
-      getCurrency(num){
+      getCurrency(type,index,num){
         if(this.showGuide && this.showGuide >0){
           return;
         }
@@ -392,9 +340,16 @@ export default {
         }else if(typeof(window.webkit) !== 'undefined'){
           window.webkit.messageHandlers.openIngotsReceiveDlg.postMessage(json_str);
         }
+        console.log(index);
         setTimeout(() => {
-          this.newTask = 0;
-        }, 1800)
+          if(type === '1'){
+            this.closeTip();
+            this.exclusiveList.splice(index, 1);
+            if(this.exclusiveList.length === 1){
+              this.show_exclusiveList = false;
+            }
+          }
+        }, 3000)
       },
       closeTip(){
         this.showFirstGetCury = false;
@@ -456,13 +411,36 @@ export default {
 
 <style lang="scss" scoped>
 .wapperTask {
-  height: 100vh;
-  box-sizing: border-box;
+  min-height: 100vh;
   background-color: #E8E8E8;
-  // overflow: scroll;
+  overflow: scroll;
+  // -webkit-overflow-scrolling: touch;  
 }
 .wapperTask .van-skeleton {
     margin-top: 1.85rem;
+}
+.taskFade-enter-active {
+  transition: all .3s ease;
+}
+.taskFade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.taskFade-enter, .taskFade-leave-to {
+  transform: translateX(-1.25rem);
+  opacity: 0;
+}
+.taskList-leave-to {
+  opacity: 0;
+  transform: translateX(-3.125rem);
+}
+.taskList-leave-active {
+  transition: all 1s ease;
+}
+.taskList-move{
+  transition: all 1s ease;
+}
+.taskList-leave-active {
+  position: absolute;
 }
 .guideBg{
   position: fixed;
@@ -587,7 +565,6 @@ export default {
 .task-main {
   margin-bottom: .3125rem;
   background-color: #fff;
-  overflow: hidden;
   .task-title {
     height: 3.625rem;
     line-height: 3.625rem;
@@ -599,9 +576,11 @@ export default {
     color: rgba(0,0,0,1);
   }
   .task-li {
-    padding: 1.1875rem 0.875rem;
+    padding: 1.1875rem 0.875rem 1.1875rem 0;
+    margin-left: 0.875rem;
     position: relative;
-    // overflow: hidden;
+    border-bottom: .0625rem solid #E8E8E8;
+    transition: all 1s;
     .task-li-t {
       position: relative;
       overflow: hidden;
@@ -734,18 +713,18 @@ export default {
         line-height: 1.5625rem;
       }
     }
-    &:after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      background: #dddddd;
-      width: 100%;
-      height: .0625rem;
-      -webkit-transform: scaleY(0.5);
-      transform: scaleY(0.5);
-      -webkit-transform-origin: 0 0;
-      transform-origin: 0 0;
-    }
+    // &:after {
+    //   content: "";
+    //   position: absolute;
+    //   bottom: 0;
+    //   background: #E8E8E8;
+    //   width: 100%;
+    //   height: .0625rem;
+    //   -webkit-transform: scaleY(0.5);
+    //   transform: scaleY(0.5);
+    //   -webkit-transform-origin: 0 0;
+    //   transform-origin: 0 0;
+    // }
   }
   .guideLi{
     overflow: initial;
