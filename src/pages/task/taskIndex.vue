@@ -39,11 +39,25 @@
                 </div>
               </div>
             </div>
-            <div class="task-li-content">
+            <div v-if="item.taskType === '1'" class="task-li-content">
               <img class="task-comp-img" src="../../assets/images/task/dingyi@2x.png" />
               <div class="task-li-line">{{ item.showScriptOne }}</div>
               <div class="task-li-line">{{ item.showScriptTwo }}</div>
               <div class="task-li-line">{{ item.showScriptThree }}</div>
+            </div>
+            <div v-else-if="item.taskType === '2' && item.inviteInfo" class="task-li-invitecard">
+              <img class="task-invitecard-img" src="../../assets/images/task/task_invite_bg.png" />
+              <div class="task-invitecard-name">
+                <img class="task-invitecard-headimg" :src="item.inviteInfo.inviteUserImg" />
+                <span>{{ item.inviteInfo.inviteUserName }}给您发了一份邀请...</span>
+              </div>
+              <div class="task-invitecard-bttn">立即查看</div>
+              <div class="task-invitecard-company">{{ item.inviteInfo.inviteCompany }}</div>
+            </div>
+            <div v-else-if="item.taskType === '3' && item.ykInfo" class="task-li-oilcard">
+              <img class="task-oilcard-img" src="../../assets/images/task/task_oilcard_bg.png" />
+              <div class="task-oilcard-last">余额：￥{{ item.ykInfo.lastCount }}</div>
+              <div class="task-oilcard-add">最新到账{{ item.ykInfo.onAddCount }}元</div>
             </div>
             <div v-if="item.status === '2' && showFirstGetCury" @click="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
             <div class="right-bttn" ref="guideFour" :class="{guideQuan2:showGuide === 4 && index === 0}">
@@ -225,7 +239,7 @@ export default {
               miniTagList: [
                 {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
               ],
-              taskAction: '去接单',status: '1',jumpUrl: '',reawrdNum: '6',
+              taskType: '1',taskAction: '去接单',status: '1',jumpUrl: '',reawrdNum: '6',
               showScriptOne: '北京昌平区⇀上海浦东',showScriptTwo: '普货【20吨】',showScriptThree: '1800元【到付】'
             },
             {
@@ -233,16 +247,24 @@ export default {
               miniTagList: [
                 {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
               ],
-              taskAction: '去传回单',status: '2',jumpUrl: '',reawrdNum: '10',
+              taskType: '1',taskAction: '去传回单',status: '2',jumpUrl: '',reawrdNum: '10',
               showScriptOne: '北京昌平区2⇀上海浦东区1',showScriptTwo: '普货【20吨】',showScriptThree: '1400元【到付】'
             },
             {
-              taskId: '13',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '提前收款，立马拿运费！',
+              taskId: '13',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '升级直属运力',
               miniTagList: [
                 {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
               ],
-              taskAction: '提前收款',status: '0',jumpUrl: '',reawrdNum: '12',
-              showScriptOne: '北京昌平区1⇀上海浦东区1',showScriptTwo: '普货【30吨】',showScriptThree: '1900元【到付】'
+              taskType: '2',taskAction: '立即查看',status: '0',jumpUrl: '',reawrdNum: '8',
+              inviteInfo: {inviteUserImg: 'https://live-ol-cdn.log56.com/nsq/header/20191231/788713f0-303e-4d07-9c82-8cdb90909db7.jpg',inviteUserName: '李大全',inviteCompany: '招商成都物流分公司'}
+            },
+            {
+              taskId: '14',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '使用电子油卡',
+              miniTagList: [
+                {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
+              ],
+              taskType: '3',taskAction: '去使用',status: '0',jumpUrl: '',reawrdNum: '5',
+              ykInfo: {onAddCount: '2600',lastCount: '6100'}
             }
           ],
           tt: Math.floor(Math.random()*10),
@@ -349,7 +371,7 @@ export default {
               this.show_exclusiveList = false;
             }
           }
-        }, 3000)
+        }, 4000)
       },
       closeTip(){
         this.showFirstGetCury = false;
@@ -711,6 +733,105 @@ export default {
         font-weight: 400;
         color: rgba(0,0,0,1);
         line-height: 1.5625rem;
+      }
+    }
+    .task-li-oilcard,.task-li-invitecard{
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      margin-top: 1.1875rem;
+      height: 7.1875rem;
+      img {
+        position: relative;
+        width: 100%;
+        height: 7.1875rem;
+      }
+      .task-oilcard-last{
+        position: absolute;
+        top: 2.825rem;
+        left: .9375rem;
+        font-size: 1.25rem;
+        font-family: Source Han Sans SC;
+        font-weight: bold;
+        color: rgba(255,255,255,1);
+      }
+      .task-oilcard-add{
+        position: absolute;
+        bottom: .5625rem;
+        left: 0;
+        padding: 0 .9375rem;
+        font-size: 1rem;
+        font-family: Source Han Sans SC;
+        font-weight: 500;
+        color: rgba(255,255,255,1);
+        // width: 7.8125rem;
+        height: 1.4375rem;
+        line-height: 1.5rem;
+        background: rgba(247,79,40,1);
+        border-radius: 0 .6875rem .6875rem 0;
+      }
+    }
+    .task-li-invitecard {
+      height: 9.75rem;
+      img {
+        height: 9.75rem;
+      }
+      .task-invitecard-name {
+        position: absolute;
+        top: 1.1875rem;
+        left: 2.4375rem;
+        font-size: 1.0625rem;
+        font-family: Source Han Sans SC;
+        font-weight: 500;
+        color: rgba(169,49,58,1);
+        height: 2.25rem;
+        line-height: 2.25rem;
+        img {
+          width: 2.25rem;
+          height: 2.25rem;
+          border-radius: .3125rem;
+          float: left;
+        }
+        span {
+          line-height: 2rem;
+          display: block;
+          position: relative;
+          height: 2.25rem;
+          float: left;
+          left: 1.125rem;
+          border-bottom: .0625rem solid #AA3539;
+        }
+      }
+      .task-invitecard-bttn {
+        position: absolute;
+        left: 50%;
+        margin-left: -4.1875rem;
+        bottom: 3.375rem;
+        clear: both;
+        width: 7.765rem;
+        height: 1.8125rem;
+        line-height: 1.75rem;
+        background: rgba(170,53,57,1);
+        border-radius: .875rem;
+        font-size: 1.0625rem;
+        font-family: Source Han Sans SC;
+        font-weight: 500;
+        color: rgba(255,255,255,1);
+        text-align: center;
+      }
+      .task-invitecard-company {
+        position: absolute;
+        right: 0.75rem;
+        bottom: 1.75rem;
+        clear: both;
+        height: 1.38rem;
+        line-height: 1.365rem;
+        transform: rotate(-15deg);
+        font-size: .75rem;
+        color: #A9313A;
+        padding: 0 .225rem;
+        border: .125rem solid #A9313A;
+        outline: .125rem solid rgb(221, 128, 131);
       }
     }
     // &:after {
