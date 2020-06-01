@@ -156,10 +156,10 @@ export default {
     created() {},
     methods: {
         goVideoList(){  //新手任务挑战
-         this.$router.push({
-        name: "taskVideoList"
-      });
-            // window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/taskVideoList?&NEW_WVW_HYB&t=${new Date().getTime()}`;
+    //      this.$router.push({
+    //     name: "taskVideoList"
+    //   });
+            window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html?&t=${new Date().getTime()}/#/task/taskVideoList&NEW_WVW_HYB`;
             // console.log(`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/taskVideoList?&NEW_WVW_HYB&t=${new Date().getTime()}`);
         },
         refresh(type){
