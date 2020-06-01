@@ -311,6 +311,10 @@ export default {
               if(this.tt > 5){
                 console.log(this.$refs.newComer.offsetTop);
                 document.getElementById('taskIndex').scrollTop = this.$refs.newComer.offsetTop;
+                window.scrollTo({
+                    top: this.$refs.newComer.offsetTop - 46,
+                    behavior: 'smooth'
+                })
               }
               AppJsBridge.guideTask(JSON.stringify({
                 navMaskShow: '1',
