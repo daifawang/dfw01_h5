@@ -1,23 +1,64 @@
 <template>
+        <van-skeleton  :row="3" :loading="loading">
     <div class="rule-wrapper">
        <div class="rule-box">
            <img src="../../assets/images/task/dingyi@2x.png" alt="">
-           <div>元宝是好运宝平台鼓励卡友使用app设定的平台奖励。元宝不可转让，可用于元宝商城兑换相对应的商品、参与元宝商城活动或游戏使用。</div>
+           <div>{{defineCoin}}</div>
        </div>
        <div class="rule-box">
            <img src="../../assets/images/task/huoqu@2x.png" alt="">
-           <div>元宝是好运宝平台鼓励卡友使用app设定的平台奖励。元宝不可转让，可用于元宝商城兑换相对应的商品、参与元宝商城活动或游戏使用。元宝是好运宝平台鼓励卡友使用app设定的平台奖励。元宝不可转让，可用于元宝商城兑换相对应的商品、参与元宝商城活动或游戏使用。</div>
+           <div>{{getCoin}}</div>
        </div>
        <div class="rule-box">
            <img src="../../assets/images/task/shiyong@2x.png" alt="">
-           <div>元宝是好运宝平台鼓励卡友使用app设定的平台奖励。元宝不可转让，可用于元宝商城兑换相对应的商品、参与元宝商城活动或游戏使用。</div>
+           <div>{{useCoin}}</div>
        </div>
     </div>
+       </van-skeleton>
 </template>
 <script>
+import { AppJsBridge, hybappObj } from "@/assets/js/hybApp_api.js";
 export default {
+    data() {
+        return {
+            loading:true,
+            defineCoin:'',
+            getCoin:'',
+            useCoin:''
+        }
+    },
     created() {
         document.title = '元宝规则';
+        this.initData();
+    },
+    methods: {
+    //数据初始化
+    initData() {
+      AppJsBridge.initSignData({}, 954002, param => {
+        this.$http({
+          apiType: "2",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          url: "/gateway.do",
+          data: param
+        })
+          .then(res => {
+            console.log(res);
+            if (res.reCode == "0") {
+                this.loading=false;
+                this.defineCoin=res.result.defineCoin;
+                this.getCoin=res.result.getCoin;
+                this.useCoin=res.result.useCoin;
+            } else {
+              this.$toast(res.reInfo);
+            }
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      });
+    },
     },
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="my-currency" :style="{height:boxHeight+'px'}">
-    <div ref="topBox">
+    <div class="top-box" ref="topBox">
       <div class="header">
         <div class="header-top">
           <div @click="goBack" class="back-icon">
@@ -28,6 +28,7 @@
             <div class="used-num">{{coinPoints}}</div>
           </div>
         </div>
+        <div class="gray-bg-line"></div>
         <div class="coin-list">
           <div class="cl-tag">
             <div v-for="(item,index) in type" :key="index" :class="{'act-tag':activeTag==item.id}"
@@ -36,17 +37,21 @@
         </div>
       </div>
     </div>
-    <div class="coin-detail" id="coinDetail" :style="{height:topBoxHeight+'px'}" ref="coinDetail">
-      <div v-for="(item,index) in coinDetail" :key="index" class="coin-detail-wrapper">
-        <div>
-          <div class="goods-name">{{item.goodsName}}</div>
-          <div class="created-time">{{item.createdTime}}</div>
+    <div class="coin-detail" id="coinDetail" :style="{marginTop:topBoxHeight+'px'}" ref="coinDetail">
+      <van-loading v-if="showLoading" size="24px" vertical>加载中...</van-loading>
+      <div v-if="coinDetail.length>0">
+        <div v-for="(item,index) in coinDetail" :key="index" class="coin-detail-wrapper">
+          <div>
+            <div class="goods-name">{{item.goodsName}}</div>
+            <div class="created-time">{{item.createdTime}}</div>
+          </div>
+          <div class="coin-num" :class="{'red-font':Number(item.coinNum)<0}">{{item.coinNum}}</div>
         </div>
-        <div class="coin-num" :class="{'red-font':Number(item.coinNum)<0}">{{item.coinNum}}</div>
       </div>
-      <div v-if="loadingMore">加载中~</div>
+      <div v-if="showNoData" class="load-more">暂无元宝数据</div>
+      <div v-if="loadingMore && coinDetail.length>0" class="load-more">加载中~</div>
     </div>
-    <!-- <div v-if="!loadingMore" class="bottom">已经到底啦~</div> -->
+    <div v-if="!loadingMore" class="bottom">已经到底啦~</div>
 
   </div>
 </template>
@@ -63,15 +68,18 @@ export default {
         { name: "已获取", id: "1" },
         { name: "已使用", id: "2" }
       ],
+      showLoading: false,
+      showNoData: false,
       boxHeight: document.documentElement.clientHeight, //盒子高度
       activeTag: 0, //0 全部 1 已获取  2 已使用 被选中状态
-      coinNewCount: "", //可使用元宝数目
-      coinPoints: "", //已消费元宝数目
-      coinSum: "", //累计获得元宝数目
+      coinNewCount: "0", //可使用元宝数目
+      coinPoints: "0", //已消费元宝数目
+      coinSum: "0", //累计获得元宝数目
       pageNum: 0, //分页page_num
-      loadingMore: false, //到达底部加载更多开关
+      loadingMore: true, //到达底部加载更多开关
       topBoxHeight: 200,
-      coinDetail: [
+      coinDetail: [],
+      coinDetail2: [
         {
           goodsName: "签到",
           createdTime: "2019.11.12    12:09:53",
@@ -153,13 +161,13 @@ export default {
   created() {
     document.title = "我的元宝";
     AppJsBridge.hidenNavigation();
-    // this.initData();
-    // this.initListData(this.activeTag);
+    this.initData();
+    this.initListData(this.activeTag);
   },
   mounted() {
     console.log(this.$refs.topBox.offsetHeight);
-    this.topBoxHeight = this.boxHeight - this.$refs.topBox.offsetHeight + 33;
-    window.addEventListener("scroll", this.loadeMore, true);
+    this.topBoxHeight = this.$refs.topBox.offsetHeight - 35;
+    window.addEventListener("scroll", this.loadeMore);
   },
   methods: {
     //数据初始化
@@ -190,13 +198,12 @@ export default {
     },
     /* 加载更多 */
     loadeMore: function() {
-      console.log("加载更多");
-      //   let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-      //   let windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
-      //   let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-      let scrollTop = this.$refs.coinDetail.scrollTop;
-      let windowHeight = this.$refs.coinDetail.clientHeight;
-      let scrollHeight = this.$refs.coinDetail.scrollHeight;
+      let scrollTop =
+        document.documentElement.scrollTop || document.body.scrollTop;
+      let windowHeight =
+        document.documentElement.clientHeight || document.body.clientHeight;
+      let scrollHeight =
+        document.documentElement.scrollHeight || document.body.scrollHeight;
       console.log(
         "---scrollTop:" +
           scrollTop +
@@ -205,19 +212,19 @@ export default {
           "---scrollHeight:" +
           scrollHeight
       );
-      if (scrollTop + windowHeight >= scrollHeight - 1) {
+      if (scrollTop + windowHeight >= scrollHeight - 2) {
         console.log(22222222222);
         if (this.loadingMore) {
           this.pageNum += 1;
           console.log(this.pageNum);
-          //   this.initListData(this.activeTag);
+          this.initListData(this.activeTag);
         }
       }
     },
     initListData(activeTag) {
       //元宝使用列表
       AppJsBridge.initSignData(
-        { type: activeTag, pageNum: this.pageNum },
+        { type: activeTag, pageNum: this.pageNum + "" },
         954003,
         param => {
           this.$http({
@@ -230,17 +237,25 @@ export default {
           })
             .then(res => {
               console.log(res);
+              console.log(res.result.length);
+              this.showLoading = false;
               if (res.reCode == "0") {
+               
                 if (res.result.length > 0) {
                   this.loadingMore = true;
                   console.log("res.result.length:" + res.result.length);
                   let coinDetail_lists = this.coinDetail.concat(res.result); //邀请记录列表
                   this.coinDetail = coinDetail_lists;
+                  console.log(this.coinDetail);
                 }
-                if (res.result.length == 0) {
+                 if (this.coinDetail.length <=0){
+                     this.showNoData=true;
+                 }
+                if (this.coinDetail.length > 0 && res.result.length <= 0) {
                   this.loadingMore = false;
                   return;
                 }
+                
               } else {
                 this.$toast(res.reInfo);
                 this.loadingMore = false;
@@ -248,18 +263,18 @@ export default {
             })
             .catch(e => {
               console.log(e);
-              //   this.loadingMore = true;
             });
         }
       );
     },
     changeTab(id) {
       //切换tab
+      this.showLoading = true;
       this.activeTag = id;
-      //   this.loadingMore = true;
       this.coinDetail = [];
       this.pageNum = 0;
       this.initListData(this.activeTag);
+      window.scrollTo(0, 0);
     },
     goBack() {
       //返回
@@ -268,7 +283,9 @@ export default {
     },
     goRule() {
       //规则
-      window.location.href = `${Const.APP_RUL}hyb_task_h5/dist/index.html?t=${new Date().getTime()}/#/task/myCurrencyRule?&NEW_WVW_HYB`;
+      window.location.href = `${
+        Const.APP_RUL
+      }hyb_task_h5/dist/index.html?t=${new Date().getTime()}/#/task/myCurrencyRule?&NEW_WVW_HYB`;
     }
   }
 };
@@ -295,13 +312,15 @@ export default {
 }
 .my-currency {
   font-size: 1.125rem;
-  // position: fixed;
-  // left:0;
-  // top:0;
   width: 100%;
   height: 100vh;
-  overflow: hidden;
   background: rgba(244, 245, 247, 1);
+}
+.top-box {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
 }
 .header {
   width: 100%;
@@ -340,6 +359,7 @@ export default {
     height: 1.125rem;
   }
 }
+
 .header-middle {
   margin-top: 0.9375rem;
   padding-left: 1.625rem;
@@ -367,7 +387,6 @@ export default {
   height: 100%;
   padding: 0 0.625rem;
   .total-box {
-    margin-bottom: 0.3125rem;
     padding: 0 1.0625rem;
     .space-flex(space-between);
     width: calc(100% - 2.125rem);
@@ -393,6 +412,11 @@ export default {
       font-weight: bold;
       color: rgba(153, 153, 153, 1);
     }
+  }
+  .gray-bg-line {
+    width: 100%;
+    height: 5px;
+    background-color: #f4f5f7;
   }
   .coin-list {
     width: 100%;
@@ -422,12 +446,12 @@ export default {
   background: rgba(255, 255, 255, 1);
   border-radius: 0 0 0.5rem 0.5rem;
   padding: 0px 1rem;
-  height: 100%;
+  height: auto;
   box-sizing: border-box;
   margin-top: -2.1875rem;
   margin-left: 0.625rem;
   margin-right: 0.625rem;
-  overflow-y: scroll;
+  //   overflow-y: scroll;
 }
 .coin-detail-wrapper {
   .space-flex(space-between);
@@ -450,14 +474,18 @@ export default {
     color: #e4322e;
   }
 }
+.load-more {
+  font-size: 1rem;
+  color: rgba(202, 202, 202, 1);
+  line-height: 3.125rem;
+  text-align: center;
+  height: 3.125rem;
+}
 .bottom {
   width: 100%;
   height: 2.5625rem;
   line-height: 2.5625rem;
-  background: olivedrab;
-  position: absolute;
-  bottom: 0rem;
-  left: 0rem;
+  background: #f4f5f7;
   text-align: center;
   font-size: 1rem;
   color: #cacaca;

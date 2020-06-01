@@ -20,6 +20,12 @@ export default {
   mounted() {
       this.initData();
        document.title = '新手攻略';
+       window.AppJSApi_BackH5TaskOrdersInfo=(string) => {
+            // taskType：1.专属任务 2.新手任务 3.每日任务
+            console.log('taskType：1.专属任务 2.新手任务 3.每日任务');
+            console.log('----进入AppJSApi_BackH5TaskOrdersIn民-----');
+            console.log('string:'+string);
+        }
   },
   computed: {
       
@@ -63,10 +69,8 @@ export default {
       });
     },
     openVideoDetails(jsonStr){
-       AppJsBridge.taskOpenVideoDetails(jsonStr,param => {
-           console.log("openVideoDetails---------"+param);
-           
-       })
+        console.log('视频播放');
+       AppJsBridge.taskOpenVideoDetails(jsonStr);
     },
   }
 };
@@ -100,7 +104,7 @@ export default {
     transform: translate(-50%, -50%);
   }
   .video-time {
-    width: 2.9375rem;
+    padding: 0px 0.75rem;
     height: 1.3125rem;
     line-height: 1.3125rem;
     text-align: center;
