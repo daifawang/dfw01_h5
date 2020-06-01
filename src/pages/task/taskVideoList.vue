@@ -19,6 +19,7 @@ export default {
   created() {},
   mounted() {
       this.initData();
+       document.title = '新手攻略';
   },
   computed: {
       
