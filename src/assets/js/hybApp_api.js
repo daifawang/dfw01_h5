@@ -181,7 +181,32 @@ let AppJsBridge = {
         } catch (error) {
             console.log(JSON.stringify(error));
         }
-    }
+    },
+    // 【JS2060】任务-跳转视频详情页
+    taskOpenVideoDetails(jsonStr,callback){
+        console.log('【JS2060】任务-跳转视频详情页');
+        let _json= JSON.stringify({jsonStr});
+        console.log(_json);
+        try {
+            if(typeof(AndroidAppGoodsJs) != 'undefined'){
+                console.log('----进入AndroidAppCommonJs.taskOpenVideoDetails----');
+                AndroidAppCommonJs.taskOpenVideoDetails(_json)
+            }else if(typeof(window.webkit) !== 'undefined'){
+                console.log('----进入window.webkit.messageHandlers.taskOpenVideoDetails.postMessage----');
+                window.webkit.messageHandlers.taskOpenVideoDetails.postMessage(_json);  
+            }
+            window.AppJSApi_BackH5TaskOrdersInfo=(string) => {
+                // taskType：1.专属任务 2.新手任务 3.每日任务
+                console.log('----进入AppJSApi_BackH5TaskOrdersInfo----');
+                console.log('string:'+string);
+                if( typeof callback === 'function' ){
+                    callback(param);
+                }
+            }
+        } catch (error) {
+            console.log(JSON.stringify(error));
+        }
+    },
 }
 export {
     AppJsBridge,
