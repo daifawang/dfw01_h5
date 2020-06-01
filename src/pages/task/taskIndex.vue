@@ -1,6 +1,6 @@
 <template>
   <div id="taskIndex" class="wapperTask">
-    <div class="wapperTaskGuide" :class="{guideBg:showGuide}">
+    <div class="wapperTaskGuide" :class="{guideBg:showGuide}" @touchmove.prevent>
       <div v-if="showGuide === 1 || showGuide === 2" class="task-guide" :style="{top:guideObj.guidePosition.top,bottom:guideObj.guidePosition.bottom}">
         <div class="guide-jian" :class="{guideJian1:showGuide === 1,guideJian2:showGuide === 2}">
           <img v-if="showGuide === 1" src="../../assets/images/task/task_jian_l2.png" />
@@ -308,13 +308,13 @@ export default {
             if(_data.data === ''){
               this.showGuide = 1;
               console.log('tt>>',this.tt);
-              if(this.tt > 5){
+              if(this.tt > 2){
                 console.log(this.$refs.newComer.offsetTop);
                 document.getElementById('taskIndex').scrollTop = this.$refs.newComer.offsetTop;
-                window.scrollTo({
-                    top: this.$refs.newComer.offsetTop - 46,
-                    behavior: 'smooth'
-                })
+                // window.scrollTo({
+                //     top: this.$refs.newComer.offsetTop,
+                //     behavior: 'smooth'
+                // })
               }
               AppJsBridge.guideTask(JSON.stringify({
                 navMaskShow: '1',
@@ -367,7 +367,7 @@ export default {
         });
       },
       guideTo(num){
-        if(num === 3 && this.tt > 5){
+        if(num === 3 && this.tt > 2){
           num = 5;
         }
         this.showGuide = num > 5 ? '' : num;
