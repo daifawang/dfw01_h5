@@ -779,7 +779,7 @@ export default {
       .task-invitecard-name {
         position: absolute;
         top: 1.1875rem;
-        left: 2.4375rem;
+        left: 2.1375rem;
         font-size: 1.0625rem;
         font-family: Source Han Sans SC;
         font-weight: 500;
@@ -798,7 +798,7 @@ export default {
           position: relative;
           height: 2.25rem;
           float: left;
-          left: 1.125rem;
+          left: 1rem;
           border-bottom: .0625rem solid #AA3539;
         }
       }
@@ -830,8 +830,8 @@ export default {
         font-size: .75rem;
         color: #A9313A;
         padding: 0 .225rem;
-        border: .125rem solid #A9313A;
-        outline: .125rem solid rgb(221, 128, 131);
+        border: .1rem solid #A9313A;
+        outline: .165rem solid rgb(221, 128, 131);
       }
     }
     // &:after {
