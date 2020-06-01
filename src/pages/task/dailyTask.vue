@@ -66,8 +66,10 @@
                                         <img src="../../assets/images/task/wancheng.png">
                                     </div>
                                 </div>
-                                <div class="short-line line"></div>
-                                <div class="short-long line"></div>
+                                <div v-if="index==0" class="short-line line short-a"></div>
+                                <div v-if="index==1" class="long-line line long-a"></div>
+                                <div v-if="index==1" class="long-line line long-b"></div>
+                                <div v-if="index==2" class="short-line line short-b"></div>
                             </div>
                             <div>{{meansSonItem.taskName}}</div>
                         </div>
@@ -185,7 +187,10 @@ export default {
             this.taskOpenVideoDetails({});
         },
         goVideoList(){  //新手任务挑战
-            window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/taskVideoList?&NEW_WVW_HYB&t=${new Date().getTime()}`;
+         this.$router.push({
+        name: "taskVideoList"
+      });
+            // window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/taskVideoList?&NEW_WVW_HYB&t=${new Date().getTime()}`;
             // console.log(`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/taskVideoList?&NEW_WVW_HYB&t=${new Date().getTime()}`);
         },
         refresh(type){
@@ -210,7 +215,7 @@ export default {
     }
     .center(){
         position: absolute;
-        left: 50%;
+        // left: 50%;
         top: 50%;
         transform: translate(-50%,-50%);
     }
@@ -368,11 +373,29 @@ export default {
             position: relative;
             .line{
                 .center();
-                width:323px;
-                height:2px;
+                width:100%;
+                height:0.125rem;
                 background:rgba(232,232,232,1);
-                border-radius:1px;
+                border-radius:0.0625rem;
                 z-index: 0;
+            }
+            .short-line{
+                // width:0.625rem;
+            }
+            .short-a{
+                left:-0.375rem;
+            }
+            .short-b{
+                right: 0.25rem;
+            }
+            .long-line{
+                // width:5.3125rem;
+            }
+            .long-a{
+                left: -2.625rem;
+            }
+            .long-b{
+                right: -109px;
             }
         }
         .new-task-status-to{
