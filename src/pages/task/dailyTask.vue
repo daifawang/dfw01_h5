@@ -4,17 +4,17 @@
         <div class="task-title" @click="refresh('1')"> 【JS2063】打开1下拉刷新控件</div>
         <div class="task-title" >默认0-看下下拉刷新： {{count}}</div>
         <!-- 新手任务 -->
-        <div class="task-title task-title-new">新手任务
+        <div class="task-title task-title-new" >新手任务
             <div @click="goVideoList">
                 <img class="task-title-new-icon1" src="../../assets/images/task/xinshou@2x.png"> 新手攻略
                 <img class="task-title-new-icon2" src="../../assets/images/task/jiantou_you@2x.png">
             </div>
         </div>
-         <div class="task-wrapper">
+         <div class="task-wrapper" v-if="newTaskList && newTaskList.length>0">
             <div v-for="(newItem,index) in newTaskList" :key="index">
                 <div class="task-box">
                     <div class="task-icon">
-                        <img :src="newItem.headImg">
+                        <!-- <img :src="newItem.headImg"> -->
                     </div>
                     <div class="task-main">
                         <div class="task-main-title">
@@ -75,10 +75,11 @@
         <!-- 每日任务 -->
         <div class="task-title">每日任务</div>
         <div class="task-wrapper">
-            <div v-for="(dailyItem,index) in daliyTaskList" :key="index" @click="clickUrl(dailyItem.jumpUrl)">
+            <transition-group appear name="taskList" tag="div">
+            <div v-for="(dailyItem,index) in daliyTaskList" :key="dailyItem.taskId" @click="clickUrl(index,dailyItem.jumpUrl)">
                 <div class="task-box">
                     <div class="task-icon">
-                        <img :src="dailyItem.headImg">
+                        <!-- <img :src="dailyItem.headImg"> -->
                     </div>
                     <div class="task-main">
                         <div class="task-main-title">
@@ -101,40 +102,15 @@
                     </div>
                     <div class="task-btn-div">
                         <div class="task-btn">
-                            <div :class="{'to-do':dailyItem.status=='0','doing':dailyItem.status=='1','done':dailyItem.status=='2',}">{{dailyItem.buttonText}}</div>
+                            <div :class="{'to-do':dailyItem.status=='1','doing':dailyItem.status=='2','done':dailyItem.status=='3',}">{{dailyItem.buttonText}}</div>
                         </div>
                         <div v-if="dailyItem.signCardText" class="task-btn-text">
                             <div>{{dailyItem.signCardText}}</div>
                         </div>
                     </div>
                 </div>
-                <div v-if="dailyItem.meansSonTasks">
-                    <div class="new-task-card">
-                        <div v-for="(meansSonItem,index) in dailyItem.meansSonTasks" :key="index" >
-                            <div class="line-box">
-                                <div v-if="meansSonItem.taskStatus == '0'" class="new-task-status-to">
-                                    <div>
-                                        <div>
-                                            <img src="../../assets/images/task/yuanbao_xiao@2x.png">
-                                            <div>+{{meansSonItem.rewardNum}}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div v-else class="new-task-status-done">
-                                    <div>
-                                        <img src="../../assets/images/task/wancheng.png">
-                                    </div>
-                                </div>
-                                <div v-if="index==0" class="short-line line short-a"></div>
-                                <div v-if="index==1" class="long-line line long-a"></div>
-                                <div v-if="index==1" class="long-line line long-b"></div>
-                                <div v-if="index==2" class="short-line line short-b"></div>
-                            </div>
-                            <div>{{meansSonItem.taskName}}</div>
-                        </div>
-                    </div>
-                </div>
             </div>
+            </transition-group>
         </div>
     </div>
 </template>
@@ -147,7 +123,8 @@ export default {
             count:0,
             hasDaliyTask:true, // 是否有每日任务
             hasNewTask:true, // 是否有新手任务
-            daliyTaskList:[
+            daliyTaskList:[],
+            daliyTaskList1:[
                 {
                     taskNeedSum:'1',
                     taskNowSum:'1',
@@ -156,6 +133,7 @@ export default {
                         "https://test-live-ol-cdn.log56.com/nsq/header/20200401/d6a323f7-1665-4b3d-8370-926ae7b80ece.jpg",
                     ],
                     status:'0',
+                    taskId:'1',
                     signCardText:'2.5W人已观看',
                     note:'一分钟了解打卡',
                     taskName:'打卡',
@@ -165,6 +143,7 @@ export default {
                  {
                     // taskNeedSum:'3',
                     // taskNowSum:'1',
+                     taskId:'2',
                     headImg:require("../../assets/images/task/daka@2x.png"),
                     status:'0',
                     // signCardText:'2.5W人已观看',
@@ -184,42 +163,14 @@ export default {
                         rewardNum:'20'},
                     ]
                 },
-                {
-                    taskNeedSum:'3',
-                    taskNowSum:'1',
-                    headImg:require("../../assets/images/task/daka@2x.png"),
-                    status:'0',
-                    signCardText:'',
-                    taskName:'转发文章',
-                    rewardNum:'20',
-                    buttonText:'去转发'
-                }, {
-                    taskNeedSum:'3',
-                    taskNowSum:'1',
-                    headImg:require("../../assets/images/task/daka@2x.png"),
-                    status:'0',
-                    signCardText:'',
-                    taskName:'点赞文章',
-                    rewardNum:'20',
-                    buttonText:'去点赞'
-                } ,{
-                    taskNeedSum:'3',
-                    taskNowSum:'1',
-                    headImg:require("../../assets/images/task/daka@2x.png"),
-                    status:'0',
-                    signCardText:'',
-                    taskName:'评论文章',
-                    rewardNum:'20',
-                    buttonText:'去评论'
-                }
+               
             ],
             newTaskList:[]
         }
     },
     created() {
-        
         console.log('created');
-       
+        
     },
     mounted() {
         this.initNewTaskListData();
@@ -231,9 +182,6 @@ export default {
     },
     methods: {
         goVideoList(){  //新手任务挑战
-    //      this.$router.push({
-    //     name: "taskVideoList"
-    //   });
             window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html?t=${new Date().getTime()}/#/task/taskVideoList?&NEW_WVW_HYB`;
             // console.log(`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/taskVideoList?&NEW_WVW_HYB&t=${new Date().getTime()}`);
         },
@@ -304,20 +252,41 @@ export default {
             });
         },
         // 跳转
-        clickUrl(url){
-            if(url=='refresh'){
-                // 跳转刷一刷tab
-                AppJsBridge.appBackMainTab('REFRESH');
-            }else if(url=='video'){
-                AppJsBridge.goVideoTopicDetail('1202017');
-            }else{
-                window.location.href=url+"?&NEW_WVW_HYB";
+        clickUrl(index,url){
+            if(index>1 && this.daliyTaskList[index].status == '2'){
+                let _obj = this.daliyTaskList[index];
+                this.daliyTaskList.splice(index, 1);
+                this.daliyTaskList.push(_obj);
+                return;
             }
+            // if(url=='refresh'){
+            //     // 跳转刷一刷tab
+            //     AppJsBridge.appBackMainTab('REFRESH');
+            // }else if(url=='video'){
+            //     // 跳转刷一刷视频详情
+            //     AppJsBridge.goVideoTopicDetail('1202017');
+            // }else{
+            //     window.location.href=url+"?&NEW_WVW_HYB";
+            // }
+           
         },
     },
 }
 </script>
 <style lang="less" scoped>
+.taskList-leave-to {
+  opacity: 0;
+  transform: translateX(-3.125rem);
+}
+.taskList-leave-active {
+  transition: all 1s ease;
+}
+.taskList-move{
+  transition: all 1s ease;
+}
+.taskList-leave-active {
+  position: absolute;
+}
     .font(@sise,@color,@lh) {
         font-size: @sise;
         color: @color;
