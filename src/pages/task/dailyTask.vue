@@ -174,7 +174,9 @@ export default {
     },
     mounted() {
         this.initNewTaskListData();
-        this.initDaliyTaskListData();
+        setTimeout(() => {
+            this.initDaliyTaskListData();
+        }, 50);
          window['AppJSApi_BackH5TaskTabClick'] = (_json) => {
             console.log("客户端返回的任务Tab点击通知>>",_json);
             this.initDaliyTaskListData();
