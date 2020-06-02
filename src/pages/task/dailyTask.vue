@@ -10,41 +10,101 @@
                 <img class="task-title-new-icon2" src="../../assets/images/task/jiantou_you@2x.png">
             </div>
         </div>
-        <div class="task-wrapper">
-        </div>
-        <!-- 每日任务 -->
-        <div class="task-title">每日任务</div>
-        <div class="task-wrapper">
-            <div v-for="(dailyItem,index) in daliyTaskList" :key="index">
+         <div class="task-wrapper">
+            <div v-for="(newItem,index) in newTaskList" :key="index">
                 <div class="task-box">
                     <div class="task-icon">
-                        <img :src="dailyItem.taskHeadImgUrl">
+                        <img :src="newItem.headImg">
                     </div>
                     <div class="task-main">
                         <div class="task-main-title">
-                            <div>{{dailyItem.taskName}}</div>
-                            <div v-if="dailyItem.miniTagList">
-                                <div v-for="(miniTagItem,index) in dailyItem.miniTagList" :key="index" class="task-main-tag">
+                            <div>{{newItem.taskName}}</div>
+                            <div v-if="newItem.miniTagList">
+                                <div v-for="(miniTagItem,index) in newItem.miniTagList" :key="index" class="task-main-tag">
                                     <img  :src="miniTagItem">
                                 </div>
                             </div>
                         </div>
-                        <div class="task-main-info" v-if="dailyItem.taskNote">{{dailyItem.taskNote}}</div>
+                        <div class="task-main-info" v-if="newItem.note">{{newItem.note}}</div>
                         <div class="task-main-desc">
                             <img src="../../assets/images/task/xiaoyuanbao@2x.png">
-                            <div class="task-main-desc-num">+{{dailyItem.reawrdNum}}</div>
-                            <div v-if="dailyItem.taskNeedSum" class="task-main-desc-text">
+                            <div class="task-main-desc-num">+{{newItem.rewardNum}}</div>
+                            <div v-if="newItem.taskNeedSum > 1" class="task-main-desc-text">
                                 <span>已完成</span>
-                                <span :class="{'red-font':Number(dailyItem.taskNowSum) > 0}">1</span><span>/{{dailyItem.taskNeedSum}}</span>
+                                <span :class="{'red-font':Number(newItem.taskNowSum) > 0}">{{newItem.taskNowSum}}</span><span>/{{newItem.taskNeedSum}}</span>
                             </div>
                         </div>
                     </div>
                     <div class="task-btn-div">
                         <div class="task-btn">
-                            <div :class="{'to-do':dailyItem.status=='0','doing':dailyItem.status=='1','done':dailyItem.status=='2',}">{{dailyItem.taskAction}}</div>
+                            <div :class="{'to-do':newItem.status=='0','doing':newItem.status=='1','done':newItem.status=='2',}">{{newItem.taskAction}}</div>
                         </div>
-                        <div v-if="dailyItem.viewCount" class="task-btn-text">
-                            <div>{{dailyItem.viewCount}}</div>
+                        <div v-if="newItem.signCardText" class="task-btn-text">
+                            <div>{{newItem.signCardText}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="newItem.meansSonTasks">
+                    <div class="new-task-card">
+                        <div v-for="(meansSonItem,index) in newItem.meansSonTasks" :key="index" >
+                            <div class="line-box">
+                                <div v-if="meansSonItem.taskStatus == '0'" class="new-task-status-to">
+                                    <div>
+                                        <div>
+                                            <img src="../../assets/images/task/yuanbao_xiao@2x.png">
+                                            <div>+{{meansSonItem.rewardNum}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-else class="new-task-status-done">
+                                    <div>
+                                        <img src="../../assets/images/task/wancheng.png">
+                                    </div>
+                                </div>
+                                <div v-if="index==0" class="short-line line short-a"></div>
+                                <div v-if="index==1" class="long-line line long-a"></div>
+                                <div v-if="index==1" class="long-line line long-b"></div>
+                                <div v-if="index==2" class="short-line line short-b"></div>
+                            </div>
+                            <div>{{meansSonItem.taskName}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 每日任务 -->
+        <div class="task-title">每日任务</div>
+        <div class="task-wrapper">
+            <div v-for="(dailyItem,index) in daliyTaskList" :key="index" @click="clickUrl(dailyItem.jumpUrl)">
+                <div class="task-box">
+                    <div class="task-icon">
+                        <img :src="dailyItem.headImg">
+                    </div>
+                    <div class="task-main">
+                        <div class="task-main-title">
+                            <div>{{dailyItem.taskName}}</div>
+                            <div v-if="dailyItem.miniTagList">
+                                <div v-for="(miniTagItem,index) in dailyItem.miniTags" :key="index" class="task-main-tag">
+                                    <img  :src="miniTagItem">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="task-main-info" v-if="dailyItem.note">{{dailyItem.note}}</div>
+                        <div class="task-main-desc">
+                            <img src="../../assets/images/task/xiaoyuanbao@2x.png">
+                            <div class="task-main-desc-num">+{{dailyItem.rewardNum}}</div>
+                            <div v-if="dailyItem.taskNeedSum > 1" class="task-main-desc-text">
+                                <span>已完成</span>
+                                <span :class="{'red-font':Number(dailyItem.taskNowSum) > 0}">{{dailyItem.taskNowSum}}</span><span>/{{dailyItem.taskNeedSum}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="task-btn-div">
+                        <div class="task-btn">
+                            <div :class="{'to-do':dailyItem.status=='0','doing':dailyItem.status=='1','done':dailyItem.status=='2',}">{{dailyItem.buttonText}}</div>
+                        </div>
+                        <div v-if="dailyItem.signCardText" class="task-btn-text">
+                            <div>{{dailyItem.signCardText}}</div>
                         </div>
                     </div>
                 </div>
@@ -56,7 +116,7 @@
                                     <div>
                                         <div>
                                             <img src="../../assets/images/task/yuanbao_xiao@2x.png">
-                                            <div>+{{meansSonItem.reawrdNum}}</div>
+                                            <div>+{{meansSonItem.rewardNum}}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -85,75 +145,90 @@ export default {
     data() {
         return {
             count:0,
+            hasDaliyTask:true, // 是否有每日任务
+            hasNewTask:true, // 是否有新手任务
             daliyTaskList:[
                 {
-                    // taskNeedSum:'3',
-                    // taskNowSum:'1',
-                    taskHeadImgUrl:require("../../assets/images/task/daka@2x.png"),
-                    miniTagList:[
+                    taskNeedSum:'1',
+                    taskNowSum:'1',
+                    headImg:require("../../assets/images/task/daka@2x.png"),
+                    miniTags:[
                         "https://test-live-ol-cdn.log56.com/nsq/header/20200401/d6a323f7-1665-4b3d-8370-926ae7b80ece.jpg",
                     ],
                     status:'0',
-                    viewCount:'2.5W人已观看',
-                    taskNote:'一分钟了解打卡',
+                    signCardText:'2.5W人已观看',
+                    note:'一分钟了解打卡',
                     taskName:'打卡',
-                    reawrdNum:'50',
-                    taskAction:'去完成'
+                    rewardNum:'50',
+                    buttonText:'去完成'
                 },
                  {
                     // taskNeedSum:'3',
                     // taskNowSum:'1',
-                    taskHeadImgUrl:require("../../assets/images/task/daka@2x.png"),
+                    headImg:require("../../assets/images/task/daka@2x.png"),
                     status:'0',
-                    // viewCount:'2.5W人已观看',
-                    // taskNote:'一分钟了解打卡',
+                    // signCardText:'2.5W人已观看',
+                    // note:'一分钟了解打卡',
                     taskName:'完善个人资料',
-                    reawrdNum:'20',
-                    taskAction:'去完善',
+                    rewardNum:'20',
+                    buttonText:'去完善',
                     meansSonTasks:[
                         {taskStatus:'0',//0 未完成  1 已完成  2 已领取奖励
                         taskName:'个人信息',
-                        reawrdNum:'20'},
+                        rewardNum:'20'},
                          {taskStatus:'1',//0 未完成  1 已完成  2 已领取奖励
                         taskName:'车辆信息',
-                        reawrdNum:'20'},
+                        rewardNum:'20'},
                          {taskStatus:'0',//0 未完成  1 已完成  2 已领取奖励
                         taskName:'运输经验',
-                        reawrdNum:'20'},
+                        rewardNum:'20'},
                     ]
                 },
                 {
                     taskNeedSum:'3',
                     taskNowSum:'1',
-                    taskHeadImgUrl:require("../../assets/images/task/daka@2x.png"),
+                    headImg:require("../../assets/images/task/daka@2x.png"),
                     status:'0',
-                    viewCount:'',
+                    signCardText:'',
                     taskName:'转发文章',
-                    reawrdNum:'20',
-                    taskAction:'去转发'
+                    rewardNum:'20',
+                    buttonText:'去转发'
                 }, {
                     taskNeedSum:'3',
                     taskNowSum:'1',
-                    taskHeadImgUrl:require("../../assets/images/task/daka@2x.png"),
+                    headImg:require("../../assets/images/task/daka@2x.png"),
                     status:'0',
-                    viewCount:'',
+                    signCardText:'',
                     taskName:'点赞文章',
-                    reawrdNum:'20',
-                    taskAction:'去点赞'
+                    rewardNum:'20',
+                    buttonText:'去点赞'
                 } ,{
                     taskNeedSum:'3',
                     taskNowSum:'1',
-                    taskHeadImgUrl:require("../../assets/images/task/daka@2x.png"),
+                    headImg:require("../../assets/images/task/daka@2x.png"),
                     status:'0',
-                    viewCount:'',
+                    signCardText:'',
                     taskName:'评论文章',
-                    reawrdNum:'20',
-                    taskAction:'去评论'
+                    rewardNum:'20',
+                    buttonText:'去评论'
                 }
-            ]
+            ],
+            newTaskList:[]
         }
     },
-    created() {},
+    created() {
+        
+        console.log('created');
+       
+    },
+    mounted() {
+        this.initNewTaskListData();
+        this.initDaliyTaskListData();
+         window['AppJSApi_BackH5TaskTabClick'] = (_json) => {
+            console.log("客户端返回的任务Tab点击通知>>",_json);
+            this.initDaliyTaskListData();
+        }
+    },
     methods: {
         goVideoList(){  //新手任务挑战
     //      this.$router.push({
@@ -164,7 +239,81 @@ export default {
         },
         refresh(type){
             AppJsBridge.setClientRefresh(type);
-        }
+        },
+        // 新手任务接口
+        initNewTaskListData() {
+            console.log('-------------initNewTaskListData-------------');
+            AppJsBridge.initSignData({}, 954008, param => {
+                this.$http({
+                apiType: "2",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                url: "/gateway.do",
+                data: param
+                })
+                .then(res => {
+                    console.log(33333333333333);
+                    // console.log(res);
+                    if (res.reCode === "0") {
+                        console.log(22222222222);
+                        console.log(res.result.length);
+                        // alert(res.result.length)
+                        if(res.result.length>0){
+                            this.newTaskList=res.result;
+                            console.log(111111111111111111111111111);
+                            
+                            console.log(this.newTaskList);
+                            
+                        }
+                    } else {
+                    this.$toast(res.reInfo);
+                    }
+                })
+                .catch(e => {
+                    console.log(e);
+                });
+            });
+        },
+        // 每日任务接口
+        initDaliyTaskListData() {
+            AppJsBridge.initSignData({}, 954005, param => {
+                this.$http({
+                apiType: "2",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                url: "/gateway.do",
+                data: param
+                })
+                .then(res => {
+                    console.log(res);
+                    if (res.reCode == "0") {
+                        if(res.result.taskList && res.result.taskList.length > 0){
+                            this.daliyTaskList=res.result.taskList;
+                        }else{
+
+                        }
+                    } else {
+                    this.$toast(res.reInfo);
+                    }
+                })
+                .catch(e => {
+                    console.log(e);
+                });
+            });
+        },
+        // 跳转
+        clickUrl(url){
+            if(url=='refresh'){
+                // 跳转刷一刷tab
+                AppJsBridge.appBackMainTab('REFRESH');
+            }else if(url=='video'){
+                AppJsBridge.goVideoTopicDetail('1202017');
+            }else{
+                window.location.href=url+"?&NEW_WVW_HYB";
+            }
+        },
     },
 }
 </script>
@@ -338,35 +487,35 @@ export default {
                 margin: 0 auto 4px;
             }
         }
-        .line-box{
-            position: relative;
-            .line{
-                .center();
-                width:100%;
-                height:0.125rem;
-                background:rgba(232,232,232,1);
-                border-radius:0.0625rem;
-                z-index: 0;
-            }
-            .short-line{
-                // width:0.625rem;
-            }
-            .short-a{
-                left:-0.375rem;
-            }
-            .short-b{
-                right: 0.25rem;
-            }
-            .long-line{
-                // width:5.3125rem;
-            }
-            .long-a{
-                left: -2.625rem;
-            }
-            .long-b{
-                right: -109px;
-            }
-        }
+        // .line-box{
+        //     position: relative;
+        //     .line{
+        //         .center();
+        //         width:100%;
+        //         height:0.125rem;
+        //         background:rgba(232,232,232,1);
+        //         border-radius:0.0625rem;
+        //         z-index: 0;
+        //     }
+        //     .short-line{
+        //         // width:0.625rem;
+        //     }
+        //     .short-a{
+        //         left:-0.375rem;
+        //     }
+        //     .short-b{
+        //         right: 0.25rem;
+        //     }
+        //     .long-line{
+        //         // width:5.3125rem;
+        //     }
+        //     .long-a{
+        //         left: -2.625rem;
+        //     }
+        //     .long-b{
+        //         right: -109px;
+        //     }
+        // }
         .new-task-status-to{
             width:46px;
             height:46px;
@@ -374,6 +523,7 @@ export default {
             border:1px solid rgba(232,232,232,1);
             border-radius:50%;
             box-sizing: border-box;
+            margin: 0 auto;
             .space-flex();
             &>div{
                 width:42px;
@@ -398,6 +548,7 @@ export default {
             height: 46px;
             background: rgba(134,233,204,1);
             border-radius: 50%;
+            margin: 0 auto;
             .space-flex();
             &>div{
                 width: 42px;

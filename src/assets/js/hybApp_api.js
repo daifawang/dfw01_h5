@@ -171,7 +171,7 @@ let AppJsBridge = {
             }else if(typeof(window.webkit) !== 'undefined'){
                 window.webkit.messageHandlers.signRequestBody.postMessage(_json);
                 window.AppJSApi_BackSignRequestBody=(signData) => {
-                    console.log('AppJSApi_BackSignRequestBody>>'+signData);
+                    // console.log('AppJSApi_BackSignRequestBody>>'+signData);
                     param = JSON.parse(decodeURI(signData));
                     if( typeof callback === 'function' ){
                         callback(param);
@@ -199,6 +199,27 @@ let AppJsBridge = {
             console.log(JSON.stringify(error));
         }
     },
+    //【JS2043】h5消息页点击视频贴的评论、回复消息，拉起原生的视频详情界面 --- 任务跳转刷一刷视频详情
+    goVideoTopicDetail(tid){
+        console.log('【JS2043】h5消息页点击视频贴的评论、回复消息，拉起原生的视频详情界面');
+        let _json= JSON.stringify({
+            'topicsId':tid,
+            // 'commentId':"",
+            // 'replyId':""
+        });
+        console.log(_json);
+        try {
+            if(typeof(AndroidAppGoodsJs) != 'undefined'){
+                console.log('--Android--进入goVideoTopicDetail--任务跳转刷一刷视频详情--');
+                AndroidAppCommonJs.goVideoTopicDetail(_json)
+            }else if(typeof(window.webkit) !== 'undefined'){
+                console.log('--ios--进入goVideoTopicDetail--任务跳转刷一刷视频详情--');
+                window.webkit.messageHandlers.goVideoTopicDetail.postMessage(_json);  
+            }
+        } catch (error) {
+            console.log(JSON.stringify(error));
+        }
+    }
 }
 export {
     AppJsBridge,
