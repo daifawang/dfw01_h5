@@ -104,6 +104,7 @@
               </div>
             </div>
           </div>
+          <div class="clear-float"></div>
           <div class="right-bttn" :class="{guideQuan2:showGuide === 5}">
             <span class="bttn-span" @click="getCurrency('10')">领取元宝</span>
           </div>
@@ -166,6 +167,7 @@
               </div>
             </div>
           </div>
+          <div class="clear-float"></div>
           <div class="right-bttn" @click="getStoreInfo()">
             <span class="bttn-span">取数据</span>
           </div>
@@ -182,6 +184,7 @@
               </div>
             </div>
           </div>
+          <div class="clear-float"></div>
           <div class="right-bttn" @click="getStoreInfo()">
             <span class="bttn-span">取数据</span>
           </div>
@@ -198,6 +201,7 @@
               </div>
             </div>
           </div>
+          <div class="clear-float"></div>
           <div class="right-bttn" @click="getStoreInfo()">
             <span class="bttn-span">取数据</span>
           </div>
@@ -214,6 +218,7 @@
               </div>
             </div>
           </div>
+          <div class="clear-float"></div>
           <div class="right-bttn" @click="getStoreInfo()">
             <span class="bttn-span">取数据</span>
           </div>
