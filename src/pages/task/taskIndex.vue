@@ -325,7 +325,7 @@ export default {
         window['AppJSApi_BackH5TaskTabClick'] = (_json) => {
             console.log("客户端返回的任务Tab点击通知>>",_json);
         }
-      }, 1000)
+      }, 100000)
 
     },
     methods:{
@@ -482,6 +482,12 @@ export default {
 }
 .wapperTask .van-skeleton {
     margin-top: 1.85rem;
+}
+.wapperTask .van-skeleton__title {
+    height: 20px;
+}
+.wapperTask .van-skeleton__row {
+    width: 90% !important;
 }
 .clear-float{
   clear: both;
