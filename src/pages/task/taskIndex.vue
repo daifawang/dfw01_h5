@@ -325,7 +325,7 @@ export default {
         window['AppJSApi_BackH5TaskTabClick'] = (_json) => {
             console.log("客户端返回的任务Tab点击通知>>",_json);
         }
-      }, 100000)
+      }, 1000)
 
     },
     methods:{
