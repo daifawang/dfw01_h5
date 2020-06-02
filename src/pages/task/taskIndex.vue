@@ -33,12 +33,13 @@
                 <div class="task-t-name">
                   <span>{{ item.taskName }}</span><img v-for="(item1, index1) in item.miniTagList" :key="index1" :src="item1.tagImgUrl" />
                 </div>
-                <!-- <div class="task-t-note">完善证件信息后可结算运费</div> -->
+                <div v-if="item.taskNote" class="task-t-note">完善证件信息后可结算运费</div>
                 <div class="task-t-currency">
                   <img src="../../assets/images/task/xiaoyuanbao@2x.png" /><span>+{{ item.reawrdNum }}</span>
                 </div>
               </div>
             </div>
+            <div class="clear-float"></div>
             <div v-if="item.taskType === '1'" class="task-li-content">
               <img class="task-comp-img" src="../../assets/images/task/dingyi@2x.png" />
               <div class="task-li-line">{{ item.showScriptOne }}</div>
@@ -54,7 +55,18 @@
               <div class="task-invitecard-bttn">立即查看</div>
               <div class="task-invitecard-company">{{ item.inviteInfo.inviteCompany }}</div>
             </div>
-            <div v-else-if="item.taskType === '3' && item.ykInfo" class="task-li-oilcard">
+            <div v-else-if="item.taskType === '3' && item.businessInfo" class="task-li-business">
+              <img class="task-business-img" :src="item.businessInfo.businessUserImg" />
+              <div class="task-business-right">
+                <div class="business-name">
+                  <span>{{ item.businessInfo.businessUserName }}</span><img :src="item.businessInfo.businessLevel" />
+                </div>
+                <div class="business-company">{{ item.businessInfo.businessCompany }}</div>
+                <div class="business-note-li"><div v-for="(business, b) in item.businessInfo.businessNoteList" :key="b" class="business-note">{{ business }}</div></div>
+              </div>
+              <div class="clear-float"></div>
+            </div>
+            <div v-else-if="item.taskType === '4' && item.ykInfo" class="task-li-oilcard">
               <img class="task-oilcard-img" src="../../assets/images/task/task_oilcard_bg.png" />
               <div class="task-oilcard-last">余额：￥{{ item.ykInfo.lastCount }}</div>
               <div class="task-oilcard-add">最新到账{{ item.ykInfo.onAddCount }}元</div>
@@ -235,7 +247,7 @@ export default {
           },
           exclusiveList:[ //专属任务列表
             {
-              taskId: '11',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '完成接单',
+              taskId: '11',taskHeadImgUrl: 'https://live-ol.log56.com/sq_server_manage/shq/20200430/478c7ae1-945f-423d-8013-9558c30e3a85.jpg',taskName: '完成接单',
               miniTagList: [
                 {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
               ],
@@ -251,6 +263,11 @@ export default {
               showScriptOne: '北京昌平区2⇀上海浦东区1',showScriptTwo: '普货【20吨】',showScriptThree: '1400元【到付】'
             },
             {
+              taskId: '19',taskHeadImgUrl: 'https://live-ol.log56.com/sq_server_manage/shq/20200430/478c7ae1-945f-423d-8013-9558c30e3a85.jpg',taskName: '绑卡收运费',
+              taskNote: '完善证件信息后可结算运费',miniTagList: [],
+              taskType: '5',taskAction: '去绑卡',status: '0',jumpUrl: '',reawrdNum: '5'
+            },
+            {
               taskId: '13',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '升级直属运力',
               miniTagList: [
                 {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
@@ -259,11 +276,22 @@ export default {
               inviteInfo: {inviteUserImg: 'https://live-ol-cdn.log56.com/nsq/header/20191231/788713f0-303e-4d07-9c82-8cdb90909db7.jpg',inviteUserName: '李大全',inviteCompany: '招商成都物流分公司'}
             },
             {
-              taskId: '14',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '使用电子油卡',
+              taskId: '14',taskHeadImgUrl: 'https://live-ol.log56.com/sq_server_manage/shq/20200430/478c7ae1-945f-423d-8013-9558c30e3a85.jpg',taskName: '发展生意人脉',
               miniTagList: [
                 {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
               ],
-              taskType: '3',taskAction: '去使用',status: '0',jumpUrl: '',reawrdNum: '5',
+              taskType: '3',taskAction: '去发展',status: '0',jumpUrl: '',reawrdNum: '5',
+              businessInfo: {
+                businessUserImg: 'https://live-ol-cdn.log56.com/nsq/header/20191231/788713f0-303e-4d07-9c82-8cdb90909db7.jpg',businessUserName: '王大全',businessCompany: '招商成都物流分公司',
+                businessLevel: 'http://kydd.log56.com/sq_server/images/guidance_bg.png',businessNoteList: ['合作过：1单/10,000元','1个共同人脉']
+              }
+            },
+            {
+              taskId: '15',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '使用电子油卡',
+              miniTagList: [
+                {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
+              ],
+              taskType: '4',taskAction: '去使用',status: '0',jumpUrl: '',reawrdNum: '5',
               ykInfo: {onAddCount: '2600',lastCount: '6100'}
             }
           ],
@@ -436,10 +464,12 @@ export default {
   min-height: 100vh;
   background-color: #E8E8E8;
   overflow: scroll;
-  // -webkit-overflow-scrolling: touch;  
 }
 .wapperTask .van-skeleton {
     margin-top: 1.85rem;
+}
+.clear-float{
+  clear: both;
 }
 .taskFade-enter-active {
   transition: all .3s ease;
@@ -594,7 +624,7 @@ export default {
     background: rgba(251,251,251,1);
     font-size: 1.1875rem;
     font-family: Source Han Sans SC;
-    font-weight: 500;
+    font-weight: 600;
     color: rgba(0,0,0,1);
   }
   .task-li {
@@ -605,11 +635,11 @@ export default {
     transition: all 1s;
     .task-li-t {
       position: relative;
-      overflow: hidden;
       .task-t-icon {
         display: block;
         width: 1.625rem;
-        height: auto;
+        height: 1.625rem;
+        border-radius:.25rem;
         float: left;
       }
       .task-t-div {
@@ -620,9 +650,9 @@ export default {
         .task-t-name {
           font-size: 1.125rem;
           font-family: Source Han Sans SC;
-          font-weight: 500;
+          font-weight: 600;
           color: rgba(0,0,0,1);
-          line-height: 0;
+          line-height: 1.25rem;
           img {
             height: 1.0625rem;
             width: 1.8125rem;
@@ -633,16 +663,17 @@ export default {
         }
         .task-t-note {
           position: relative;
-          top: 0.375rem;
+          top: 0.15rem;
           font-size: 1rem;
           font-family: Source Han Sans SC;
           font-weight: 400;
           color: rgba(108,108,108,1);
+          line-height: 1.625rem;
         }
         .task-t-currency {
           position: relative;
-          top: .375rem;
-          line-height: 1.375rem;
+          top: .325rem;
+          line-height: 1.25rem;
           img {
             width: 1.3125rem;
             height: auto;
@@ -822,16 +853,75 @@ export default {
       .task-invitecard-company {
         position: absolute;
         right: 0.75rem;
-        bottom: 1.75rem;
+        bottom: 1.875rem;
         clear: both;
-        height: 1.38rem;
-        line-height: 1.365rem;
+        height: 1.3rem;
+        line-height: 1.285rem;
         transform: rotate(-15deg);
-        font-size: .75rem;
-        color: #A9313A;
-        padding: 0 .225rem;
-        border: .1rem solid #A9313A;
-        outline: .165rem solid rgb(221, 128, 131);
+        font-size: .6875rem;
+        color: #A93539;
+        padding: 0 0.225rem;
+        border: 0.0765rem solid #A93539;
+        box-shadow: 0 0 0 0.0625rem #e2bcbc, 0 0 0 0.1rem #A93539;
+      }
+    }
+    .task-li-business {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      margin-top: 1.1875rem;
+      .task-business-img {
+        display: block;
+        float: left;
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: .3125rem;
+      }
+      .task-business-right {
+        position: relative;
+        float: left;
+        left: 0.5625rem;
+        top: -0.25rem;
+        .business-name {
+          font-size: 1rem;
+          font-family: Source Han Sans SC;
+          font-weight: 400;
+          color: rgba(0,0,0,1);
+          img {
+            width: 2.5rem;
+            height: 1.125rem;
+            position: relative;
+            left: 0.3125rem;
+            top: 0.1875rem;
+          }
+        }
+        .business-company {
+          font-size: .9375rem;
+          font-family: Source Han Sans SC;
+          font-weight: 400;
+          color: rgba(107,107,107,1);
+          line-height: 1.5625rem;
+          margin-bottom: .25rem;
+        }
+        .business-note-li{
+          .business-note {
+            font-size: .8125rem;
+            font-family: Source Han Sans SC;
+            font-weight: 500;
+            color: rgba(205,161,103,1);
+            height: 1.125rem;
+            line-height: 1.0625rem;
+            background: rgba(255,255,255,1);
+            border: .0625rem solid rgba(205,161,103,1);
+            border-radius: .5rem;
+            display: table;
+            position: relative;
+            padding: 0 .3125rem;
+            &:nth-child(n+2){
+              margin-top: .5rem;
+            }
+          }
+        }
       }
     }
     // &:after {
