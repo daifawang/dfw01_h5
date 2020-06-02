@@ -8,6 +8,7 @@
     "build": "vue-cli-service build --mode testing",
     "prepub": "vue-cli-service build --mode prepub",
     "publish": "vue-cli-service build --mode production",
+    "build:cicd": "node build_cicd.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -33,6 +34,7 @@
     "eslint-plugin-vue": "^5.0.0",
     "less": "^3.11.1",
     "less-loader": "^6.1.0",
+    "minimist": "^1.2.5",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",
     "vue-template-compiler": "^2.6.10",
