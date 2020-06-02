@@ -73,7 +73,7 @@
             </div>
             <div v-if="item.status === '2' && showFirstGetCury" @click="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
             <div class="right-bttn" ref="guideFour" :class="{guideQuan2:showGuide === 4 && index === 0}">
-              <span v-if="item.status === '0' || item.status === '1'" class="bttn-span" @click="goTaskUrl(item.jumpUrl)">{{ item.taskAction }}</span>
+              <span v-if="item.status === '0' || item.status === '1'" class="bttn-span" @click="goTaskUrl(index,item.jumpUrl)">{{ item.taskAction }}</span>
               <span v-else-if="item.status === '2'" class="bttn-span bttn-success" @click="getCurrency('1',index,'10')">领取元宝</span>
             </div>
             <div v-if="showGuide === 4 && index === 0" class="right-bttn-guide" >
@@ -277,7 +277,7 @@ export default {
               miniTagList: [
                 {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
               ],
-              taskType: '2',taskAction: '立即查看',status: '0',jumpUrl: '',reawrdNum: '8',
+              taskType: '2',taskAction: '立即查看',status: '0',jumpUrl: '-1',reawrdNum: '8',
               inviteInfo: {inviteUserImg: 'https://live-ol-cdn.log56.com/nsq/header/20191231/788713f0-303e-4d07-9c82-8cdb90909db7.jpg',inviteUserName: '李大全',inviteCompany: '招商成都物流分公司'}
             },
             {
@@ -310,6 +310,7 @@ export default {
     },
     mounted() {
       setTimeout(() => {
+        AppJsBridge.setClientRefresh('1'); //开启下拉刷新
         AppJsBridge.getStoreInfo('TASK_GUIDE_KEY');
         AppJsBridge.getStoreInfo('TASK_GETCURY_KEY');
         this.loadingFlag1 = this.exclusiveList.length > 0 ? false : true;
@@ -410,7 +411,16 @@ export default {
         this.showFirstGetCury = false;
         AppJsBridge.storeInfo('TASK_GETCURY_KEY','1');
       },
-      goTaskUrl(jump_url){
+      goTaskUrl(index,jump_url){
+        if(this.showGuide && this.showGuide >0){
+          return;
+        }
+        if(jump_url === '-1'){
+          let _obj = this.exclusiveList[index];
+          this.exclusiveList.splice(index, 1);
+          this.exclusiveList.push(_obj);
+          return;
+        }
         this.$toast({
           position: 'top',
           message: jump_url,
@@ -636,8 +646,10 @@ export default {
     padding: 1.1875rem 0.875rem 1.1875rem 0;
     margin-left: 0.875rem;
     position: relative;
-    border-bottom: .0625rem solid #E8E8E8;
     transition: all 1s;
+    &:nth-last-child(n+2) { 
+      border-bottom: .0625rem solid #E8E8E8;
+    }
     .task-li-t {
       position: relative;
       .task-t-icon {
