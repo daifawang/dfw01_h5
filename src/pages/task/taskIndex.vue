@@ -339,10 +339,12 @@ export default {
   created() {
     document.title = '任务';
     //本地模拟数据测试用：----部署时候删除--☆☆☆☆☆☆☆----
-    this.loadingFlag1 = false;
-    this.loadingFlag2 = false;
-    this.loadingFlag3 = false;
-    this.exclusiveList = this.exclusiveList1;
+    if(process.env.VUE_APP_ENV === 'development'){
+      this.loadingFlag1 = false;
+      this.loadingFlag2 = false;
+      this.loadingFlag3 = false;
+      this.exclusiveList = this.exclusiveList1;
+    }
     //本地模拟数据测试用：----部署时候删除--☆☆☆☆☆☆☆----
   },
   mounted() {
