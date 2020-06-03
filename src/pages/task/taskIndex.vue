@@ -290,7 +290,7 @@ export default {
       ],
       exclusiveList:[ //专属任务列表
       ],
-      daliyTaskList:[],
+      daliyTaskList:[],//每日任务列表
       newTaskList1:[
         {
           taskNeedSum:'1',
@@ -330,8 +330,8 @@ export default {
               rewardNum:'20'},
           ]
         }
-      ],
-      newTaskList:[],
+      ],//新手任务列表-本地测试用
+      newTaskList:[],//新手任务列表
       hasDaliyTask:true, // 是否有每日任务
       hasNewTask:true, // 是否有新手任务
     }
