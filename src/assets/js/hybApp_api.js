@@ -244,6 +244,22 @@ let AppJsBridge = {
             console.log(JSON.stringify(error));
         }
     },
+    // 【JS2055】检查更新app版本
+    checkAppVersion(type){
+        // 处理接口recode返回5:type传值1。 0 检查新版本 1 获取升级信息
+        console.log('【JS2056】弹出登录界面');
+        let _json= JSON.stringify({ "type":info});
+        console.log(_json);
+        try {
+            if(typeof(AndroidAppGoodsJs) != 'undefined'){
+                AndroidAppCommonJs.checkAppVersionInfo(json)(_json)
+            }else if(typeof(window.webkit) !== 'undefined'){
+                window.webkit.messageHandlers.checkAppVersionInfo.postMessage(_json);  
+            }
+        } catch (error) {
+            console.log(JSON.stringify(error));
+        }
+    },
 }
 export {
     AppJsBridge,
