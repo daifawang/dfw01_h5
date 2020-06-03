@@ -483,6 +483,12 @@ export default {
 .wapperTask .van-skeleton {
     margin-top: 1.85rem;
 }
+.wapperTask .van-skeleton__title {
+    height: 1.25rem;
+}
+.wapperTask .van-skeleton__row {
+    width: 90% !important;
+}
 .clear-float{
   clear: both;
 }
@@ -709,7 +715,7 @@ export default {
     .sj-tag{
       width: 8.375rem;
       height: 1.625rem;
-      line-height: 1.5625rem;
+      line-height: 1.5825rem;
       position: absolute;
       right: 0.875rem;
       top: -0.85rem;
@@ -873,7 +879,7 @@ export default {
         bottom: 1.875rem;
         clear: both;
         height: 1.3rem;
-        line-height: 1.285rem;
+        line-height: 1.29rem;
         transform: rotate(-15deg);
         font-size: .6875rem;
         color: #A93539;
@@ -927,7 +933,7 @@ export default {
             font-weight: 500;
             color: rgba(205,161,103,1);
             height: 1.125rem;
-            line-height: 1.0625rem;
+            line-height: 1.115rem;
             background: rgba(255,255,255,1);
             border: .0625rem solid rgba(205,161,103,1);
             border-radius: .5rem;
@@ -941,18 +947,6 @@ export default {
         }
       }
     }
-    // &:after {
-    //   content: "";
-    //   position: absolute;
-    //   bottom: 0;
-    //   background: #E8E8E8;
-    //   width: 100%;
-    //   height: .0625rem;
-    //   -webkit-transform: scaleY(0.5);
-    //   transform: scaleY(0.5);
-    //   -webkit-transform-origin: 0 0;
-    //   transform-origin: 0 0;
-    // }
   }
   .guideLi{
     overflow: initial;
