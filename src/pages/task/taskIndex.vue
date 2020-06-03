@@ -91,73 +91,73 @@
     <van-skeleton title avatar :row="3" avatar-shape="square" :loading="loadingFlag2">
       <div ref="newComer" class="task-main">
        <div class="tasks-title task-title-new" >新手任务
-            <div @click="goVideoList">
-                <img class="task-title-new-icon1" src="../../assets/images/task/xinshou@2x.png"> 新手攻略
-                <img class="task-title-new-icon2" src="../../assets/images/task/jiantou_you@2x.png">
-            </div>
+          <div @click="goVideoList">
+            <img class="task-title-new-icon1" src="../../assets/images/task/xinshou@2x.png"> 新手攻略
+            <img class="task-title-new-icon2" src="../../assets/images/task/jiantou_you@2x.png">
+          </div>
         </div>
-         <div class="task-wrapper" v-if="newTaskList && newTaskList.length>0">
-            <div class="task-wrapper-div" v-for="(newItem,index) in newTaskList" :key="index">
-                <div class="task-box">
-                    <div class="task-icon">
-                        <!-- <img :src="newItem.headImg"> -->
+        <div class="task-wrapper" v-if="newTaskList && newTaskList.length>0">
+          <div class="task-wrapper-div" v-for="(newItem,index) in newTaskList" :key="index">
+            <div class="task-box">
+              <div class="task-icon">
+                <!-- <img :src="newItem.headImg"> -->
+              </div>
+              <div class="tasks-main">
+                <div class="task-main-title">
+                  <div>{{newItem.taskName}}</div>
+                  <div v-if="newItem.miniTagList">
+                    <div v-for="(miniTagItem,index) in newItem.miniTagList" :key="index" class="task-main-tag">
+                      <img  :src="miniTagItem">
                     </div>
-                    <div class="tasks-main">
-                        <div class="task-main-title">
-                            <div>{{newItem.taskName}}</div>
-                            <div v-if="newItem.miniTagList">
-                                <div v-for="(miniTagItem,index) in newItem.miniTagList" :key="index" class="task-main-tag">
-                                    <img  :src="miniTagItem">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="task-main-info" v-if="newItem.note">{{newItem.note}}</div>
-                        <div class="task-main-desc">
-                            <img src="../../assets/images/task/xiaoyuanbao@2x.png">
-                            <div class="task-main-desc-num">+{{newItem.rewardNum}}</div>
-                            <div v-if="newItem.taskNeedSum > 1" class="task-main-desc-text">
-                                <span>已完成</span>
-                                <span :class="{'red-font':Number(newItem.taskNowSum) > 0}">{{newItem.taskNowSum}}</span><span>/{{newItem.taskNeedSum}}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="task-btn-div">
-                        <div class="task-btn">
-                            <div :class="{'to-do':newItem.status=='0','doing':newItem.status=='1','done':newItem.status=='2',}">{{newItem.taskAction}}</div>
-                        </div>
-                        <div v-if="newItem.signCardText" class="task-btn-text">
-                            <div>{{newItem.signCardText}}</div>
-                        </div>
-                    </div>
+                  </div>
                 </div>
-                <div v-if="newItem.meansSonTasks">
-                    <div class="new-task-card">
-                        <div v-for="(meansSonItem,index) in newItem.meansSonTasks" :key="index" >
-                            <div class="line-box">
-                                <div v-if="meansSonItem.taskStatus == '0'" class="new-task-status-to">
-                                    <div>
-                                        <div>
-                                            <img src="../../assets/images/task/yuanbao_xiao@2x.png">
-                                            <div>+{{meansSonItem.rewardNum}}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div v-else class="new-task-status-done">
-                                    <div>
-                                        <img src="../../assets/images/task/wancheng.png">
-                                    </div>
-                                </div>
-                                <div v-if="index==0" class="short-line line short-a" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
-                                <div v-if="index==1" class="long-line line long-a" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
-                                <div v-if="index==1" class="long-line line long-b" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
-                                <div v-if="index==2 && meansSonItem.taskStatus>='1'" class="long-line line long-c" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
-                                <div v-if="index==2" class="short-line line short-b" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
-                            </div>
-                            <div>{{meansSonItem.taskName}}</div>
-                        </div>
-                    </div>
+                <div class="task-main-info" v-if="newItem.note">{{newItem.note}}</div>
+                <div class="task-main-desc">
+                  <img src="../../assets/images/task/xiaoyuanbao@2x.png">
+                  <div class="task-main-desc-num">+{{newItem.rewardNum}}</div>
+                  <div v-if="newItem.taskNeedSum > 1" class="task-main-desc-text">
+                    <span>已完成</span>
+                    <span :class="{'red-font':Number(newItem.taskNowSum) > 0}">{{newItem.taskNowSum}}</span><span>/{{newItem.taskNeedSum}}</span>
+                  </div>
                 </div>
+              </div>
+              <div class="task-btn-div">
+                <div class="task-btn">
+                  <div :class="{'to-do':newItem.status=='0','doing':newItem.status=='1','done':newItem.status=='2',}">{{newItem.taskAction}}</div>
+                </div>
+                <div v-if="newItem.signCardText" class="task-btn-text">
+                  <div>{{newItem.signCardText}}</div>
+                </div>
+              </div>
             </div>
+            <div v-if="newItem.meansSonTasks">
+              <div class="new-task-card">
+                <div v-for="(meansSonItem,index) in newItem.meansSonTasks" :key="index" >
+                  <div class="line-box">
+                    <div v-if="meansSonItem.taskStatus == '0'" class="new-task-status-to">
+                      <div>
+                        <div>
+                          <img src="../../assets/images/task/yuanbao_xiao@2x.png">
+                          <div>+{{meansSonItem.rewardNum}}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div v-else class="new-task-status-done">
+                      <div>
+                        <img src="../../assets/images/task/wancheng.png">
+                      </div>
+                    </div>
+                    <div v-if="index==0" class="short-line line short-a" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
+                    <div v-if="index==1" class="long-line line long-a" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
+                    <div v-if="index==1" class="long-line line long-b" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
+                    <div v-if="index==2 && meansSonItem.taskStatus>='1'" class="long-line line long-c" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
+                    <div v-if="index==2" class="short-line line short-b" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
+                  </div>
+                  <div>{{meansSonItem.taskName}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </van-skeleton>
@@ -165,42 +165,42 @@
       <div class="task-main">
         <div class="tasks-title">每日任务</div>
         <div class="task-wrapper">
-            <transition-group appear name="taskList" tag="div">
-            <div class="task-wrapper-div" v-for="(dailyItem,index) in daliyTaskList" :key="dailyItem.taskId" @click="clickUrl(index,dailyItem.jumpUrl)">
-                <div class="task-box">
-                    <div class="task-icon">
-                        <!-- <img :src="dailyItem.headImg"> -->
-                    </div>
-                    <div class="tasks-main">
-                        <div class="task-main-title">
-                            <div>{{dailyItem.taskName}}</div>
-                            <div v-if="dailyItem.miniTagList">
-                                <div v-for="(miniTagItem,index) in dailyItem.miniTags" :key="index" class="task-main-tag">
-                                    <img  :src="miniTagItem">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="task-main-info" v-if="dailyItem.note">{{dailyItem.note}}</div>
-                        <div class="task-main-desc">
-                            <img src="../../assets/images/task/xiaoyuanbao@2x.png">
-                            <div class="task-main-desc-num">+{{dailyItem.rewardNum}}</div>
-                            <div v-if="dailyItem.taskNeedSum > 1" class="task-main-desc-text">
-                                <span>已完成</span>
-                                <span :class="{'red-font':Number(dailyItem.taskNowSum) > 0}">{{dailyItem.taskNowSum}}</span><span>/{{dailyItem.taskNeedSum}}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="task-btn-div">
-                        <div class="task-btn">
-                            <div :class="{'to-do':dailyItem.status=='1','doing':dailyItem.status=='2','done':dailyItem.status=='3',}">{{dailyItem.buttonText}}</div>
-                        </div>
-                        <div v-if="dailyItem.signCardText" class="task-btn-text">
-                            <div>{{dailyItem.signCardText}}</div>
-                        </div>
+          <transition-group appear name="taskList" tag="div">
+          <div class="task-wrapper-div" v-for="(dailyItem,index) in daliyTaskList" :key="dailyItem.taskId" @click="clickUrl(index,dailyItem.jumpUrl)">
+            <div class="task-box">
+              <div class="task-icon">
+                <!-- <img :src="dailyItem.headImg"> -->
+              </div>
+              <div class="tasks-main">
+                <div class="task-main-title">
+                    <div>{{dailyItem.taskName}}</div>
+                    <div v-if="dailyItem.miniTagList">
+                      <div v-for="(miniTagItem,index) in dailyItem.miniTags" :key="index" class="task-main-tag">
+                        <img  :src="miniTagItem">
+                      </div>
                     </div>
                 </div>
+                <div class="task-main-info" v-if="dailyItem.note">{{dailyItem.note}}</div>
+                <div class="task-main-desc">
+                    <img src="../../assets/images/task/xiaoyuanbao@2x.png">
+                    <div class="task-main-desc-num">+{{dailyItem.rewardNum}}</div>
+                    <div v-if="dailyItem.taskNeedSum > 1" class="task-main-desc-text">
+                      <span>已完成</span>
+                      <span :class="{'red-font':Number(dailyItem.taskNowSum) > 0}">{{dailyItem.taskNowSum}}</span><span>/{{dailyItem.taskNeedSum}}</span>
+                    </div>
+                </div>
+              </div>
+              <div class="task-btn-div">
+                <div class="task-btn">
+                  <div :class="{'to-do':dailyItem.status=='1','doing':dailyItem.status=='2','done':dailyItem.status=='3',}">{{dailyItem.buttonText}}</div>
+                </div>
+                <div v-if="dailyItem.signCardText" class="task-btn-text">
+                  <div>{{dailyItem.signCardText}}</div>
+                </div>
+              </div>
             </div>
-            </transition-group>
+          </div>
+          </transition-group>
         </div>
       </div>
     </van-skeleton>
@@ -211,362 +211,360 @@
 import Const from "@/assets/js/const" 
 import { AppJsBridge, hybappObj } from "@/assets/js/hybApp_api.js";
 export default {
-    name: "taskIndex",
-    data() {
-        return {
-          loadingFlag1: true,
-          loadingFlag2: true,
-          loadingFlag3: true,
-          showGuide: '', //是否显示引导页
-          showFirstGetCury: false, //是否有领取过元宝
-          clientWid: document.documentElement.clientWidth,
-          show_exclusiveList: true,
-          guideObj: {
-            text: '关于任务，你想了解的都在这里，快去看看吧！',
-            guidePosition: {
-              top: 'initial',
-              bottom:'initial',
-              left: '0'
-            }
-          },
-          exclusiveList:[ //专属任务列表
-            {
-              taskId: '11',taskHeadImgUrl: 'https://live-ol.log56.com/sq_server_manage/shq/20200430/478c7ae1-945f-423d-8013-9558c30e3a85.jpg',taskName: '完成接单',
-              miniTagList: [
-                {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
-              ],
-              taskType: '1',taskAction: '去接单',status: '1',jumpUrl: '',reawrdNum: '6',
-              showScriptOne: '北京昌平区⇀上海浦东',showScriptTwo: '普货【20吨】',showScriptThree: '1800元【到付】'
-            },
-            {
-              taskId: '12',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '货到了，我要运费',
-              miniTagList: [
-                {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
-              ],
-              taskType: '1',taskAction: '去传回单',status: '2',jumpUrl: '',reawrdNum: '10',
-              showScriptOne: '北京昌平区2⇀上海浦东区1',showScriptTwo: '普货【20吨】',showScriptThree: '1400元【到付】'
-            },
-            {
-              taskId: '19',taskHeadImgUrl: 'https://live-ol.log56.com/sq_server_manage/shq/20200430/478c7ae1-945f-423d-8013-9558c30e3a85.jpg',taskName: '绑卡收运费',
-              taskNote: '完善证件信息后可结算运费',miniTagList: [],
-              taskType: '5',taskAction: '去绑卡',status: '0',jumpUrl: '',reawrdNum: '5'
-            },
-            {
-              taskId: '13',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '升级直属运力',
-              miniTagList: [
-                {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
-              ],
-              taskType: '2',taskAction: '立即查看',status: '0',jumpUrl: '-1',reawrdNum: '8',
-              inviteInfo: {inviteUserImg: 'https://live-ol-cdn.log56.com/nsq/header/20191231/788713f0-303e-4d07-9c82-8cdb90909db7.jpg',inviteUserName: '李大全',inviteCompany: '招商成都物流分公司'}
-            },
-            {
-              taskId: '14',taskHeadImgUrl: 'https://live-ol.log56.com/sq_server_manage/shq/20200430/478c7ae1-945f-423d-8013-9558c30e3a85.jpg',taskName: '发展生意人脉',
-              miniTagList: [
-                {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
-              ],
-              taskType: '3',taskAction: '去发展',status: '0',jumpUrl: '',reawrdNum: '5',
-              businessInfo: {
-                businessUserImg: 'https://live-ol-cdn.log56.com/nsq/header/20191231/788713f0-303e-4d07-9c82-8cdb90909db7.jpg',businessUserName: '王大全',businessCompany: '招商成都物流分公司',
-                businessLevel: 'http://kydd.log56.com/sq_server/images/guidance_bg.png',businessNoteList: ['合作过：1单/10,000元','1个共同人脉']
-              }
-            },
-            {
-              taskId: '15',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '使用电子油卡',
-              miniTagList: [
-                {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
-              ],
-              taskType: '4',taskAction: '去使用',status: '0',jumpUrl: '',reawrdNum: '5',
-              ykInfo: {onAddCount: '2600',lastCount: '6100'}
-            }
-          ],
-          tt: Math.floor(Math.random()*10),
-          hasDaliyTask:true, // 是否有每日任务
-        hasNewTask:true, // 是否有新手任务
-            daliyTaskList:[],
-            newTaskList1:[
-                {
-                    taskNeedSum:'1',
-                    taskNowSum:'1',
-                    headImg:require("../../assets/images/task/daka@2x.png"),
-                    miniTags:[
-                        "https://test-live-ol-cdn.log56.com/nsq/header/20200401/d6a323f7-1665-4b3d-8370-926ae7b80ece.jpg",
-                    ],
-                    status:'0',
-                    taskId:'1',
-                    signCardText:'2.5W人已观看',
-                    note:'一分钟了解打卡',
-                    taskName:'打卡',
-                    rewardNum:'50',
-                    buttonText:'去完成'
-                },
-                 {
-                    // taskNeedSum:'3',
-                    // taskNowSum:'1',
-                     taskId:'2',
-                    headImg:require("../../assets/images/task/daka@2x.png"),
-                    status:'0',
-                    // signCardText:'2.5W人已观看',
-                    // note:'一分钟了解打卡',
-                    taskName:'完善个人资料',
-                    rewardNum:'20',
-                    buttonText:'去完善',
-                    meansSonTasks:[
-                        {taskStatus:0,//0 未完成  1 已完成  2 已领取奖励
-                        taskName:'个人信息',
-                        rewardNum:'20'},
-                         {taskStatus:0,//0 未完成  1 已完成  2 已领取奖励
-                        taskName:'车辆信息',
-                        rewardNum:'20'},
-                         {taskStatus:1,//0 未完成  1 已完成  2 已领取奖励
-                        taskName:'运输经验',
-                        rewardNum:'20'},
-                    ]
-                },
-               
-            ],
-            newTaskList:[]
+  name: "taskIndex",
+  data() {
+    return {
+      loadingFlag1: true,
+      loadingFlag2: true,
+      loadingFlag3: true,
+      showGuide: '', //是否显示引导页
+      showFirstGetCury: false, //是否有领取过元宝
+      clientWid: document.documentElement.clientWidth,
+      show_exclusiveList: true,
+      guideObj: {
+        text: '关于任务，你想了解的都在这里，快去看看吧！',
+        guidePosition: {
+          top: 'initial',
+          bottom:'initial',
+          left: '0'
         }
-    },
-    created() {
-      document.title = '任务';
-      // this.initMedth();
-      
-    },
-    mounted() {
-         this.initNewTaskListData();
-        setTimeout(() => {
-            this.initDaliyTaskListData();
-        }, 50);
-      setTimeout(() => {
-        AppJsBridge.setClientRefresh('1'); //开启下拉刷新
-        AppJsBridge.getStoreInfo('TASK_GUIDE_KEY');
-        AppJsBridge.getStoreInfo('TASK_GETCURY_KEY');
-        this.loadingFlag1 = this.exclusiveList.length > 0 ? false : true;
-        this.loadingFlag2 = false;
-        this.loadingFlag3 = false;
-        this.getStoreInfoBack();
-        // 回调获取客户端返回的任务成功信息,taskType：1.专属任务 2.新手任务 3.每日任务
-        window['AppJSApi_BackH5TaskOrdersInfo'] = (_json) => {
-            console.log("客户端返回的任务成功信息>>",JSON.parse(_json));
-        }
-        // 回调获取客户端返回的任务Tab点击通知
-        window['AppJSApi_BackH5TaskTabClick'] = (_json) => {
-            console.log("客户端返回的任务Tab点击通知>>",_json);
-            this.initDaliyTaskListData();
-        }
-      }, 1000)
-
-    },
-    methods:{
-      GoDaily(){
-        window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html?t=${new Date().getTime()}/#/task/dailyTask?&NEW_WVW_HYB`;
       },
-      initMedth(){
-        var _data={
-          'source':'0',
-          'channel':'1'
+      exclusiveList:[ //专属任务列表
+        {
+          taskId: '11',taskHeadImgUrl: 'https://live-ol.log56.com/sq_server_manage/shq/20200430/478c7ae1-945f-423d-8013-9558c30e3a85.jpg',taskName: '完成接单',
+          miniTagList: [
+            {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
+          ],
+          taskType: '1',taskAction: '去接单',status: '1',jumpUrl: '',reawrdNum: '6',
+          showScriptOne: '北京昌平区⇀上海浦东',showScriptTwo: '普货【20吨】',showScriptThree: '1800元【到付】'
+        },
+        {
+          taskId: '12',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '货到了，我要运费',
+          miniTagList: [
+            {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
+          ],
+          taskType: '1',taskAction: '去传回单',status: '2',jumpUrl: '',reawrdNum: '10',
+          showScriptOne: '北京昌平区2⇀上海浦东区1',showScriptTwo: '普货【20吨】',showScriptThree: '1400元【到付】'
+        },
+        {
+          taskId: '19',taskHeadImgUrl: 'https://live-ol.log56.com/sq_server_manage/shq/20200430/478c7ae1-945f-423d-8013-9558c30e3a85.jpg',taskName: '绑卡收运费',
+          taskNote: '完善证件信息后可结算运费',miniTagList: [],
+          taskType: '5',taskAction: '去绑卡',status: '0',jumpUrl: '',reawrdNum: '5'
+        },
+        {
+          taskId: '13',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '升级直属运力',
+          miniTagList: [
+            {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
+          ],
+          taskType: '2',taskAction: '立即查看',status: '0',jumpUrl: '-1',reawrdNum: '8',
+          inviteInfo: {inviteUserImg: 'https://live-ol-cdn.log56.com/nsq/header/20191231/788713f0-303e-4d07-9c82-8cdb90909db7.jpg',inviteUserName: '李大全',inviteCompany: '招商成都物流分公司'}
+        },
+        {
+          taskId: '14',taskHeadImgUrl: 'https://live-ol.log56.com/sq_server_manage/shq/20200430/478c7ae1-945f-423d-8013-9558c30e3a85.jpg',taskName: '发展生意人脉',
+          miniTagList: [
+            {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
+          ],
+          taskType: '3',taskAction: '去发展',status: '0',jumpUrl: '',reawrdNum: '5',
+          businessInfo: {
+            businessUserImg: 'https://live-ol-cdn.log56.com/nsq/header/20191231/788713f0-303e-4d07-9c82-8cdb90909db7.jpg',businessUserName: '王大全',businessCompany: '招商成都物流分公司',
+            businessLevel: 'http://kydd.log56.com/sq_server/images/guidance_bg.png',businessNoteList: ['合作过：1单/10,000元','1个共同人脉']
+          }
+        },
+        {
+          taskId: '15',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '使用电子油卡',
+          miniTagList: [
+            {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
+          ],
+          taskType: '4',taskAction: '去使用',status: '0',jumpUrl: '',reawrdNum: '5',
+          ykInfo: {onAddCount: '2600',lastCount: '6100'}
         }
-        AppJsBridge.initSignData(_data,'954000',function(param){
-          console.log('---param---',param);
-          this.$http({
-              apiType: '2',
-              headers: {
-                  "Content-Type": "application/json"
-              },
-              url: "/gateway.do",
-              data:  param
+      ],
+      tt: Math.floor(Math.random()*10),
+      hasDaliyTask:true, // 是否有每日任务
+      hasNewTask:true, // 是否有新手任务
+      daliyTaskList:[],
+      newTaskList1:[
+        {
+          taskNeedSum:'1',
+          taskNowSum:'1',
+          headImg:require("../../assets/images/task/daka@2x.png"),
+          miniTags:[
+              "https://test-live-ol-cdn.log56.com/nsq/header/20200401/d6a323f7-1665-4b3d-8370-926ae7b80ece.jpg",
+          ],
+          status:'0',
+          taskId:'1',
+          signCardText:'2.5W人已观看',
+          note:'一分钟了解打卡',
+          taskName:'打卡',
+          rewardNum:'50',
+          buttonText:'去完成'
+        },
+        {
+          // taskNeedSum:'3',
+          // taskNowSum:'1',
+            taskId:'2',
+          headImg:require("../../assets/images/task/daka@2x.png"),
+          status:'0',
+          // signCardText:'2.5W人已观看',
+          // note:'一分钟了解打卡',
+          taskName:'完善个人资料',
+          rewardNum:'20',
+          buttonText:'去完善',
+          meansSonTasks:[
+              {taskStatus:0,//0 未完成  1 已完成  2 已领取奖励
+              taskName:'个人信息',
+              rewardNum:'20'},
+                {taskStatus:0,//0 未完成  1 已完成  2 已领取奖励
+              taskName:'车辆信息',
+              rewardNum:'20'},
+                {taskStatus:1,//0 未完成  1 已完成  2 已领取奖励
+              taskName:'运输经验',
+              rewardNum:'20'},
+          ]
+        }
+      ],
+      newTaskList:[]
+    }
+  },
+  created() {
+    document.title = '任务';
+    // this.initMedth();
+    
+  },
+  mounted() {
+        this.initNewTaskListData();
+      setTimeout(() => {
+          this.initDaliyTaskListData();
+      }, 50);
+    setTimeout(() => {
+      AppJsBridge.setClientRefresh('1'); //开启下拉刷新
+      AppJsBridge.getStoreInfo('TASK_GUIDE_KEY');
+      AppJsBridge.getStoreInfo('TASK_GETCURY_KEY');
+      this.loadingFlag1 = this.exclusiveList.length > 0 ? false : true;
+      this.loadingFlag2 = false;
+      this.loadingFlag3 = false;
+      this.getStoreInfoBack();
+      // 回调获取客户端返回的任务成功信息,taskType：1.专属任务 2.新手任务 3.每日任务
+      window['AppJSApi_BackH5TaskOrdersInfo'] = (_json) => {
+          console.log("客户端返回的任务成功信息>>",JSON.parse(_json));
+      }
+      // 回调获取客户端返回的任务Tab点击通知
+      window['AppJSApi_BackH5TaskTabClick'] = (_json) => {
+          console.log("客户端返回的任务Tab点击通知>>",_json);
+          this.initDaliyTaskListData();
+      }
+    }, 1000)
+
+  },
+  methods:{
+    GoDaily(){
+      window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html?t=${new Date().getTime()}/#/task/dailyTask?&NEW_WVW_HYB`;
+    },
+    initMedth(){
+      var _data={
+        'source':'0',
+        'channel':'1'
+      }
+      AppJsBridge.initSignData(_data,'954000',function(param){
+        console.log('---param---',param);
+        this.$http({
+            apiType: '2',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            url: "/gateway.do",
+            data:  param
+          })
+          .then(res => {
+            console.log(res);
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      });
+    },
+    getStoreInfoBack(){
+      // 回调获取客户端返回的H5存储的数据
+      window['AppJSApi_BackH5Data'] = (_json) => {
+        console.log("客户端返回的H5存储的数据>>",JSON.parse(_json));
+        var _data = JSON.parse(_json);
+        if(_data.key === 'TASK_GUIDE_KEY'){
+          if(_data.data === ''){
+            this.showGuide = 1;
+            console.log('tt>>',this.tt);
+            if(this.tt > 2){
+              console.log(this.$refs.newComer.offsetTop);
+              window.scrollTo(0,this.$refs.newComer.offsetTop);
+            }
+            AppJsBridge.guideTask(JSON.stringify({
+              navMaskShow: '1',
+              navBtnEmpty: '0',
+              tabMaskShow: '1',
+              taskTabBtnEmpty: '1'
+            }));
+            this.guideObj.text = '好运宝全新改版！<br/>这里是任务板块，你可以通过完成不同任务 来获取元宝奖励，元宝可用来兑换物品哦~';
+            this.guideObj.guidePosition.top = 'initial';
+            this.guideObj.guidePosition.bottom = '0rem';
+          }
+        }else if(_data.key === 'TASK_GETCURY_KEY'){
+          this.showFirstGetCury = _data.data === '1' ? false : true;
+        }
+      }
+    },
+    getCurrency(type,index,num){
+      if(this.showGuide && this.showGuide >0){
+        return;
+      }
+      var json_str = JSON.stringify({
+        addCount: num,
+        taskId:'1001'
+      })
+      if(typeof(AndroidAppCommonJs)!=='undefined'){
+        AndroidAppCommonJs.openIngotsReceiveDlg(json_str)
+      }else if(typeof(window.webkit) !== 'undefined'){
+        window.webkit.messageHandlers.openIngotsReceiveDlg.postMessage(json_str);
+      }
+      console.log(index);
+      setTimeout(() => {
+        if(type === '1'){
+          this.closeTip();
+          this.exclusiveList.splice(index, 1);
+          if(this.exclusiveList.length === 1){
+            this.show_exclusiveList = false;
+          }
+        }
+      }, 4000)
+    },
+    closeTip(){
+      this.showFirstGetCury = false;
+      AppJsBridge.storeInfo('TASK_GETCURY_KEY','1');
+    },
+    goTaskUrl(index,jump_url){
+      if(this.showGuide && this.showGuide >0){
+        return;
+      }
+      if(jump_url === '-1'){
+        let _obj = this.exclusiveList[index];
+        this.exclusiveList.splice(index, 1);
+        this.exclusiveList.push(_obj);
+        return;
+      }
+      this.$toast({
+        position: 'top',
+        message: jump_url,
+        duration: 1500
+      });
+    },
+    guideTo(num){
+      if(num === 3 && this.tt > 2){
+        num = 5;
+      }
+      this.showGuide = num > 5 ? '' : num;
+      if(num === 2){
+        AppJsBridge.guideTask(JSON.stringify({
+          navMaskShow: '1',
+          navBtnEmpty: '1',
+          tabMaskShow: '1',
+          taskTabBtnEmpty: '0'
+        }));
+        this.guideObj.text = '完成任务领取的元宝在这里~';
+        this.guideObj.text2 = '这里是元宝商城，想了解元宝可以用来做什么，进来看看就知道啦~ ';
+        this.guideObj.guidePosition.top = '0';
+        this.guideObj.guidePosition.marginTop = '1.5rem';
+        this.guideObj.guidePosition.bottom = 'initial';
+      }else if(num === 3 || num === 4 || num === 5){
+        AppJsBridge.guideTask(JSON.stringify({
+          navMaskShow: '1',
+          navBtnEmpty: '0',
+          tabMaskShow: '1',
+          taskTabBtnEmpty: '0'
+        }));
+        this.guideObj.text = num === 3 ? '这里是发货方派发的一些任务<br/>例如接单、传回单等，需要您及时完成哦~' : '关于任务，你想了解的都在这里，快去看看吧';
+      }else if(num > 5 || num === ''){
+        AppJsBridge.guideTask(JSON.stringify({
+          navMaskShow: '0',
+          navBtnEmpty: '0',
+          tabMaskShow: '0',
+          taskTabBtnEmpty: '0'
+        }));
+        AppJsBridge.storeInfo('TASK_GUIDE_KEY','1');
+      }
+    },
+    toastD(){
+      console.log(2);
+      this.$toast({
+        position: 'top',
+        message: 'toastdddddd',
+        duration: 1500
+      });
+    },
+    goVideoList(){  //新手任务挑战
+        window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html?t=${new Date().getTime()}/#/task/taskVideoList?&NEW_WVW_HYB`;
+        // console.log(`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/taskVideoList?&NEW_WVW_HYB&t=${new Date().getTime()}`);
+    },
+    // 新手任务接口
+    initNewTaskListData() {
+        console.log('-------------initNewTaskListData-------------');
+        AppJsBridge.initSignData({}, 954008, param => {
+            this.$http({
+            apiType: "2",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            url: "/gateway.do",
+            data: param
             })
             .then(res => {
-              console.log(res);
+                console.log(33333333333333);
+                // console.log(res);
+                if (res.reCode === "0") {
+                    console.log(22222222222);
+                    console.log(res.result.length);
+                    // alert(res.result.length)
+                    if(res.result.length>0){
+                        this.newTaskList=res.result;
+                        console.log(111111111111111111111111111);
+                        
+                        console.log(this.newTaskList);
+                        
+                    }
+                } else {
+                this.$toast(res.reInfo);
+                }
             })
             .catch(e => {
-              console.log(e);
+                console.log(e);
             });
         });
-      },
-      getStoreInfoBack(){
-        // 回调获取客户端返回的H5存储的数据
-        window['AppJSApi_BackH5Data'] = (_json) => {
-          console.log("客户端返回的H5存储的数据>>",JSON.parse(_json));
-          var _data = JSON.parse(_json);
-          if(_data.key === 'TASK_GUIDE_KEY'){
-            if(_data.data === ''){
-              this.showGuide = 1;
-              console.log('tt>>',this.tt);
-              if(this.tt > 2){
-                console.log(this.$refs.newComer.offsetTop);
-                window.scrollTo(0,this.$refs.newComer.offsetTop);
-              }
-              AppJsBridge.guideTask(JSON.stringify({
-                navMaskShow: '1',
-                navBtnEmpty: '0',
-                tabMaskShow: '1',
-                taskTabBtnEmpty: '1'
-              }));
-              this.guideObj.text = '好运宝全新改版！<br/>这里是任务板块，你可以通过完成不同任务 来获取元宝奖励，元宝可用来兑换物品哦~';
-              this.guideObj.guidePosition.top = 'initial';
-              this.guideObj.guidePosition.bottom = '0rem';
-            }
-          }else if(_data.key === 'TASK_GETCURY_KEY'){
-            this.showFirstGetCury = _data.data === '1' ? false : true;
-          }
-        }
-      },
-      getCurrency(type,index,num){
-        if(this.showGuide && this.showGuide >0){
-          return;
-        }
-        var json_str = JSON.stringify({
-          addCount: num,
-          taskId:'1001'
-        })
-        if(typeof(AndroidAppCommonJs)!=='undefined'){
-          AndroidAppCommonJs.openIngotsReceiveDlg(json_str)
-        }else if(typeof(window.webkit) !== 'undefined'){
-          window.webkit.messageHandlers.openIngotsReceiveDlg.postMessage(json_str);
-        }
-        console.log(index);
-        setTimeout(() => {
-          if(type === '1'){
-            this.closeTip();
-            this.exclusiveList.splice(index, 1);
-            if(this.exclusiveList.length === 1){
-              this.show_exclusiveList = false;
-            }
-          }
-        }, 4000)
-      },
-      closeTip(){
-        this.showFirstGetCury = false;
-        AppJsBridge.storeInfo('TASK_GETCURY_KEY','1');
-      },
-      goTaskUrl(index,jump_url){
-        if(this.showGuide && this.showGuide >0){
-          return;
-        }
-        if(jump_url === '-1'){
-          let _obj = this.exclusiveList[index];
-          this.exclusiveList.splice(index, 1);
-          this.exclusiveList.push(_obj);
-          return;
-        }
-        this.$toast({
-          position: 'top',
-          message: jump_url,
-          duration: 1500
-        });
-      },
-      guideTo(num){
-        if(num === 3 && this.tt > 2){
-          num = 5;
-        }
-        this.showGuide = num > 5 ? '' : num;
-        if(num === 2){
-          AppJsBridge.guideTask(JSON.stringify({
-            navMaskShow: '1',
-            navBtnEmpty: '1',
-            tabMaskShow: '1',
-            taskTabBtnEmpty: '0'
-          }));
-          this.guideObj.text = '完成任务领取的元宝在这里~';
-          this.guideObj.text2 = '这里是元宝商城，想了解元宝可以用来做什么，进来看看就知道啦~ ';
-          this.guideObj.guidePosition.top = '0';
-          this.guideObj.guidePosition.marginTop = '1.5rem';
-          this.guideObj.guidePosition.bottom = 'initial';
-        }else if(num === 3 || num === 4 || num === 5){
-          AppJsBridge.guideTask(JSON.stringify({
-            navMaskShow: '1',
-            navBtnEmpty: '0',
-            tabMaskShow: '1',
-            taskTabBtnEmpty: '0'
-          }));
-          this.guideObj.text = num === 3 ? '这里是发货方派发的一些任务<br/>例如接单、传回单等，需要您及时完成哦~' : '关于任务，你想了解的都在这里，快去看看吧';
-        }else if(num > 5 || num === ''){
-          AppJsBridge.guideTask(JSON.stringify({
-            navMaskShow: '0',
-            navBtnEmpty: '0',
-            tabMaskShow: '0',
-            taskTabBtnEmpty: '0'
-          }));
-          AppJsBridge.storeInfo('TASK_GUIDE_KEY','1');
-        }
-      },
-      toastD(){
-        console.log(2);
-        this.$toast({
-          position: 'top',
-          message: 'toastdddddd',
-          duration: 1500
-        });
-      },
-        goVideoList(){  //新手任务挑战
-            window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html?t=${new Date().getTime()}/#/task/taskVideoList?&NEW_WVW_HYB`;
-            // console.log(`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/taskVideoList?&NEW_WVW_HYB&t=${new Date().getTime()}`);
-        },
-       
-        // 新手任务接口
-        initNewTaskListData() {
-            console.log('-------------initNewTaskListData-------------');
-            AppJsBridge.initSignData({}, 954008, param => {
-                this.$http({
-                apiType: "2",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                url: "/gateway.do",
-                data: param
-                })
-                .then(res => {
-                    console.log(33333333333333);
-                    // console.log(res);
-                    if (res.reCode === "0") {
-                        console.log(22222222222);
-                        console.log(res.result.length);
-                        // alert(res.result.length)
-                        if(res.result.length>0){
-                            this.newTaskList=res.result;
-                            console.log(111111111111111111111111111);
-                            
-                            console.log(this.newTaskList);
-                            
-                        }
-                    } else {
-                    this.$toast(res.reInfo);
-                    }
-                })
-                .catch(e => {
-                    console.log(e);
-                });
-            });
-        },
-        // 每日任务接口
-        initDaliyTaskListData() {
-            AppJsBridge.initSignData({}, 954005, param => {
-                this.$http({
-                apiType: "2",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                url: "/gateway.do",
-                data: param
-                })
-                .then(res => {
-                    console.log(res);
-                    if (res.reCode == "0") {
-                        if(res.result.taskList && res.result.taskList.length > 0){
-                            this.daliyTaskList=res.result.taskList;
-                        }else{
+    },
+    // 每日任务接口
+    initDaliyTaskListData() {
+        AppJsBridge.initSignData({}, 954005, param => {
+            this.$http({
+            apiType: "2",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            url: "/gateway.do",
+            data: param
+            })
+            .then(res => {
+                console.log(res);
+                if (res.reCode == "0") {
+                    if(res.result.taskList && res.result.taskList.length > 0){
+                        this.daliyTaskList=res.result.taskList;
+                    }else{
 
-                        }
-                    } else {
-                    this.$toast(res.reInfo);
                     }
-                })
-                .catch(e => {
-                    console.log(e);
-                });
+                } else {
+                this.$toast(res.reInfo);
+                }
+            })
+            .catch(e => {
+                console.log(e);
             });
-        },
+        });
+    }
   }
 }
 </script>
@@ -1058,7 +1056,6 @@ export default {
     padding: .6875rem;
   }
 }
-
 // tf
  .font(@sise,@color,@lh) {
         font-size: @sise;
