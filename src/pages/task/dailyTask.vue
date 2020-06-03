@@ -1,10 +1,10 @@
 <template>
     <div class="daily-task">
-        <div class="task-title" @click="refresh('0')"> 【JS2063】关闭0下拉刷新控件</div>
-        <div class="task-title" @click="refresh('1')"> 【JS2063】打开1下拉刷新控件</div>
-        <div class="task-title" >默认0-看下下拉刷新： {{count}}</div>
+        <div class="tasks-title" @click="refresh('0')"> 【JS2063】关闭0下拉刷新控件</div>
+        <div class="tasks-title" @click="refresh('1')"> 【JS2063】打开1下拉刷新控件</div>
+        <div class="tasks-title" >默认0-看下下拉刷新： {{count}}</div>
         <!-- 新手任务 -->
-        <div class="task-title task-title-new" >新手任务
+        <div class="tasks-title task-title-new" >新手任务
             <div @click="goVideoList">
                 <img class="task-title-new-icon1" src="../../assets/images/task/xinshou@2x.png"> 新手攻略
                 <img class="task-title-new-icon2" src="../../assets/images/task/jiantou_you@2x.png">
@@ -61,10 +61,11 @@
                                         <img src="../../assets/images/task/wancheng.png">
                                     </div>
                                 </div>
-                                <div v-if="index==0" class="short-line line short-a" :class="{'active-line':meansSonItem.taskStatus=='1'}"></div>
-                                <div v-if="index==1" class="long-line line long-a" :class="{'active-line':meansSonItem.taskStatus=='1'}"></div>
-                                <div v-if="index==1" class="long-line line long-b" :class="{'active-line':meansSonItem.taskStatus=='1'}"></div>
-                                <div v-if="index==2" class="short-line line short-b" :class="{'active-line':meansSonItem.taskStatus=='1'}"></div>
+                                <div v-if="index==0" class="short-line line short-a" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
+                                <div v-if="index==1" class="long-line line long-a" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
+                                <div v-if="index==1" class="long-line line long-b" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
+                                <div v-if="index==2 && meansSonItem.taskStatus>='1'" class="long-line line long-c" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
+                                <div v-if="index==2" class="short-line line short-b" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
                             </div>
                             <div>{{meansSonItem.taskName}}</div>
                         </div>
@@ -73,7 +74,7 @@
             </div>
         </div>
         <!-- 每日任务 -->
-        <div class="task-title">每日任务</div>
+        <div class="tasks-title">每日任务</div>
         <div class="task-wrapper">
             <transition-group appear name="taskList" tag="div">
             <div v-for="(dailyItem,index) in daliyTaskList" :key="dailyItem.taskId" @click="clickUrl(index,dailyItem.jumpUrl)">
@@ -152,13 +153,13 @@ export default {
                     rewardNum:'20',
                     buttonText:'去完善',
                     meansSonTasks:[
-                        {taskStatus:'0',//0 未完成  1 已完成  2 已领取奖励
+                        {taskStatus:0,//0 未完成  1 已完成  2 已领取奖励
                         taskName:'个人信息',
                         rewardNum:'20'},
-                         {taskStatus:'1',//0 未完成  1 已完成  2 已领取奖励
+                         {taskStatus:0,//0 未完成  1 已完成  2 已领取奖励
                         taskName:'车辆信息',
                         rewardNum:'20'},
-                         {taskStatus:'0',//0 未完成  1 已完成  2 已领取奖励
+                         {taskStatus:1,//0 未完成  1 已完成  2 已领取奖励
                         taskName:'运输经验',
                         rewardNum:'20'},
                     ]
@@ -183,13 +184,14 @@ export default {
         }
     },
     methods: {
+         refresh(type){
+            AppJsBridge.setClientRefresh(type);
+        },
         goVideoList(){  //新手任务挑战
             window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html?t=${new Date().getTime()}/#/task/taskVideoList?&NEW_WVW_HYB`;
             // console.log(`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/taskVideoList?&NEW_WVW_HYB&t=${new Date().getTime()}`);
         },
-        refresh(type){
-            AppJsBridge.setClientRefresh(type);
-        },
+       
         // 新手任务接口
         initNewTaskListData() {
             console.log('-------------initNewTaskListData-------------');
@@ -312,7 +314,7 @@ export default {
         width: 100%;
         height: auto;
     }
-    .task-title{
+    .tasks-title{
         height: 3.625rem;
         background: rgba(251,251,251,1);
         padding-left: 1rem;
@@ -476,17 +478,20 @@ export default {
                 left:0.9375rem;
             }
             .short-b{
-                right: -1.1875rem;
+                right: -0.9375rem;
             }
             .long-line{
-                width:6.25rem;
+                width:7.5rem;
                 z-index: 7;
             }
             .long-a{
-                left: -17px;
+                left: -1.9375rem;
             }
             .long-b{
-                left: 86px;
+                left: 6.0625rem;
+            }
+            .long-c{
+                left: -1.9375rem;
             }
             .active-line{
              background: rgba(134,233,204,1);
