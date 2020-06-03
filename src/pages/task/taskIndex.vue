@@ -32,7 +32,7 @@
                 <img class="task-t-icon" :src="item.taskHeadImgUrl" />
                 <div class="task-t-div">
                   <div class="task-t-name">
-                    <span>{{ item.taskName }}</span><img v-for="(item1, index1) in item.miniTagList" :key="index1" :src="item1.tagImgUrl" />
+                    <span>{{ item.taskName }}</span><img v-for="(item1, index1) in item.miniTagList" :key="index1" :src="item1" />
                   </div>
                   <div v-if="item.taskNote" class="task-t-note">完善证件信息后可结算运费</div>
                   <div class="task-t-currency">
@@ -41,36 +41,36 @@
                 </div>
               </div>
               <div class="clear-float"></div>
-              <div v-if="item.taskType === '1'" class="task-li-content">
-                <img class="task-comp-img" src="../../assets/images/task/dingyi@2x.png" />
-                <div class="task-li-line">{{ item.showScriptOne }}</div>
-                <div class="task-li-line">{{ item.showScriptTwo }}</div>
-                <div class="task-li-line">{{ item.showScriptThree }}</div>
+              <div v-if="item.taskType === '1' && item.extra" class="task-li-content">
+                <img class="task-comp-img" :src="item.extra.companyImgUrl" />
+                <div class="task-li-line">{{ item.extra.showScriptOne }}</div>
+                <div class="task-li-line">{{ item.extra.showScriptTwo }}</div>
+                <div class="task-li-line">{{ item.extra.showScriptThree }}</div>
               </div>
-              <div v-else-if="item.taskType === '2' && item.inviteInfo" class="task-li-invitecard">
+              <div v-else-if="item.taskType === '2' && item.extra" class="task-li-invitecard">
                 <img class="task-invitecard-img" src="../../assets/images/task/task_invite_bg.png" />
                 <div class="task-invitecard-name">
-                  <img class="task-invitecard-headimg" :src="item.inviteInfo.inviteUserImg" />
-                  <span>{{ item.inviteInfo.inviteUserName }}给您发了一份邀请...</span>
+                  <img class="task-invitecard-headimg" :src="item.extra.inviteUserImg" />
+                  <span>{{ item.extra.inviteUserName }}给您发了一份邀请...</span>
                 </div>
                 <div class="task-invitecard-bttn">立即查看</div>
-                <div class="task-invitecard-company">{{ item.inviteInfo.inviteCompany }}</div>
+                <div class="task-invitecard-company">{{ item.extra.inviteCompany }}</div>
               </div>
-              <div v-else-if="item.taskType === '3' && item.businessInfo" class="task-li-business">
-                <img class="task-business-img" :src="item.businessInfo.businessUserImg" />
+              <div v-else-if="item.taskType === '3' && item.extra" class="task-li-business">
+                <img class="task-business-img" :src="item.extra.businessUserImg" />
                 <div class="task-business-right">
                   <div class="business-name">
-                    <span>{{ item.businessInfo.businessUserName }}</span><img :src="item.businessInfo.businessLevel" />
+                    <span>{{ item.extra.businessUserName }}</span><img :src="item.extra.businessLevel" />
                   </div>
-                  <div class="business-company">{{ item.businessInfo.businessCompany }}</div>
-                  <div class="business-note-li"><div v-for="(business, b) in item.businessInfo.businessNoteList" :key="b" class="business-note">{{ business }}</div></div>
+                  <div class="business-company">{{ item.extra.businessCompany }}</div>
+                  <div class="business-note-li"><div v-for="(business, b) in item.extra.businessNoteList" :key="b" class="business-note">{{ business }}</div></div>
                 </div>
                 <div class="clear-float"></div>
               </div>
-              <div v-else-if="item.taskType === '4' && item.ykInfo" class="task-li-oilcard">
+              <div v-else-if="item.taskType === '4' && item.extra" class="task-li-oilcard">
                 <img class="task-oilcard-img" src="../../assets/images/task/task_oilcard_bg.png" />
-                <div class="task-oilcard-last">余额：￥{{ item.ykInfo.lastCount }}</div>
-                <div class="task-oilcard-add">最新到账{{ item.ykInfo.onAddCount }}元</div>
+                <div class="task-oilcard-last">余额：￥{{ item.extra.lastCount }}</div>
+                <div class="task-oilcard-add">最新到账{{ item.extra.onAddCount }}元</div>
               </div>
               <div v-if="item.status === '2' && showFirstGetCury" @click="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
               <div class="right-bttn" ref="guideFour" :class="{guideQuan2:showGuide === 4 && index === 0}">
@@ -236,18 +236,24 @@ export default {
         {
           taskId: '11',taskHeadImgUrl: 'https://live-ol.log56.com/sq_server_manage/shq/20200430/478c7ae1-945f-423d-8013-9558c30e3a85.jpg',taskName: '完成接单',
           miniTagList: [
-            {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
+            'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'
           ],
           taskType: '1',taskAction: '去接单',status: '1',jumpUrl: '',reawrdNum: '6',
-          showScriptOne: '北京昌平区⇀上海浦东',showScriptTwo: '普货【20吨】',showScriptThree: '1800元【到付】'
+          extra: {
+            companyImgUrl: 'http://kydd.log56.com/sq_server/images/guidance_bg.png',
+            showScriptOne: '北京昌平区⇀上海浦东',showScriptTwo: '普货【20吨】',showScriptThree: '1800元【到付】'
+          }
         },
         {
           taskId: '12',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '货到了，我要运费',
           miniTagList: [
-            {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
+            'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'
           ],
           taskType: '1',taskAction: '去传回单',status: '2',jumpUrl: '',reawrdNum: '10',
-          showScriptOne: '北京昌平区2⇀上海浦东区1',showScriptTwo: '普货【20吨】',showScriptThree: '1400元【到付】'
+          extra: {
+            companyImgUrl: 'http://kydd.log56.com/sq_server/images/guidance_bg.png',
+            showScriptOne: '北京昌平区2⇀上海浦东1',showScriptTwo: '普货【20吨】',showScriptThree: '1400元【到付】'
+          }
         },
         {
           taskId: '19',taskHeadImgUrl: 'https://live-ol.log56.com/sq_server_manage/shq/20200430/478c7ae1-945f-423d-8013-9558c30e3a85.jpg',taskName: '绑卡收运费',
@@ -257,18 +263,18 @@ export default {
         {
           taskId: '13',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '升级直属运力',
           miniTagList: [
-            {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
+            'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'
           ],
           taskType: '2',taskAction: '立即查看',status: '0',jumpUrl: '-1',reawrdNum: '8',
-          inviteInfo: {inviteUserImg: 'https://live-ol-cdn.log56.com/nsq/header/20191231/788713f0-303e-4d07-9c82-8cdb90909db7.jpg',inviteUserName: '李大全',inviteCompany: '招商成都物流分公司'}
+          extra: {inviteUserImg: 'https://live-ol-cdn.log56.com/nsq/header/20191231/788713f0-303e-4d07-9c82-8cdb90909db7.jpg',inviteUserName: '李大全',inviteCompany: '招商成都物流分公司'}
         },
         {
           taskId: '14',taskHeadImgUrl: 'https://live-ol.log56.com/sq_server_manage/shq/20200430/478c7ae1-945f-423d-8013-9558c30e3a85.jpg',taskName: '发展生意人脉',
           miniTagList: [
-            {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
+            'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'
           ],
           taskType: '3',taskAction: '去发展',status: '0',jumpUrl: '',reawrdNum: '5',
-          businessInfo: {
+          extra: {
             businessUserImg: 'https://live-ol-cdn.log56.com/nsq/header/20191231/788713f0-303e-4d07-9c82-8cdb90909db7.jpg',businessUserName: '王大全',businessCompany: '招商成都物流分公司',
             businessLevel: 'http://kydd.log56.com/sq_server/images/guidance_bg.png',businessNoteList: ['合作过：1单/10,000元','1个共同人脉']
           }
@@ -276,10 +282,10 @@ export default {
         {
           taskId: '15',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '使用电子油卡',
           miniTagList: [
-            {tagImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'}
+            'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'
           ],
           taskType: '4',taskAction: '去使用',status: '0',jumpUrl: '',reawrdNum: '5',
-          ykInfo: {onAddCount: '2600',lastCount: '6100'}
+          extra: {onAddCount: '2600',lastCount: '6100'}
         }
       ],
       exclusiveList:[ //专属任务列表
@@ -332,6 +338,14 @@ export default {
   },
   created() {
     document.title = '任务';
+    //本地模拟数据测试用：----部署时候删除--☆☆☆☆☆☆☆----
+    if(process.env.VUE_APP_ENV === 'development'){
+      this.loadingFlag1 = false;
+      this.loadingFlag2 = false;
+      this.loadingFlag3 = false;
+      this.exclusiveList = this.exclusiveList1;
+    }
+    //本地模拟数据测试用：----部署时候删除--☆☆☆☆☆☆☆----
   },
   mounted() {
     // 开启下拉刷新
@@ -346,9 +360,6 @@ export default {
       console.log('callback-backData>>',backData);
       this.showFirstGetCury = backData.data === '1' ? false : true;
     });
-    // this.loadingFlag1 = false;
-    // this.loadingFlag2 = false;
-    // this.loadingFlag3 = false;
     // 初始化专属任务
     this.initExclusiveList();
     // 初始化新手任务
