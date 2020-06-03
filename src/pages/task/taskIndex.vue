@@ -222,7 +222,7 @@ export default {
       showGuideStore: false, //APP本地存储字段-引导页是否展示
       showGuide: '', //本页面是否显示引导页
       guideType: 0, //引导页类型：0.有专属任务的引导；1.无专属任务的引导
-      showFirstGetCury: false, //是否有领取过元宝
+      showFirstGetCury: false, //APP本地存储字段-是否展示快去领取元宝提示
       show_exclusiveList: true, //判断最后一条专属任务完成时，专属任务栏目整体消失
       guideObj: {
         text: '关于任务，你想了解的都在这里，快去看看吧！',
@@ -350,26 +350,18 @@ export default {
   mounted() {
     // 开启下拉刷新
     AppJsBridge.setClientRefresh('1');
-    // 获取APP本地存储--是否展示新手引导
-    AppJsBridge.getStoreInfo('TASK_GUIDE_KEY',backData => {
-      console.log('callback-backData>>',backData);
-      this.showGuideStore = backData.data === '1' ? false : true;
-    });
-    // 获取APP本地存储--是否展示快去领取元宝提示
-    AppJsBridge.getStoreInfo('TASK_GETCURY_KEY',backData => {
-      console.log('callback-backData>>',backData);
-      this.showFirstGetCury = backData.data === '1' ? false : true;
-    });
     // 初始化专属任务
     this.initExclusiveList();
-    // 初始化新手任务
     setTimeout(() => {
-      this.initNewTaskListData();
-    }, 50);
-    // 初始化每日任务
-    setTimeout(() => {
+      // 初始化每日任务
       this.initDaliyTaskListData();
+      // 获取APP本地存储--是否展示快去领取元宝提示
+      AppJsBridge.getStoreInfo('TASK_GETCURY_KEY',backData => {
+        console.log('callback-backData>>',backData);
+        this.showFirstGetCury = backData.data === '1' ? false : true;
+      });
     }, 100);
+
     // 回调获取客户端返回的任务成功信息,taskType：1.专属任务 2.新手任务 3.每日任务---用来刷新哪个任务块
     window['AppJSApi_BackH5TaskOrdersInfo'] = (_json) => {
       console.log("客户端返回的任务成功信息>>",JSON.parse(_json));
@@ -397,16 +389,13 @@ export default {
           data:  param
         })
         .then(res => {
-          console.log(66999);
+          console.log('---ExclusiveList--'+res);
+          // 初始化新手任务
+          this.initNewTaskListData('0');
           this.loadingFlag1 = false;
           if (res.reCode === "0") {
             console.log(77999);
             this.exclusiveList = res.result;
-            if(this.exclusiveList.length > 0 && this.showGuideStore){
-              this.showGuide = 1;
-              this.guideType = 0;
-              this.goGuideApi();
-            }
           } else {
             this.$toast(res.reInfo);
           }
@@ -414,7 +403,27 @@ export default {
         .catch(e => {
           console.log(e);
           this.loadingFlag1 = false;
+          // 初始化新手任务
+          this.initNewTaskListData('0');
         });
+      });
+    },
+    getGuideStoreApi(isInit){
+      // 获取APP本地存储--是否展示新手引导
+      AppJsBridge.getStoreInfo('TASK_GUIDE_KEY',backData => {
+        console.log('callback-backData>>',backData);
+        this.showGuideStore = backData.data === '1' ? false : true;
+        if(this.showGuideStore){
+          if(this.exclusiveList.length > 0){
+            this.showGuide = 1;
+            this.guideType = 0;
+            this.goGuideApi();
+          }else if(isInit === '0' && this.exclusiveList.length === 0 && this.newTaskList.length > 0){
+            this.showGuide = 1;
+            this.guideType = 1;
+            this.goGuideApi();
+          }
+        }
       });
     },
     goGuideApi(){
@@ -520,7 +529,7 @@ export default {
         // console.log(`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/taskVideoList?&NEW_WVW_HYB&t=${new Date().getTime()}`);
     },
     // 新手任务接口
-    initNewTaskListData() {
+    initNewTaskListData(isInit) {
       console.log('-------------initNewTaskListData-------------');
       AppJsBridge.initSignData({}, 954008, param => {
         this.$http({
@@ -538,20 +547,16 @@ export default {
             console.log(22222222222);
             if(res.result.length>0){
               this.newTaskList=res.result;
-              console.log(this.newTaskList);
-              if(this.exclusiveList.length === 0 && this.newTaskList.length > 0 && this.showGuideStore){
-                this.showGuide = 1;
-                this.guideType = 1;
-                this.goGuideApi();
-              }
             }
           } else {
             this.$toast(res.reInfo);
           }
+          this.getGuideStoreApi(isInit);
         })
         .catch(e => {
           console.log(e);
           this.loadingFlag2 = false;
+          this.getGuideStoreApi(isInit);
         });
       });
     },
