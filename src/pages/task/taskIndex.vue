@@ -217,7 +217,8 @@ export default {
       loadingFlag1: true,
       loadingFlag2: true,
       loadingFlag3: true,
-      showGuide: '', //是否显示引导页
+      showGuideStore: false, //APP本地存储字段-引导页是否展示
+      showGuide: '', //本页面是否显示引导页
       showFirstGetCury: false, //是否有领取过元宝
       clientWid: document.documentElement.clientWidth,
       show_exclusiveList: true,
@@ -329,32 +330,36 @@ export default {
   created() {
     document.title = '任务';
     // this.initMedth();
-    
   },
   mounted() {
-        this.initNewTaskListData();
-      setTimeout(() => {
-          this.initDaliyTaskListData();
-      }, 50);
+    AppJsBridge.setClientRefresh('1'); //开启下拉刷新
+    this.initNewTaskListData();
     setTimeout(() => {
-      AppJsBridge.setClientRefresh('1'); //开启下拉刷新
+      this.initDaliyTaskListData();
+    }, 50);
+    setTimeout(() => {
+      // AppJsBridge.getStoreInfo('TASK_GUIDE_KEY',backData => {
+      //   console.log('callback-backData>>',backData);
+      //   if(backData.data === ''){
+      //     this.showGuideStore = true;
+      //   }
+      // });
       AppJsBridge.getStoreInfo('TASK_GUIDE_KEY');
       AppJsBridge.getStoreInfo('TASK_GETCURY_KEY');
       this.loadingFlag1 = this.exclusiveList.length > 0 ? false : true;
       this.loadingFlag2 = false;
       this.loadingFlag3 = false;
       this.getStoreInfoBack();
-      // 回调获取客户端返回的任务成功信息,taskType：1.专属任务 2.新手任务 3.每日任务
-      window['AppJSApi_BackH5TaskOrdersInfo'] = (_json) => {
-          console.log("客户端返回的任务成功信息>>",JSON.parse(_json));
-      }
-      // 回调获取客户端返回的任务Tab点击通知
-      window['AppJSApi_BackH5TaskTabClick'] = (_json) => {
-          console.log("客户端返回的任务Tab点击通知>>",_json);
-          this.initDaliyTaskListData();
-      }
-    }, 1000)
-
+    }, 100)
+    // 回调获取客户端返回的任务成功信息,taskType：1.专属任务 2.新手任务 3.每日任务---用来刷新哪个任务块
+    window['AppJSApi_BackH5TaskOrdersInfo'] = (_json) => {
+      console.log("客户端返回的任务成功信息>>",JSON.parse(_json));
+    }
+    // 回调获取客户端返回的任务Tab点击通知---用来刷新每日任务块
+    window['AppJSApi_BackH5TaskTabClick'] = (_json) => {
+      console.log("客户端返回的任务Tab点击通知>>",_json);
+      this.initDaliyTaskListData();
+    }
   },
   methods:{
     GoDaily(){
@@ -803,6 +808,7 @@ export default {
             color: rgba(255,189,5,1);
             position: relative;
             left: .1875rem;
+            bottom: .1rem;
           }
         }
       }

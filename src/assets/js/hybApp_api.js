@@ -133,7 +133,7 @@ let AppJsBridge = {
         }
     },
     // 【JS2058】H5数据存取---取数据 ---注意需要回调获取数据
-    getStoreInfo(key){
+    getStoreInfo(key,callback){
         let _json = JSON.stringify({
             type: '2',
             key: key,
@@ -146,6 +146,14 @@ let AppJsBridge = {
             }else if(typeof(window.webkit) !== 'undefined'){
                 window.webkit.messageHandlers.manageH5Data.postMessage(_json);
             }
+            // 回调获取客户端返回的H5存储的数据
+            // window['AppJSApi_BackH5Data'] = (json) => {
+            //     console.log("AppJSApi_BackH5Data>>",JSON.parse(json));
+            //     var _data = JSON.parse(json);
+            //     if(_data.key === key && typeof callback === 'function'){
+            //         callback(_data);
+            //     }
+            // }
         } catch (error) {
             console.log(JSON.stringify(error));
         }
