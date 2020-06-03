@@ -96,8 +96,8 @@
                 <img class="task-title-new-icon2" src="../../assets/images/task/jiantou_you@2x.png">
             </div>
         </div>
-         <div class="task-wrapper" v-if="newTaskList1 && newTaskList1.length>0">
-            <div class="task-wrapper-div" v-for="(newItem,index) in newTaskList1" :key="index">
+         <div class="task-wrapper" v-if="newTaskList && newTaskList.length>0">
+            <div class="task-wrapper-div" v-for="(newItem,index) in newTaskList" :key="index">
                 <div class="task-box">
                     <div class="task-icon">
                         <!-- <img :src="newItem.headImg"> -->
