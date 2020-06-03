@@ -35,10 +35,10 @@ new Vue({
 }).$mount('#app')
 
 if (process.env.VUE_APP_ENV !== 'production') {
-  require.ensure([], function (require) {
-    const Consolea = require('vconsole/dist/vconsole.min.js')
-    new Consolea()
-  })
+  // require.ensure([], function (require) {
+  //   const Consolea = require('vconsole/dist/vconsole.min.js')
+  //   new Consolea()
+  // })
   setTimeout(() => {
     console.log(location.href)
   }, 3000)

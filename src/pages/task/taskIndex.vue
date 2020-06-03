@@ -25,66 +25,68 @@
             <div class="guide-bttn" @click="guideTo(4)"><img src="../../assets/images/task/task_know.png" /></div>
           </div>
         </div>
-        <transition-group appear name="taskList" tag="div">
-          <div v-for="(item, index) in exclusiveList" :key="item.taskId" class="task-li">
-            <div class="task-li-t">
-              <img class="task-t-icon" :src="item.taskHeadImgUrl" />
-              <div class="task-t-div">
-                <div class="task-t-name">
-                  <span>{{ item.taskName }}</span><img v-for="(item1, index1) in item.miniTagList" :key="index1" :src="item1.tagImgUrl" />
+        <div class="task-wrapper" v-if="exclusiveList && exclusiveList.length>0">
+          <transition-group appear name="taskList" tag="div">
+            <div v-for="(item, index) in exclusiveList" :key="item.taskId" class="task-li">
+              <div class="task-li-t">
+                <img class="task-t-icon" :src="item.taskHeadImgUrl" />
+                <div class="task-t-div">
+                  <div class="task-t-name">
+                    <span>{{ item.taskName }}</span><img v-for="(item1, index1) in item.miniTagList" :key="index1" :src="item1.tagImgUrl" />
+                  </div>
+                  <div v-if="item.taskNote" class="task-t-note">完善证件信息后可结算运费</div>
+                  <div class="task-t-currency">
+                    <img src="../../assets/images/task/xiaoyuanbao@2x.png" /><span>+{{ item.reawrdNum }}</span>
+                  </div>
                 </div>
-                <div v-if="item.taskNote" class="task-t-note">完善证件信息后可结算运费</div>
-                <div class="task-t-currency">
-                  <img src="../../assets/images/task/xiaoyuanbao@2x.png" /><span>+{{ item.reawrdNum }}</span>
-                </div>
-              </div>
-            </div>
-            <div class="clear-float"></div>
-            <div v-if="item.taskType === '1'" class="task-li-content">
-              <img class="task-comp-img" src="../../assets/images/task/dingyi@2x.png" />
-              <div class="task-li-line">{{ item.showScriptOne }}</div>
-              <div class="task-li-line">{{ item.showScriptTwo }}</div>
-              <div class="task-li-line">{{ item.showScriptThree }}</div>
-            </div>
-            <div v-else-if="item.taskType === '2' && item.inviteInfo" class="task-li-invitecard">
-              <img class="task-invitecard-img" src="../../assets/images/task/task_invite_bg.png" />
-              <div class="task-invitecard-name">
-                <img class="task-invitecard-headimg" :src="item.inviteInfo.inviteUserImg" />
-                <span>{{ item.inviteInfo.inviteUserName }}给您发了一份邀请...</span>
-              </div>
-              <div class="task-invitecard-bttn">立即查看</div>
-              <div class="task-invitecard-company">{{ item.inviteInfo.inviteCompany }}</div>
-            </div>
-            <div v-else-if="item.taskType === '3' && item.businessInfo" class="task-li-business">
-              <img class="task-business-img" :src="item.businessInfo.businessUserImg" />
-              <div class="task-business-right">
-                <div class="business-name">
-                  <span>{{ item.businessInfo.businessUserName }}</span><img :src="item.businessInfo.businessLevel" />
-                </div>
-                <div class="business-company">{{ item.businessInfo.businessCompany }}</div>
-                <div class="business-note-li"><div v-for="(business, b) in item.businessInfo.businessNoteList" :key="b" class="business-note">{{ business }}</div></div>
               </div>
               <div class="clear-float"></div>
-            </div>
-            <div v-else-if="item.taskType === '4' && item.ykInfo" class="task-li-oilcard">
-              <img class="task-oilcard-img" src="../../assets/images/task/task_oilcard_bg.png" />
-              <div class="task-oilcard-last">余额：￥{{ item.ykInfo.lastCount }}</div>
-              <div class="task-oilcard-add">最新到账{{ item.ykInfo.onAddCount }}元</div>
-            </div>
-            <div v-if="item.status === '2' && showFirstGetCury" @click="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
-            <div class="right-bttn" ref="guideFour" :class="{guideQuan2:showGuide === 4 && index === 0}">
-              <span v-if="item.status === '0' || item.status === '1'" class="bttn-span" @click="goTaskUrl(index,item.jumpUrl)">{{ item.taskAction }}</span>
-              <span v-else-if="item.status === '2'" class="bttn-span bttn-success" @click="getCurrency('1',index,'10')">领取元宝</span>
-            </div>
-            <div v-if="showGuide === 4 && index === 0" class="right-bttn-guide" >
-              <div class="task-guide task-guide-four">
-                <img class="guide-four-jt" src="../../assets/images/task/task_jian_l1.png" />
-                <div class="guide-text"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
-                <div class="guide-bttn" @click="guideTo('')"><img src="../../assets/images/task/task_know.png" /></div>
+              <div v-if="item.taskType === '1'" class="task-li-content">
+                <img class="task-comp-img" src="../../assets/images/task/dingyi@2x.png" />
+                <div class="task-li-line">{{ item.showScriptOne }}</div>
+                <div class="task-li-line">{{ item.showScriptTwo }}</div>
+                <div class="task-li-line">{{ item.showScriptThree }}</div>
+              </div>
+              <div v-else-if="item.taskType === '2' && item.inviteInfo" class="task-li-invitecard">
+                <img class="task-invitecard-img" src="../../assets/images/task/task_invite_bg.png" />
+                <div class="task-invitecard-name">
+                  <img class="task-invitecard-headimg" :src="item.inviteInfo.inviteUserImg" />
+                  <span>{{ item.inviteInfo.inviteUserName }}给您发了一份邀请...</span>
+                </div>
+                <div class="task-invitecard-bttn">立即查看</div>
+                <div class="task-invitecard-company">{{ item.inviteInfo.inviteCompany }}</div>
+              </div>
+              <div v-else-if="item.taskType === '3' && item.businessInfo" class="task-li-business">
+                <img class="task-business-img" :src="item.businessInfo.businessUserImg" />
+                <div class="task-business-right">
+                  <div class="business-name">
+                    <span>{{ item.businessInfo.businessUserName }}</span><img :src="item.businessInfo.businessLevel" />
+                  </div>
+                  <div class="business-company">{{ item.businessInfo.businessCompany }}</div>
+                  <div class="business-note-li"><div v-for="(business, b) in item.businessInfo.businessNoteList" :key="b" class="business-note">{{ business }}</div></div>
+                </div>
+                <div class="clear-float"></div>
+              </div>
+              <div v-else-if="item.taskType === '4' && item.ykInfo" class="task-li-oilcard">
+                <img class="task-oilcard-img" src="../../assets/images/task/task_oilcard_bg.png" />
+                <div class="task-oilcard-last">余额：￥{{ item.ykInfo.lastCount }}</div>
+                <div class="task-oilcard-add">最新到账{{ item.ykInfo.onAddCount }}元</div>
+              </div>
+              <div v-if="item.status === '2' && showFirstGetCury" @click="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
+              <div class="right-bttn" ref="guideFour" :class="{guideQuan2:showGuide === 4 && index === 0}">
+                <span v-if="item.status === '0' || item.status === '1'" class="bttn-span" @click="goTaskUrl(index,item.jumpUrl)">{{ item.taskAction }}</span>
+                <span v-else-if="item.status === '2'" class="bttn-span bttn-success" @click="getCurrency('1',index,'10')">领取元宝</span>
+              </div>
+              <div v-if="showGuide === 4 && index === 0" class="right-bttn-guide" >
+                <div class="task-guide task-guide-four">
+                  <img class="guide-four-jt" src="../../assets/images/task/task_jian_l1.png" />
+                  <div class="guide-text"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
+                  <div class="guide-bttn" @click="guideTo('')"><img src="../../assets/images/task/task_know.png" /></div>
+                </div>
               </div>
             </div>
-          </div>
-        </transition-group>
+          </transition-group>
+        </div>
       </div>
       </transition>
     </van-skeleton>
@@ -214,14 +216,14 @@ export default {
   name: "taskIndex",
   data() {
     return {
-      loadingFlag1: true,
-      loadingFlag2: true,
-      loadingFlag3: true,
+      loadingFlag1: true, //骨架区域1-专属
+      loadingFlag2: true, //骨架区域2-新手
+      loadingFlag3: true, //骨架区域3-每日
       showGuideStore: false, //APP本地存储字段-引导页是否展示
       showGuide: '', //本页面是否显示引导页
+      guideType: 0, //引导页类型：0.有专属任务的引导；1.无专属任务的引导
       showFirstGetCury: false, //是否有领取过元宝
-      clientWid: document.documentElement.clientWidth,
-      show_exclusiveList: true,
+      show_exclusiveList: true, //判断最后一条专属任务完成时，专属任务栏目整体消失
       guideObj: {
         text: '关于任务，你想了解的都在这里，快去看看吧！',
         guidePosition: {
@@ -230,7 +232,7 @@ export default {
           left: '0'
         }
       },
-      exclusiveList:[ //专属任务列表
+      exclusiveList1:[ //专属任务列表
         {
           taskId: '11',taskHeadImgUrl: 'https://live-ol.log56.com/sq_server_manage/shq/20200430/478c7ae1-945f-423d-8013-9558c30e3a85.jpg',taskName: '完成接单',
           miniTagList: [
@@ -280,9 +282,8 @@ export default {
           ykInfo: {onAddCount: '2600',lastCount: '6100'}
         }
       ],
-      tt: Math.floor(Math.random()*10),
-      hasDaliyTask:true, // 是否有每日任务
-      hasNewTask:true, // 是否有新手任务
+      exclusiveList:[ //专属任务列表
+      ],
       daliyTaskList:[],
       newTaskList1:[
         {
@@ -324,33 +325,40 @@ export default {
           ]
         }
       ],
-      newTaskList:[]
+      newTaskList:[],
+      hasDaliyTask:true, // 是否有每日任务
+      hasNewTask:true, // 是否有新手任务
     }
   },
   created() {
     document.title = '任务';
-    // this.initMedth();
   },
   mounted() {
-    AppJsBridge.setClientRefresh('1'); //开启下拉刷新
-    this.initNewTaskListData();
+    // 开启下拉刷新
+    AppJsBridge.setClientRefresh('1');
+    // 获取APP本地存储--是否展示新手引导
+    AppJsBridge.getStoreInfo('TASK_GUIDE_KEY',backData => {
+      console.log('callback-backData>>',backData);
+      this.showGuideStore = backData.data === '1' ? false : true;
+    });
+    // 获取APP本地存储--是否展示快去领取元宝提示
+    AppJsBridge.getStoreInfo('TASK_GETCURY_KEY',backData => {
+      console.log('callback-backData>>',backData);
+      this.showFirstGetCury = backData.data === '1' ? false : true;
+    });
+    this.loadingFlag1 = false;
+    this.loadingFlag2 = false;
+    this.loadingFlag3 = false;
+    // 初始化专属任务
+    this.initExclusiveList();
+    // 初始化新手任务
+    setTimeout(() => {
+      this.initNewTaskListData();
+    }, 50);
+    // 初始化每日任务
     setTimeout(() => {
       this.initDaliyTaskListData();
-    }, 50);
-    setTimeout(() => {
-      // AppJsBridge.getStoreInfo('TASK_GUIDE_KEY',backData => {
-      //   console.log('callback-backData>>',backData);
-      //   if(backData.data === ''){
-      //     this.showGuideStore = true;
-      //   }
-      // });
-      AppJsBridge.getStoreInfo('TASK_GUIDE_KEY');
-      AppJsBridge.getStoreInfo('TASK_GETCURY_KEY');
-      this.loadingFlag1 = this.exclusiveList.length > 0 ? false : true;
-      this.loadingFlag2 = false;
-      this.loadingFlag3 = false;
-      this.getStoreInfoBack();
-    }, 100)
+    }, 100);
     // 回调获取客户端返回的任务成功信息,taskType：1.专属任务 2.新手任务 3.每日任务---用来刷新哪个任务块
     window['AppJSApi_BackH5TaskOrdersInfo'] = (_json) => {
       console.log("客户端返回的任务成功信息>>",JSON.parse(_json));
@@ -365,56 +373,49 @@ export default {
     GoDaily(){
       window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html?t=${new Date().getTime()}/#/task/dailyTask?&NEW_WVW_HYB`;
     },
-    initMedth(){
-      var _data={
-        'source':'0',
-        'channel':'1'
-      }
-      AppJsBridge.initSignData(_data,'954000',function(param){
-        console.log('---param---',param);
+    initExclusiveList(){
+      console.log('-------------initExclusiveList-------------');
+      AppJsBridge.initSignData({},'954010',param => {
+        console.log('---param---initExclusiveList--',param);
         this.$http({
-            apiType: '2',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            url: "/gateway.do",
-            data:  param
-          })
-          .then(res => {
-            console.log(res);
-          })
-          .catch(e => {
-            console.log(e);
-          });
+          apiType: '2',
+          headers: {
+              "Content-Type": "application/json"
+          },
+          url: "/gateway.do",
+          data:  param
+        })
+        .then(res => {
+          console.log(66999);
+          this.loadingFlag1 = false;
+          if (res.reCode === "0") {
+            console.log(77999);
+            this.exclusiveList = res.result;
+            if(this.exclusiveList.length > 0 && this.showGuideStore){
+              this.showGuide = 1;
+              this.guideType = 0;
+              this.goGuideApi();
+            }
+          } else {
+            this.$toast(res.reInfo);
+          }
+        })
+        .catch(e => {
+          console.log(e);
+          this.loadingFlag1 = false;
+        });
       });
     },
-    getStoreInfoBack(){
-      // 回调获取客户端返回的H5存储的数据
-      window['AppJSApi_BackH5Data'] = (_json) => {
-        console.log("客户端返回的H5存储的数据>>",JSON.parse(_json));
-        var _data = JSON.parse(_json);
-        if(_data.key === 'TASK_GUIDE_KEY'){
-          if(_data.data === ''){
-            this.showGuide = 1;
-            console.log('tt>>',this.tt);
-            if(this.tt > 2){
-              console.log(this.$refs.newComer.offsetTop);
-              window.scrollTo(0,this.$refs.newComer.offsetTop);
-            }
-            AppJsBridge.guideTask(JSON.stringify({
-              navMaskShow: '1',
-              navBtnEmpty: '0',
-              tabMaskShow: '1',
-              taskTabBtnEmpty: '1'
-            }));
-            this.guideObj.text = '好运宝全新改版！<br/>这里是任务板块，你可以通过完成不同任务 来获取元宝奖励，元宝可用来兑换物品哦~';
-            this.guideObj.guidePosition.top = 'initial';
-            this.guideObj.guidePosition.bottom = '0rem';
-          }
-        }else if(_data.key === 'TASK_GETCURY_KEY'){
-          this.showFirstGetCury = _data.data === '1' ? false : true;
-        }
-      }
+    goGuideApi(){
+      AppJsBridge.guideTask(JSON.stringify({
+        navMaskShow: '1',
+        navBtnEmpty: '0',
+        tabMaskShow: '1',
+        taskTabBtnEmpty: '1'
+      }));
+      this.guideObj.text = '好运宝全新改版！<br/>这里是任务板块，你可以通过完成不同任务 来获取元宝奖励，元宝可用来兑换物品哦~';
+      this.guideObj.guidePosition.top = 'initial';
+      this.guideObj.guidePosition.bottom = '0rem';
     },
     getCurrency(type,index,num){
       if(this.showGuide && this.showGuide >0){
@@ -461,7 +462,7 @@ export default {
       });
     },
     guideTo(num){
-      if(num === 3 && this.tt > 2){
+      if(num === 3 && this.guideType > 0){
         num = 5;
       }
       this.showGuide = num > 5 ? '' : num;
@@ -509,66 +510,69 @@ export default {
     },
     // 新手任务接口
     initNewTaskListData() {
-        console.log('-------------initNewTaskListData-------------');
-        AppJsBridge.initSignData({}, 954008, param => {
-            this.$http({
-            apiType: "2",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            url: "/gateway.do",
-            data: param
-            })
-            .then(res => {
-                console.log(33333333333333);
-                // console.log(res);
-                if (res.reCode === "0") {
-                    console.log(22222222222);
-                    console.log(res.result.length);
-                    // alert(res.result.length)
-                    if(res.result.length>0){
-                        this.newTaskList=res.result;
-                        console.log(111111111111111111111111111);
-                        
-                        console.log(this.newTaskList);
-                        
-                    }
-                } else {
-                this.$toast(res.reInfo);
-                }
-            })
-            .catch(e => {
-                console.log(e);
-            });
+      console.log('-------------initNewTaskListData-------------');
+      AppJsBridge.initSignData({}, 954008, param => {
+        this.$http({
+        apiType: "2",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        url: "/gateway.do",
+        data: param
+        })
+        .then(res => {
+          console.log(33333333333333);
+          this.loadingFlag2 = false;
+          if (res.reCode === "0") {
+            console.log(22222222222);
+            if(res.result.length>0){
+              this.newTaskList=res.result;
+              console.log(this.newTaskList);
+              if(this.exclusiveList.length === 0 && this.newTaskList.length > 0 && this.showGuideStore){
+                this.showGuide = 1;
+                this.guideType = 1;
+                this.goGuideApi();
+              }
+            }
+          } else {
+            this.$toast(res.reInfo);
+          }
+        })
+        .catch(e => {
+          console.log(e);
+          this.loadingFlag2 = false;
         });
+      });
     },
     // 每日任务接口
     initDaliyTaskListData() {
-        AppJsBridge.initSignData({}, 954005, param => {
-            this.$http({
-            apiType: "2",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            url: "/gateway.do",
-            data: param
-            })
-            .then(res => {
-                console.log(res);
-                if (res.reCode == "0") {
-                    if(res.result.taskList && res.result.taskList.length > 0){
-                        this.daliyTaskList=res.result.taskList;
-                    }else{
+      AppJsBridge.initSignData({}, 954005, param => {
+        this.$http({
+          apiType: "2",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          url: "/gateway.do",
+          data: param
+        })
+        .then(res => {
+          console.log(res);
+          this.loadingFlag3 = false;
+          if (res.reCode == "0") {
+            if(res.result.taskList && res.result.taskList.length > 0){
+                this.daliyTaskList=res.result.taskList;
+            }else{
 
-                    }
-                } else {
-                this.$toast(res.reInfo);
-                }
-            })
-            .catch(e => {
-                console.log(e);
-            });
+            }
+          } else {
+            this.$toast(res.reInfo);
+          }
+        })
+        .catch(e => {
+          console.log(e);
+          this.loadingFlag3 = false;
         });
+      });
     }
   }
 }
