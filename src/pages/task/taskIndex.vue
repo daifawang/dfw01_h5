@@ -346,9 +346,9 @@ export default {
       console.log('callback-backData>>',backData);
       this.showFirstGetCury = backData.data === '1' ? false : true;
     });
-    this.loadingFlag1 = false;
-    this.loadingFlag2 = false;
-    this.loadingFlag3 = false;
+    // this.loadingFlag1 = false;
+    // this.loadingFlag2 = false;
+    // this.loadingFlag3 = false;
     // 初始化专属任务
     this.initExclusiveList();
     // 初始化新手任务
@@ -435,7 +435,7 @@ export default {
         if(type === '1'){
           this.closeTip();
           this.exclusiveList.splice(index, 1);
-          if(this.exclusiveList.length === 1){
+          if(this.exclusiveList.length === 0){
             this.show_exclusiveList = false;
           }
         }
