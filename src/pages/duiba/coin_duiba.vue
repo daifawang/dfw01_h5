@@ -1,7 +1,8 @@
 <template>
-    <div>元宝商城</div>
+    <div></div>
 </template>
 <script>
+import Const from "@/assets/js/const" 
 import { AppJsBridge, hybappObj } from "@/assets/js/hybApp_api.js";
 export default {
     created() {
@@ -10,6 +11,7 @@ export default {
             forbidClick: true
         });
         this.initData();
+        document.title="元宝商城"
     },
     methods: {
         initData() {
@@ -25,6 +27,7 @@ export default {
                     .then(res => {
                         console.log(res);
                         if (res.reCode == "0") {
+                            window.location.href=res.result;
                         } else {
                             this.$toast(res.reInfo);
                         }

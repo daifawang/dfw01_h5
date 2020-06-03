@@ -227,7 +227,23 @@ let AppJsBridge = {
         } catch (error) {
             console.log(JSON.stringify(error));
         }
-    }
+    },
+    // 【JS2056】弹出登录界面
+    goLogin(info){
+        // info用服务器返回的
+        console.log('【JS2056】弹出登录界面');
+        let _json= JSON.stringify({ "reInfo":info});
+        console.log(_json);
+        try {
+            if(typeof(AndroidAppGoodsJs) != 'undefined'){
+                AndroidAppCommonJs.goLogin(json)(_json)
+            }else if(typeof(window.webkit) !== 'undefined'){
+                window.webkit.messageHandlers.goLogin.postMessage(_json);  
+            }
+        } catch (error) {
+            console.log(JSON.stringify(error));
+        }
+    },
 }
 export {
     AppJsBridge,
