@@ -34,7 +34,7 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
-if (process.env.VUE_APP_ENV !== 'testing' && process.env.VUE_APP_ENV !== 'production') {
+if (process.env.VUE_APP_ENV !== 'development' && process.env.VUE_APP_ENV !== 'production') {
   require.ensure([], function (require) {
     const Consolea = require('vconsole/dist/vconsole.min.js')
     new Consolea()
