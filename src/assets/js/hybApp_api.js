@@ -146,7 +146,7 @@ let AppJsBridge = {
             }else if(typeof(window.webkit) !== 'undefined'){
                 window.webkit.messageHandlers.manageH5Data.postMessage(_json);
             }
-            回调获取客户端返回的H5存储的数据
+            // 回调获取客户端返回的H5存储的数据
             window.AppJSApi_BackH5Data = (json) => {
                 console.log("AppJSApi_BackH5Data>>",JSON.parse(json));
                 var _data = JSON.parse(json);

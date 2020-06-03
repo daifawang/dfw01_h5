@@ -389,7 +389,7 @@ export default {
           data:  param
         })
         .then(res => {
-          console.log('---ExclusiveList--'+res);
+          console.log('---ExclusiveList--',res);
           // 初始化新手任务
           this.initNewTaskListData('0');
           this.loadingFlag1 = false;
