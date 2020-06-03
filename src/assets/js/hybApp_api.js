@@ -185,7 +185,7 @@ let AppJsBridge = {
     // 【JS2060】任务-跳转视频详情页
     taskOpenVideoDetails(jsonStr){
         console.log('【JS2060】任务-跳转视频详情页');
-        let _json= JSON.stringify({jsonStr});
+        let _json= JSON.stringify(jsonStr);
         console.log(_json);
         try {
             if(typeof(AndroidAppGoodsJs) != 'undefined'){
