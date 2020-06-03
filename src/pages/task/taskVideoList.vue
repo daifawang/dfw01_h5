@@ -25,6 +25,7 @@ export default {
             console.log('taskType：1.专属任务 2.新手任务 3.每日任务');
             console.log('----进入AppJSApi_BackH5TaskOrdersIn民-----');
             console.log('string:'+string);
+            this.initData();
         }
   },
   computed: {

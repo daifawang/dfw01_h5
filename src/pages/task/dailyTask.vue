@@ -10,8 +10,8 @@
                 <img class="task-title-new-icon2" src="../../assets/images/task/jiantou_you@2x.png">
             </div>
         </div>
-         <div class="task-wrapper" v-if="newTaskList && newTaskList.length>0">
-            <div v-for="(newItem,index) in newTaskList" :key="index">
+         <div class="task-wrapper" v-if="newTaskList1 && newTaskList1.length>0">
+            <div v-for="(newItem,index) in newTaskList1" :key="index">
                 <div class="task-box">
                     <div class="task-icon">
                         <!-- <img :src="newItem.headImg"> -->
@@ -61,10 +61,10 @@
                                         <img src="../../assets/images/task/wancheng.png">
                                     </div>
                                 </div>
-                                <div v-if="index==0" class="short-line line short-a"></div>
-                                <div v-if="index==1" class="long-line line long-a"></div>
-                                <div v-if="index==1" class="long-line line long-b"></div>
-                                <div v-if="index==2" class="short-line line short-b"></div>
+                                <div v-if="index==0" class="short-line line short-a" :class="{'active-line':meansSonItem.taskStatus=='1'}"></div>
+                                <div v-if="index==1" class="long-line line long-a" :class="{'active-line':meansSonItem.taskStatus=='1'}"></div>
+                                <div v-if="index==1" class="long-line line long-b" :class="{'active-line':meansSonItem.taskStatus=='1'}"></div>
+                                <div v-if="index==2" class="short-line line short-b" :class="{'active-line':meansSonItem.taskStatus=='1'}"></div>
                             </div>
                             <div>{{meansSonItem.taskName}}</div>
                         </div>
@@ -124,7 +124,7 @@ export default {
             hasDaliyTask:true, // 是否有每日任务
             hasNewTask:true, // 是否有新手任务
             daliyTaskList:[],
-            daliyTaskList1:[
+            newTaskList1:[
                 {
                     taskNeedSum:'1',
                     taskNowSum:'1',
@@ -458,36 +458,44 @@ export default {
                 margin: 0 auto 4px;
             }
         }
-        // .line-box{
-        //     position: relative;
-        //     .line{
-        //         .center();
-        //         width:100%;
-        //         height:0.125rem;
-        //         background:rgba(232,232,232,1);
-        //         border-radius:0.0625rem;
-        //         z-index: 0;
-        //     }
-        //     .short-line{
-        //         // width:0.625rem;
-        //     }
-        //     .short-a{
-        //         left:-0.375rem;
-        //     }
-        //     .short-b{
-        //         right: 0.25rem;
-        //     }
-        //     .long-line{
-        //         // width:5.3125rem;
-        //     }
-        //     .long-a{
-        //         left: -2.625rem;
-        //     }
-        //     .long-b{
-        //         right: -109px;
-        //     }
-        // }
+        .line-box{
+            position: relative;
+            .line{
+                .center();
+                width:170%;
+                height:0.125rem;
+                background:rgba(232,232,232,1);
+                border-radius:0.0625rem;
+                z-index: 0;
+            }
+            .short-line{
+                width:50%;
+                z-index: 8;
+            }
+            .short-a{
+                left:0.9375rem;
+            }
+            .short-b{
+                right: -1.1875rem;
+            }
+            .long-line{
+                width:6.25rem;
+                z-index: 7;
+            }
+            .long-a{
+                left: -17px;
+            }
+            .long-b{
+                left: 86px;
+            }
+            .active-line{
+             background: rgba(134,233,204,1);
+        }
+        }
+        
         .new-task-status-to{
+            position: relative;
+            z-index: 9;
             width:46px;
             height:46px;
             background:rgba(255,255,255,1);
@@ -515,6 +523,8 @@ export default {
             }
         }
         .new-task-status-done{
+            position: relative;
+            z-index: 9;
             width: 46px;
             height: 46px;
             background: rgba(134,233,204,1);

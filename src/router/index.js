@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HelloWorld from '@/pages/HelloWorld.vue'
 import task from './modules/task' /*task模组引入*/
+import duiba from './modules/duiba' /*duiba模组引入*/
 Vue.use(VueRouter)
 const routes = [
   {
@@ -9,7 +10,8 @@ const routes = [
     name: '',
     component: HelloWorld
   },
-  ...task
+  ...task,
+  ...duiba
 ]
 const router = new VueRouter({
   routes,
