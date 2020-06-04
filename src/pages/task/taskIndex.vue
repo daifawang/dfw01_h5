@@ -450,8 +450,8 @@ export default {
           }else if(this.exclusiveList.length === 0 && this.newTaskList.length > 0){
             this.showGuide = 1;
             this.guideType = 1;
-            console.log("guide newcomer >>>>"+this.$refs.newComer.offsetTop);
-            window.scrollTo(0,this.$refs.newComer.offsetTop);
+            // console.log("guide newcomer >>>>"+this.$refs.newComer.offsetTop);
+            // window.scrollTo(0,this.$refs.newComer.offsetTop);
             this.goGuideApi();
           }
         }
