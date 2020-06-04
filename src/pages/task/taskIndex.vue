@@ -107,7 +107,7 @@
           <div class="task-wrapper-div" v-for="(newItem,index) in newTaskList" :key="index">
             <div class="task-box">
               <div class="task-icon">
-                <!-- <img :src="newItem.headImg"> -->
+                <img :src="newItem.headImg">
               </div>
               <div class="tasks-main">
                 <div class="task-main-title">
@@ -187,7 +187,7 @@
           <div class="task-wrapper-div" v-for="(dailyItem,index) in dailyTaskList" :key="dailyItem.taskId" @click="clickUrl(index,dailyItem.jumpUrl)">
             <div class="task-box">
               <div class="task-icon">
-                <!-- <img :src="dailyItem.headImg"> -->
+                <img :src="dailyItem.headImg">
               </div>
               <div class="tasks-main">
                 <div class="task-main-title">
@@ -1282,8 +1282,7 @@ export default {
                 height:1.0625rem;
                 background:rgba(255,242,242,1);
                 border-radius:0.125rem;
-                position: absolute;
-                bottom: 0.125rem;
+                margin-top: 0.3125rem;
                 text-align: center;
                 // .font(0.75rem,#D11414,1.0625rem);
                 &>div{
