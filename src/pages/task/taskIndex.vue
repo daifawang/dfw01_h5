@@ -74,7 +74,7 @@
                 <div class="task-oilcard-add">最新到账{{ item.extra.onAddCount }}元</div>
               </div>
               <div v-if="item.status === '2' && showFirstGetCury" @click="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
-              <div class="right-bttn" ref="guideFour" :class="{guideQuan2:showGuide === 4 && index === 0}">
+              <div class="right-bttn" :class="{guideQuan2:showGuide === 4 && index === 0}">
                 <span v-if="item.status === '0' || item.status === '1'" class="bttn-span" @click="goTaskUrl(index,item.jumpUrl)">{{ item.taskAction }}</span>
                 <span v-else-if="item.status === '2'" class="bttn-span bttn-success" @click="getCurrency('1',index,'10')">领取元宝</span>
               </div>
@@ -129,11 +129,18 @@
                 </div>
               </div>
               <div class="task-btn-div">
-                <div class="task-btn">
+                <div class="task-btn" :class="{guideQuan2:showGuide === 5 && index === 0}">
                   <div :class="{'to-do':newItem.status=='0','doing':newItem.status=='1','done':newItem.status=='2',}">{{newItem.taskAction}}</div>
                 </div>
                 <div v-if="newItem.signCardText" class="task-btn-text">
                   <div>{{newItem.signCardText}}</div>
+                </div>
+              </div>
+              <div v-if="showGuide === 5 && index === 0" class="right-bttn-guide" >
+                <div class="task-guide task-guide-four">
+                  <img class="guide-four-jt" src="../../assets/images/task/task_jian_l1.png" />
+                  <div class="guide-text"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
+                  <div class="guide-bttn" @click="guideTo('')"><img src="../../assets/images/task/task_know.png" /></div>
                 </div>
               </div>
             </div>
@@ -319,7 +326,7 @@ export default {
           note:'一分钟了解打卡',
           taskName:'打卡',
           rewardNum:'50',
-          buttonText:'去完成'
+          taskAction:'去完成'
         },
         {
           // taskNeedSum:'3',
@@ -331,7 +338,7 @@ export default {
           // note:'一分钟了解打卡',
           taskName:'完善个人资料',
           rewardNum:'20',
-          buttonText:'去完善',
+          taskAction:'去完善',
           meansSonTasks:[
               {taskStatus:0,//0 未完成  1 已完成  2 已领取奖励
               taskName:'个人信息',
@@ -363,10 +370,15 @@ export default {
       setTimeout(() => {
         this.loadingFlag = false;
         this.exclusiveList = this.exclusiveList1;
-        this.newTaskFlag = '1';
-        setTimeout(() => {
-          this.dailyTaskFlag = '1';
-        }, 1000);
+        this.newTaskList = this.newTaskList1;
+        // this.exclusiveFlag = '1'
+        // this.newTaskFlag = '1';
+        // setTimeout(() => {
+        //   this.dailyTaskFlag = '1';
+        //   this.showGuide = 1;
+        //   this.guideType = 0;
+        //   this.goGuideApi();
+        // }, 1000);
       }, 1000);
     }
     //本地模拟数据测试用：----部署时候删除--☆☆☆☆☆☆☆----
@@ -1197,6 +1209,10 @@ export default {
                 max-width: 100%;
             }
         }
+        .task-guide-four{
+          top: 50%;
+          margin-top: 0.9rem;
+        }
         .tasks-main{
             flex: 1;
             .task-main-title{
@@ -1275,6 +1291,17 @@ export default {
                     transform: scale(0.9);
                     color: #D11414;
                 }
+            }
+            .guideQuan2 {
+              background-color: #fff;
+              border-radius: 60%;
+              z-index: 9990;
+              padding: 0.6875rem;
+              right: .225rem;
+              // top: 0.8rem;
+              top: 50%;
+              margin-top: -1.75rem;
+              position: absolute;
             }
         }
     }
