@@ -1285,8 +1285,11 @@ export default {
                 height:1.0625rem;
                 background:rgba(255,242,242,1);
                 border-radius:0.125rem;
-                margin-top: 0.3125rem;
+                margin-top: 1.1875rem;
                 text-align: center;
+                position: absolute;
+                top: 50%;
+                right: 0.625rem;
                 // .font(0.75rem,#D11414,1.0625rem);
                 &>div{
                     font-size: 0.75rem;
