@@ -608,7 +608,7 @@ export default {
           data: param
         })
         .then(res => {
-          console.log(res);
+          console.log('---initDailyTaskListData--',res);
           this.loadingFlag = false;
           if (res.reCode == "0") {
             this.dailyTaskList = res.result.taskList;
@@ -797,6 +797,7 @@ export default {
   background-color: #fff;
   .task-server-failed {
     padding: 1.1875rem .875rem;
+    width: initial;
   }
   .task-title {
     height: 3.625rem;
