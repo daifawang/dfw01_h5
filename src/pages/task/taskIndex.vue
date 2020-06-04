@@ -447,7 +447,7 @@ export default {
             this.showGuide = 1;
             this.guideType = 0;
             this.goGuideApi();
-          }else if(this.exclusiveList.length === 0 && his.newTaskList.length > 0){
+          }else if(this.exclusiveList.length === 0 && this.newTaskList.length > 0){
             this.showGuide = 1;
             this.guideType = 1;
             console.log("guide newcomer >>>>"+this.$refs.newComer.offsetTop);

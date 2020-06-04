@@ -167,7 +167,7 @@ let AppJsBridge = {
             data:_data,
             sid: sid
         })
-        console.log(_json);
+        // console.log(_json);
         try {
             if(typeof(AndroidAppGoodsJs) !== 'undefined'){
                 signData=AndroidAppCommonJs.signRequestBody(_json);
