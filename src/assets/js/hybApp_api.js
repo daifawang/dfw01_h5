@@ -236,7 +236,7 @@ let AppJsBridge = {
         console.log(_json);
         try {
             if(typeof(AndroidAppGoodsJs) != 'undefined'){
-                AndroidAppCommonJs.goLogin(json)(_json)
+                AndroidAppCommonJs.goLogin(_json);
             }else if(typeof(window.webkit) !== 'undefined'){
                 window.webkit.messageHandlers.goLogin.postMessage(_json);  
             }
@@ -248,7 +248,7 @@ let AppJsBridge = {
     checkAppVersion(type){
         // 处理接口recode返回5:type传值1。 0 检查新版本 1 获取升级信息
         console.log('【JS2056】弹出登录界面');
-        let _json= JSON.stringify({ "type":info});
+        let _json= JSON.stringify({ "type":type});
         console.log(_json);
         try {
             if(typeof(AndroidAppGoodsJs) != 'undefined'){

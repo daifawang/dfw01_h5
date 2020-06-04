@@ -1,6 +1,7 @@
 'use strict'
 import axios from "axios"
 import Const from "./const" 
+import { AppJsBridge } from "@/assets/js/hybApp_api";
 // 创建一个axios的对象
 // application/x-www-form-urlencoded;charset=utf-8
 const Axios = axios.create({
@@ -39,7 +40,15 @@ Axios.interceptors.request.use(
 Axios.interceptors.response.use(
     res => {
         //对响应数据做些事
-        return res.data;
+        if(res.data.reCode == '4'){
+            // 重新登录来获取token
+            AppJsBridge.goLogin(res.data.reInfo);
+        }else if(res.data.reCode == '5'){
+            // 升级客户端
+            AppJsBridge.checkAppVersion("1");
+        }else{
+            return res.data;
+        }
     },
     error => {
         console.log(error);
