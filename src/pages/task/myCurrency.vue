@@ -1,64 +1,67 @@
 <template>
-    <div class="my-currency" :style="{height:boxHeight+'px'}">
-        <div class="top-box" ref="topBox">
-            <div class="header">
-                <div class="header-top">
-                    <div @click="goBack" class="back-icon">
-                        <img src="../../assets/images/task/fanhui_jiantou.png">
+    <div>
+        <!-- <loading v-show="!loadSuccess"></loading> -->
+        <div  class="my-currency">
+            <div class="top-box" ref="topBox">
+                <div class="header">
+                    <div class="header-top">
+                        <div @click="goBack" class="back-icon">
+                            <img src="../../assets/images/task/fanhui_jiantou.png">
+                        </div>
+                        <div>我的元宝</div>
+                        <div @click="goRule" class="rule-icon">
+                            <img src="../../assets/images/task/wenhao.png">
+                        </div>
                     </div>
-                    <div>我的元宝</div>
-                    <div @click="goRule" class="rule-icon">
-                        <img src="../../assets/images/task/wenhao.png">
+                    <div class="header-middle">
+                        <span class="desc">可用元宝</span>
+                        <span class="num">{{coinNewCount}}</span>
+                        <img src="../../assets/images/task/yuanbao.png" class="yb-icon">
                     </div>
                 </div>
-                <div class="header-middle">
-                    <span class="desc">可用元宝</span>
-                    <span class="num">{{coinNewCount}}</span>
-                    <img src="../../assets/images/task/yuanbao.png" class="yb-icon">
+                <div class="currency-detail">
+                    <div class="total-box" ref="zsGuide">
+                        <div>
+                            <div class="total-desc">总获取</div>
+                            <div class="had-num">{{coinSum}}</div>
+                        </div>
+                        <div>
+                            <div class="total-desc">已使用</div>
+                            <div class="used-num">{{coinPoints}}</div>
+                        </div>
+                    </div>
+                    <div class="gray-bg-line"></div>
+                    <div class="coin-list">
+                        <div class="cl-tag">
+                            <div v-for="(item,index) in type" :key="index" :class="{'act-tag':activeTag==item.id}"
+                                @click="changeTab(item.id)">{{item.name}}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="currency-detail">
-                <div class="total-box" ref="zsGuide">
-                    <div>
-                        <div class="total-desc">总获取</div>
-                        <div class="had-num">{{coinSum}}</div>
-                    </div>
-                    <div>
-                        <div class="total-desc">已使用</div>
-                        <div class="used-num">{{coinPoints}}</div>
-                    </div>
-                </div>
-                <div class="gray-bg-line"></div>
-                <div class="coin-list">
-                    <div class="cl-tag">
-                        <div v-for="(item,index) in type" :key="index" :class="{'act-tag':activeTag==item.id}"
-                            @click="changeTab(item.id)">{{item.name}}</div>
+            <div class="coin-detail" id="coinDetail" :style="{marginTop:topBoxHeight+'px'}" ref="coinDetail">
+                <van-loading v-if="showLoading" size="24px" vertical>加载中...</van-loading>
+                <div v-if="coinDetail.length>0">
+                    <div v-for="(item,index) in coinDetail" :key="index" class="coin-detail-wrapper">
+                        <div>
+                            <div class="goods-name">{{item.goodsName}}</div>
+                            <div class="created-time">{{item.createdTime}}</div>
+                        </div>
+                        <div class="coin-num" :class="{'red-font':Number(item.coinNum)<0}">{{item.coinNum}}</div>
                     </div>
                 </div>
+                <div v-if="showNoData" class="load-more">暂无元宝数据</div>
+                <div v-if="loadingMore && coinDetail.length>0" class="load-more">加载中~</div>
             </div>
+            <div v-if="!loadingMore" class="bottom">已经到底啦~</div>
         </div>
-        <div class="coin-detail" id="coinDetail" :style="{marginTop:topBoxHeight+'px'}" ref="coinDetail">
-            <van-loading v-if="showLoading" size="24px" vertical>加载中...</van-loading>
-            <div v-if="coinDetail.length>0">
-                <div v-for="(item,index) in coinDetail" :key="index" class="coin-detail-wrapper">
-                    <div>
-                        <div class="goods-name">{{item.goodsName}}</div>
-                        <div class="created-time">{{item.createdTime}}</div>
-                    </div>
-                    <div class="coin-num" :class="{'red-font':Number(item.coinNum)<0}">{{item.coinNum}}</div>
-                </div>
-            </div>
-            <div v-if="showNoData" class="load-more">暂无元宝数据</div>
-            <div v-if="loadingMore && coinDetail.length>0" class="load-more">加载中~</div>
-        </div>
-        <div v-if="!loadingMore" class="bottom">已经到底啦~</div>
-
     </div>
+
 </template>
 <script>
 import { AppJsBridge, hybappObj } from "@/assets/js/hybApp_api.js";
 import Const from "@/assets/js/const";
-
+import loading from "@/components/loading.vue";
 export default {
     name: "myCurrency",
     data() {
@@ -68,6 +71,7 @@ export default {
                 { name: "已获取", id: "1" },
                 { name: "已使用", id: "2" }
             ],
+            loadSuccess: false,
             showLoading: false,
             showNoData: false,
             boxHeight: document.documentElement.clientHeight, //盒子高度
@@ -78,18 +82,23 @@ export default {
             pageNum: 0, //分页page_num
             loadingMore: true, //到达底部加载更多开关
             topBoxHeight: 200,
-            coinDetail: [],//元宝列表
+            coinDetail: [] //元宝列表
         };
     },
+    // components: {
+    //     loading: loading
+    // },
     created() {
         document.title = "我的元宝";
         AppJsBridge.hidenNavigation();
         this.initData();
-        this.initListData(this.activeTag);
+        setTimeout(() => {
+            this.initListData(this.activeTag);
+        }, 100);
     },
     mounted() {
-        console.log(this.$refs.topBox.offsetHeight);
-        this.topBoxHeight = this.$refs.topBox.offsetHeight - 35;
+        console.log('this.$refs.topBox.clientHeight:'+this.$refs.topBox.clientHeight);
+        this.topBoxHeight = this.$refs.topBox.offsetHeight - 39;
         window.addEventListener("scroll", this.loadeMore);
     },
     methods: {
@@ -107,6 +116,7 @@ export default {
                     .then(res => {
                         console.log(res);
                         if (res.reCode == "0") {
+                            // this.loadSuccess = true;
                             this.coinNewCount = res.result.coinNewCount;
                             this.coinPoints = res.result.coinPoints;
                             this.coinSum = res.result.coinSum;
@@ -162,27 +172,20 @@ export default {
                     })
                         .then(res => {
                             console.log(res);
-                            console.log(res.result.length);
                             this.showLoading = false;
                             if (res.reCode == "0") {
                                 if (res.result.length > 0) {
                                     this.loadingMore = true;
-                                    console.log(
-                                        "res.result.length:" + res.result.length
-                                    );
-                                    let coinDetail_lists = this.coinDetail.concat(
-                                        res.result
-                                    ); //邀请记录列表
+                                    console.log("res.result.length:" + res.result.length);
+                                    let coinDetail_lists = this.coinDetail.concat(res.result); //邀请记录列表
                                     this.coinDetail = coinDetail_lists;
                                     console.log(this.coinDetail);
                                 }
-                                if (this.coinDetail.length <= 0) {
+                                if (this.coinDetail.length <= 0 && res.result.length <= 0) {
+                                    console.log(1111111111);
                                     this.showNoData = true;
                                 }
-                                if (
-                                    this.coinDetail.length > 0 &&
-                                    res.result.length <= 0
-                                ) {
+                                if (this.coinDetail.length > 0 && res.result.length <= 0) {
                                     this.loadingMore = false;
                                     return;
                                 }
@@ -251,6 +254,8 @@ export default {
     top: 0px;
     left: 0px;
     width: 100%;
+    // height: auto;
+    clear:both;
 }
 .header {
     width: 100%;
@@ -376,11 +381,12 @@ export default {
     background: rgba(255, 255, 255, 1);
     border-radius: 0 0 0.5rem 0.5rem;
     padding: 0px 1rem;
-    height: auto;
     box-sizing: border-box;
+    // width: 100%;
+    height: auto;
     margin-top: -2.1875rem;
     margin-left: 0.625rem;
-    margin-right: 0.625rem;
+    margin-right: 0.5rem;
     //   overflow-y: scroll;
 }
 .coin-detail-wrapper {
