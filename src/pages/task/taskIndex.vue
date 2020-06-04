@@ -78,6 +78,7 @@
                 <span v-if="item.status === '0' || item.status === '1'" class="bttn-span" @click="goTaskUrl(index,item.jumpUrl)">{{ item.taskAction }}</span>
                 <span v-else-if="item.status === '2'" class="bttn-span bttn-success" @click="getCurrency('1',index,'10')">领取元宝</span>
               </div>
+              <!-- <div class="task-invitecard-bttn">立即查看</div> -->
               <div v-if="showGuide === 4 && index === 0" class="right-bttn-guide" >
                 <div class="task-guide task-guide-four">
                   <img class="guide-four-jt" src="../../assets/images/task/task_jian_l1.png" />
@@ -129,6 +130,7 @@
                 </div>
               </div>
               <div class="task-btn-div">
+                <div v-if="newItem.status === '2' && showFirstGetCury" @click="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
                 <div class="task-btn" :class="{guideQuan2:showGuide === 5 && index === 0}">
                   <div :class="{'to-do':newItem.status=='0','doing':newItem.status=='1','done':newItem.status=='2',}">{{newItem.taskAction}}</div>
                 </div>
@@ -320,7 +322,7 @@ export default {
           miniTags:[
               "https://test-live-ol-cdn.log56.com/nsq/header/20200401/d6a323f7-1665-4b3d-8370-926ae7b80ece.jpg",
           ],
-          status:'0',
+          status:'2',
           taskId:'1',
           signCardText:'2.5W人已观看',
           note:'一分钟了解打卡',
@@ -371,6 +373,7 @@ export default {
         this.loadingFlag = false;
         this.exclusiveList = this.exclusiveList1;
         this.newTaskList = this.newTaskList1;
+        this.showFirstGetCury = true;
         // this.exclusiveFlag = '1'
         // this.newTaskFlag = '1';
         // setTimeout(() => {
@@ -886,36 +889,6 @@ export default {
         }
       }
     }
-    .sj-tag{
-      width: 8.375rem;
-      height: 1.625rem;
-      line-height: 1.5825rem;
-      position: absolute;
-      right: 0.875rem;
-      top: -0.85rem;
-      clear: both;
-      background-color: #F4E3C0;
-      border-radius: .8125rem;
-      text-align: center;
-      font-size: 1rem;
-      font-family: Source Han Sans SC;
-      font-weight: 400;
-      color: rgba(1,1,1,1);
-      &:before,&:after{
-        content: "";
-        display: block;
-        border-width: .8125rem;
-        border-left-width: .375rem;
-        border-right-width: .375rem;
-        position: absolute;
-        bottom: -1.4375rem;
-        left: 6.1875rem;
-        border-style: solid dashed dashed;
-        border-color: #F4E3C0 transparent transparent;
-        font-size: 0;
-        line-height: 0;
-      }
-    }
     .right-bttn {
       position: absolute;
       right: .875rem;
@@ -1133,6 +1106,36 @@ export default {
     left: -0.6125rem;
     z-index: 9990;
     padding: .6875rem;
+  }
+  .sj-tag{
+    width: 8.375rem;
+    height: 1.625rem;
+    line-height: 1.5825rem;
+    position: absolute;
+    right: 0.875rem;
+    top: -0.85rem;
+    clear: both;
+    background-color: #F4E3C0;
+    border-radius: .8125rem;
+    text-align: center;
+    font-size: 1rem;
+    font-family: Source Han Sans SC;
+    font-weight: 400;
+    color: rgba(1,1,1,1);
+    &:before,&:after{
+      content: "";
+      display: block;
+      border-width: .8125rem;
+      border-left-width: .375rem;
+      border-right-width: .375rem;
+      position: absolute;
+      bottom: -1.4375rem;
+      left: 6.1875rem;
+      border-style: solid dashed dashed;
+      border-color: #F4E3C0 transparent transparent;
+      font-size: 0;
+      line-height: 0;
+    }
   }
 }
 // tf
