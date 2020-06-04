@@ -1,22 +1,23 @@
 <template>
   <div id="taskIndex" class="wapperTask">
-    <div class="wapperTaskGuide" :class="{guideBg:showGuide}" @touchmove.prevent>
-      <div v-if="showGuide === 1 || showGuide === 2" class="task-guide" :style="{top:guideObj.guidePosition.top,bottom:guideObj.guidePosition.bottom}">
-        <div class="guide-jian" :class="{guideJian1:showGuide === 1,guideJian2:showGuide === 2}">
-          <img v-if="showGuide === 1" src="../../assets/images/task/task_jian_l2.png" />
-          <img v-if="showGuide === 2" src="../../assets/images/task/task_jian_r2.png" />
-        </div>
-        <div class="guide-text" :class="{guideText1:showGuide === 1,guideText2:showGuide === 2}"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
-        <img v-if="showGuide === 2" class="guide-jt-2" src="../../assets/images/task/task_jian_l2.png" />
-        <div v-if="showGuide === 2" class="guide-text guide-text2"><span v-html="guideObj.text2"></span><img src="../../assets/images/task/task_hudie.png" /></div>
-        <div class="guide-bttn" @click="guideTo(showGuide+1)" :style="{bottom:guideObj.guidePosition.bottom,marginTop:guideObj.guidePosition.marginTop}">
-          <img src="../../assets/images/task/task_know.png" />
+    <loading v-show="loadingFlag"></loading>
+    <div v-show="!loadingFlag" class="task-show-wrapper">
+      <div class="wapperTaskGuide" :class="{guideBg:showGuide}" @touchmove.prevent>
+        <div v-if="showGuide === 1 || showGuide === 2" class="task-guide" :style="{top:guideObj.guidePosition.top,bottom:guideObj.guidePosition.bottom}">
+          <div class="guide-jian" :class="{guideJian1:showGuide === 1,guideJian2:showGuide === 2}">
+            <img v-if="showGuide === 1" src="../../assets/images/task/task_jian_l2.png" />
+            <img v-if="showGuide === 2" src="../../assets/images/task/task_jian_r2.png" />
+          </div>
+          <div class="guide-text" :class="{guideText1:showGuide === 1,guideText2:showGuide === 2}"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
+          <img v-if="showGuide === 2" class="guide-jt-2" src="../../assets/images/task/task_jian_l2.png" />
+          <div v-if="showGuide === 2" class="guide-text guide-text2"><span v-html="guideObj.text2"></span><img src="../../assets/images/task/task_hudie.png" /></div>
+          <div class="guide-bttn" @click="guideTo(showGuide+1)" :style="{bottom:guideObj.guidePosition.bottom,marginTop:guideObj.guidePosition.marginTop}">
+            <img src="../../assets/images/task/task_know.png" />
+          </div>
         </div>
       </div>
-    </div>
-    <van-skeleton title avatar :row="2" avatar-shape="square" :loading="loadingFlag1">
       <transition name="taskFade">
-      <div v-show="show_exclusiveList" class="task-main">
+      <div v-show="showExclusiveList" class="task-main">
         <div class="task-title">
           <span ref="zsGuide" :class="{guideQuan:showGuide === 3}">专属任务</span>
           <div v-if="showGuide === 3" class="task-guide">
@@ -87,12 +88,16 @@
             </div>
           </transition-group>
         </div>
+        <div class="task-wrapper task-server-failed" v-else-if="exclusiveFlag === '0'">
+          <van-loading type="spinner" size="24px">专属任务正在全力加载中...</van-loading>
+        </div>
+        <div class="task-wrapper task-server-failed" v-else-if="exclusiveFlag === '1'">
+          <van-loading type="spinner" size="24px">获取专属任务失败，稍后再试试吧~</van-loading>
+        </div>
       </div>
       </transition>
-    </van-skeleton>
-    <van-skeleton title avatar :row="3" avatar-shape="square" :loading="loadingFlag2">
-      <div ref="newComer" class="task-main">
-       <div class="tasks-title task-title-new" >新手任务
+      <div v-if="hasNewTask" ref="newComer" class="task-main">
+        <div class="tasks-title task-title-new" >新手任务
           <div @click="goVideoList">
             <img class="task-title-new-icon1" src="../../assets/images/task/xinshou@2x.png"> 新手攻略
             <img class="task-title-new-icon2" src="../../assets/images/task/jiantou_you@2x.png">
@@ -161,14 +166,18 @@
             </div>
           </div>
         </div>
+        <div class="task-wrapper task-server-failed" v-else-if="newTaskFlag === '0'">
+          <van-loading type="spinner" size="24px">新手任务正在全力加载中...</van-loading>
+        </div>
+        <div class="task-wrapper task-server-failed" v-else-if="newTaskFlag === '1'">
+          <van-loading type="spinner" size="24px">获取新手任务失败，稍后再试试吧~</van-loading>
+        </div>
       </div>
-    </van-skeleton>
-    <van-skeleton title avatar :row="4" avatar-shape="square" :loading="loadingFlag3">
-      <div class="task-main">
+      <div v-if="hasDailyTask" class="task-main">
         <div class="tasks-title">每日任务</div>
-        <div class="task-wrapper">
+        <div class="task-wrapper" v-if="dailyTaskList && dailyTaskList.length>0">
           <transition-group appear name="taskList" tag="div">
-          <div class="task-wrapper-div" v-for="(dailyItem,index) in daliyTaskList" :key="dailyItem.taskId" @click="clickUrl(index,dailyItem.jumpUrl)">
+          <div class="task-wrapper-div" v-for="(dailyItem,index) in dailyTaskList" :key="dailyItem.taskId" @click="clickUrl(index,dailyItem.jumpUrl)">
             <div class="task-box">
               <div class="task-icon">
                 <!-- <img :src="dailyItem.headImg"> -->
@@ -204,26 +213,31 @@
           </div>
           </transition-group>
         </div>
+        <div class="task-wrapper task-server-failed" v-else-if="dailyTaskFlag === '0'">
+          <van-loading type="spinner" size="24px">每日任务正在全力加载中...</van-loading>
+        </div>
+        <div class="task-wrapper task-server-failed" v-else-if="dailyTaskFlag === '1'">
+          <van-loading type="spinner" size="24px">获取每日任务失败，稍后再试试吧~</van-loading>
+        </div>
       </div>
-    </van-skeleton>
-    <div style="height:1.5rem;"></div>
+      <div style="height:1.5rem;"></div>
+    </div>
   </div>
 </template>
 <script>
 import Const from "@/assets/js/const" 
 import { AppJsBridge, hybappObj } from "@/assets/js/hybApp_api.js";
+import loading from "@/components/loading.vue"
 export default {
   name: "taskIndex",
   data() {
     return {
-      loadingFlag1: true, //骨架区域1-专属
-      loadingFlag2: true, //骨架区域2-新手
-      loadingFlag3: true, //骨架区域3-每日
+      loadingFlag: true,
       showGuideStore: false, //APP本地存储字段-引导页是否展示
       showGuide: '', //本页面是否显示引导页
       guideType: 0, //引导页类型：0.有专属任务的引导；1.无专属任务的引导
       showFirstGetCury: false, //APP本地存储字段-是否展示快去领取元宝提示
-      show_exclusiveList: true, //判断最后一条专属任务完成时，专属任务栏目整体消失
+      showExclusiveList: true, //判断最后一条专属任务完成时，专属任务栏目整体消失;
       guideObj: {
         text: '关于任务，你想了解的都在这里，快去看看吧！',
         guidePosition: {
@@ -290,7 +304,7 @@ export default {
       ],
       exclusiveList:[ //专属任务列表
       ],
-      daliyTaskList:[],//每日任务列表
+      dailyTaskList:[],//每日任务列表
       newTaskList1:[
         {
           taskNeedSum:'1',
@@ -332,29 +346,39 @@ export default {
         }
       ],//新手任务列表-本地测试用
       newTaskList:[],//新手任务列表
-      hasDaliyTask:true, // 是否有每日任务
       hasNewTask:true, // 是否有新手任务
+      hasDailyTask:true, // 是否有每日任务
+      exclusiveFlag:'0', //专属列表过渡状态：0在加载提示；1接口获取失败提示
+      newTaskFlag:'0', //新手列表过渡状态：0在加载提示；1接口获取失败提示
+      dailyTaskFlag:'0' //每日列表过渡状态：0在加载提示；1接口获取失败提示
     }
+  },
+  components:{
+    loading:loading
   },
   created() {
     document.title = '任务';
     //本地模拟数据测试用：----部署时候删除--☆☆☆☆☆☆☆----
     if(process.env.VUE_APP_ENV === 'development'){
-      this.loadingFlag1 = false;
-      this.loadingFlag2 = false;
-      this.loadingFlag3 = false;
-      this.exclusiveList = this.exclusiveList1;
+      setTimeout(() => {
+        this.loadingFlag = false;
+        this.exclusiveList = this.exclusiveList1;
+        this.newTaskFlag = '1';
+        setTimeout(() => {
+          this.dailyTaskFlag = '1';
+        }, 1000);
+      }, 1000);
     }
     //本地模拟数据测试用：----部署时候删除--☆☆☆☆☆☆☆----
   },
   mounted() {
     // 开启下拉刷新
     AppJsBridge.setClientRefresh('1');
-    // 初始化专属任务
-    this.initExclusiveList();
+    // 初始化专属任务-0
+    this.initExclusiveList('0');
     setTimeout(() => {
       // 初始化每日任务
-      this.initDaliyTaskListData();
+      this.initDailyTaskListData();
       // 获取APP本地存储--是否展示快去领取元宝提示
       AppJsBridge.getStoreInfo('TASK_GETCURY_KEY',backData => {
         console.log('callback-backData>>',backData);
@@ -369,17 +393,16 @@ export default {
     // 回调获取客户端返回的任务Tab点击通知---用来刷新每日任务块
     window['AppJSApi_BackH5TaskTabClick'] = (_json) => {
       console.log("客户端返回的任务Tab点击通知>>",_json);
-      this.initDaliyTaskListData();
+      this.initDailyTaskListData();
     }
   },
   methods:{
     GoDaily(){
       window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html?t=${new Date().getTime()}/#/task/dailyTask?&NEW_WVW_HYB`;
     },
-    initExclusiveList(){
-      console.log('-------------initExclusiveList-------------');
+    // 专属任务接口
+    initExclusiveList(isInit){
       AppJsBridge.initSignData({},'954010',param => {
-        console.log('---param---initExclusiveList--',param);
         this.$http({
           apiType: '2',
           headers: {
@@ -391,24 +414,30 @@ export default {
         .then(res => {
           console.log('---ExclusiveList--',res);
           // 初始化新手任务
-          this.initNewTaskListData('0');
-          this.loadingFlag1 = false;
+          if(isInit === '0'){
+            this.initNewTaskListData(isInit);
+          }
           if (res.reCode === "0") {
-            console.log(77999);
             this.exclusiveList = res.result;
+            if(this.exclusiveList.length === 0){
+              this.showExclusiveList = false;
+            }
           } else {
-            this.$toast(res.reInfo);
+            this.exclusiveFlag = '1';
+            console.log(res.reInfo);
           }
         })
         .catch(e => {
           console.log(e);
-          this.loadingFlag1 = false;
+          this.exclusiveFlag = '1';
           // 初始化新手任务
-          this.initNewTaskListData('0');
+          if(isInit === '0'){
+            this.initNewTaskListData(isInit);
+          }
         });
       });
     },
-    getGuideStoreApi(isInit){
+    getGuideStoreApi(){
       // 获取APP本地存储--是否展示新手引导
       AppJsBridge.getStoreInfo('TASK_GUIDE_KEY',backData => {
         console.log('callback-backData>>',backData);
@@ -418,9 +447,11 @@ export default {
             this.showGuide = 1;
             this.guideType = 0;
             this.goGuideApi();
-          }else if(isInit === '0' && this.exclusiveList.length === 0 && this.newTaskList.length > 0){
+          }else if(this.exclusiveList.length === 0 && his.newTaskList.length > 0){
             this.showGuide = 1;
             this.guideType = 1;
+            console.log("guide newcomer >>>>"+this.$refs.newComer.offsetTop);
+            window.scrollTo(0,this.$refs.newComer.offsetTop);
             this.goGuideApi();
           }
         }
@@ -456,7 +487,7 @@ export default {
           this.closeTip();
           this.exclusiveList.splice(index, 1);
           if(this.exclusiveList.length === 0){
-            this.show_exclusiveList = false;
+            this.showExclusiveList = false;
           }
         }
       }, 4000)
@@ -530,7 +561,6 @@ export default {
     },
     // 新手任务接口
     initNewTaskListData(isInit) {
-      console.log('-------------initNewTaskListData-------------');
       AppJsBridge.initSignData({}, 954008, param => {
         this.$http({
         apiType: "2",
@@ -541,27 +571,33 @@ export default {
         data: param
         })
         .then(res => {
-          console.log(33333333333333);
-          this.loadingFlag2 = false;
+          console.log('---initNewTaskListData--',res);
+          this.loadingFlag = false;
           if (res.reCode === "0") {
-            console.log(22222222222);
-            if(res.result.length>0){
-              this.newTaskList=res.result;
+            this.newTaskList=res.result;
+            if(this.newTaskList.length === 0){
+              this.hasNewTask = false;
             }
           } else {
-            this.$toast(res.reInfo);
+            this.newTaskFlag = '1';
+            console.log(res.reInfo);
           }
-          this.getGuideStoreApi(isInit);
+          if(isInit === '0'){
+            this.getGuideStoreApi();
+          }
         })
         .catch(e => {
           console.log(e);
-          this.loadingFlag2 = false;
-          this.getGuideStoreApi(isInit);
+          this.loadingFlag = false;
+          this.newTaskFlag = '1';
+          if(isInit === '0'){
+            this.getGuideStoreApi();
+          }
         });
       });
     },
     // 每日任务接口
-    initDaliyTaskListData() {
+    initDailyTaskListData() {
       AppJsBridge.initSignData({}, 954005, param => {
         this.$http({
           apiType: "2",
@@ -573,20 +609,21 @@ export default {
         })
         .then(res => {
           console.log(res);
-          this.loadingFlag3 = false;
+          this.loadingFlag = false;
           if (res.reCode == "0") {
-            if(res.result.taskList && res.result.taskList.length > 0){
-                this.daliyTaskList=res.result.taskList;
-            }else{
-
+            this.dailyTaskList = res.result.taskList;
+            if(this.dailyTaskList.length === 0){
+              this.hasDailyTask = false;
             }
           } else {
-            this.$toast(res.reInfo);
+            this.dailyTaskFlag = '1';
+            console.log(res.reInfo);
           }
         })
         .catch(e => {
           console.log(e);
-          this.loadingFlag3 = false;
+          this.loadingFlag = false;
+          this.dailyTaskFlag = '1';
         });
       });
     }
@@ -758,6 +795,9 @@ export default {
 .task-main {
   margin-bottom: .3125rem;
   background-color: #fff;
+  .task-server-failed {
+    padding: 1.1875rem .875rem;
+  }
   .task-title {
     height: 3.625rem;
     line-height: 3.625rem;
