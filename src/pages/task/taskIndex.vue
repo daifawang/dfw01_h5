@@ -23,12 +23,12 @@
           <div v-if="showGuide === 3" class="task-guide">
             <img class="guide-four-jt" src="../../assets/images/task/task_jian_r1.png" />
             <div class="guide-text"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
-            <div class="guide-bttn" @click="guideTo(4)"><img src="../../assets/images/task/task_know.png" /></div>
+            <div class="guide-bttn" @click.stop="guideTo(4)"><img src="../../assets/images/task/task_know.png" /></div>
           </div>
         </div>
         <div class="task-wrapper" v-if="exclusiveList && exclusiveList.length>0">
           <transition-group appear name="taskList" tag="div">
-            <div v-for="(item, index) in exclusiveList" :key="item.taskId" class="task-li">
+            <div v-for="(item, index) in exclusiveList" :key="item.taskId" class="task-li" @click.stop="clickUrl(item.status,item.jumpUrl)">
               <div class="task-li-t">
                 <img class="task-t-icon" :src="item.taskHeadImgUrl" />
                 <div class="task-t-div">
@@ -54,7 +54,7 @@
                   <img class="task-invitecard-headimg" :src="item.extra.inviteUserImg" />
                   <span>{{ item.extra.inviteUserName }}给您发了一份邀请...</span>
                 </div>
-                <div class="task-invitecard-bttn">立即查看</div>
+                <div class="task-invitecard-bttn" @click.stop="clickUrl(item.status,item.jumpUrl)">立即查看</div>
                 <div class="task-invitecard-company">{{ item.extra.inviteCompany }}</div>
               </div>
               <div v-else-if="item.taskType === '3' && item.extra" class="task-li-business">
@@ -73,17 +73,19 @@
                 <div class="task-oilcard-last">余额：￥{{ item.extra.lastCount }}</div>
                 <div class="task-oilcard-add">最新到账{{ item.extra.onAddCount }}元</div>
               </div>
-              <div v-if="item.status === '2' && showFirstGetCury" @click="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
+              <div v-if="item.status === '2' && showFirstGetCury" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
               <div class="right-bttn" :class="{guideQuan2:showGuide === 4 && index === 0}">
-                <span v-if="item.status === '0' || item.status === '1'" class="bttn-span" @click="goTaskUrl(index,item.jumpUrl)">{{ item.taskAction }}</span>
-                <span v-else-if="item.status === '2'" class="bttn-span bttn-success" @click="getCurrency('1',index,'10')">领取元宝</span>
+                <span v-if="item.status === '0' || item.status === '1'" class="bttn-span" @click.stop="clickRightBttn('1',index)">{{ item.taskAction }}</span>
+                <span v-else-if="item.status === '2'" class="bttn-span bttn-success" @click.stop="clickRightBttn('1',index)">领取元宝</span>
               </div>
-              <!-- <div class="task-invitecard-bttn">立即查看</div> -->
+              <div v-if="item.viewCount" class="task-btn-view">
+                <div>{{item.viewCount}}</div>
+              </div>
               <div v-if="showGuide === 4 && index === 0" class="right-bttn-guide" >
                 <div class="task-guide task-guide-four">
                   <img class="guide-four-jt" src="../../assets/images/task/task_jian_l1.png" />
                   <div class="guide-text"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
-                  <div class="guide-bttn" @click="guideTo('')"><img src="../../assets/images/task/task_know.png" /></div>
+                  <div class="guide-bttn" @click.stop="guideTo('')"><img src="../../assets/images/task/task_know.png" /></div>
                 </div>
               </div>
             </div>
@@ -97,6 +99,7 @@
         </div>
       </div>
       </transition>
+      <transition name="taskFade">
       <div v-if="hasNewTask" ref="newComer" class="task-main">
         <div class="tasks-title task-title-new" >新手任务
           <div @click="goVideoList">
@@ -105,7 +108,8 @@
           </div>
         </div>
         <div class="task-wrapper" v-if="newTaskList && newTaskList.length>0">
-          <div class="task-wrapper-div" v-for="(newItem,index) in newTaskList" :key="index">
+          <transition-group appear name="taskList" tag="div">
+          <div class="task-wrapper-div" v-for="(newItem,index) in newTaskList" :key="newItem.taskId" @click.stop="clickUrl(newItem.status,newItem.jumpUrl)">
             <div class="task-box">
               <div class="task-icon">
                 <img :src="newItem.headImg">
@@ -130,8 +134,8 @@
                 </div>
               </div>
               <div class="task-btn-div">
-                <div v-if="newItem.status === '2' && showFirstGetCury" @click="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
-                <div class="task-btn" :class="{guideQuan2:showGuide === 5 && index === 0}">
+                <div v-if="newItem.status === '2' && showFirstGetCury" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
+                <div @click.stop="clickRightBttn('2',index)" class="task-btn" :class="{guideQuan2:showGuide === 5 && index === 0}">
                   <div :class="{'to-do':newItem.status=='0','doing':newItem.status=='1','done':newItem.status=='2',}">{{newItem.taskAction}}</div>
                 </div>
                 <div v-if="newItem.signCardText" class="task-btn-text">
@@ -142,7 +146,7 @@
                 <div class="task-guide task-guide-four">
                   <img class="guide-four-jt" src="../../assets/images/task/task_jian_l1.png" />
                   <div class="guide-text"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
-                  <div class="guide-bttn" @click="guideTo('')"><img src="../../assets/images/task/task_know.png" /></div>
+                  <div class="guide-bttn" @click.stop="guideTo('')"><img src="../../assets/images/task/task_know.png" /></div>
                 </div>
               </div>
             </div>
@@ -174,6 +178,7 @@
               </div>
             </div>
           </div>
+          </transition-group>
         </div>
         <div class="task-wrapper task-server-failed" v-else-if="newTaskFlag === '0'">
           <van-loading type="spinner" size="24px">新手任务正在全力加载中...</van-loading>
@@ -182,11 +187,12 @@
           <van-loading type="spinner" size="24px">获取新手任务失败，稍后再试试吧~</van-loading>
         </div>
       </div>
+      </transition>
       <div v-if="hasDailyTask" class="task-main">
         <div class="tasks-title">每日任务</div>
         <div class="task-wrapper" v-if="dailyTaskList && dailyTaskList.length>0">
           <transition-group appear name="taskList" tag="div">
-          <div class="task-wrapper-div" v-for="(dailyItem,index) in dailyTaskList" :key="dailyItem.taskId" @click="clickUrl(index,dailyItem.jumpUrl)">
+          <div class="task-wrapper-div" v-for="(dailyItem,index) in dailyTaskList" :key="dailyItem.taskId" @click.stop="clickUrl(dailyItem.status,dailyItem.jumpUrl)">
             <div class="task-box">
               <div class="task-icon">
                 <img :src="dailyItem.headImg">
@@ -211,7 +217,8 @@
                 </div>
               </div>
               <div class="task-btn-div">
-                <div class="task-btn">
+                <div v-if="dailyItem.status === '2' && showFirstGetCury" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
+                <div @click.stop="clickRightBttn('3',index)" class="task-btn">
                   <div :class="{'to-do':dailyItem.status=='1','doing':dailyItem.status=='2','done':dailyItem.status=='3',}">{{dailyItem.buttonText}}</div>
                 </div>
                 <div v-if="dailyItem.signCardText" class="task-btn-text">
@@ -246,7 +253,6 @@ export default {
       showGuide: '', //本页面是否显示引导页
       guideType: 0, //引导页类型：0.有专属任务的引导；1.无专属任务的引导
       showFirstGetCury: false, //APP本地存储字段-是否展示快去领取元宝提示
-      showExclusiveList: true, //判断最后一条专属任务完成时，专属任务栏目整体消失;
       guideObj: {
         text: '关于任务，你想了解的都在这里，快去看看吧！',
         guidePosition: {
@@ -261,7 +267,7 @@ export default {
           miniTagList: [
             'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'
           ],
-          taskType: '1',taskAction: '去接单',status: '1',jumpUrl: '',reawrdNum: '6',
+          taskType: '1',taskAction: '去接单',status: '1',jumpUrl: '',reawrdNum: '6',viewCount: '4000人在看',
           extra: {
             companyImgUrl: 'http://kydd.log56.com/sq_server/images/guidance_bg.png',
             showScriptOne: '北京昌平区⇀上海浦东',showScriptTwo: '普货【20吨】',showScriptThree: '1800元【到付】'
@@ -281,7 +287,7 @@ export default {
         {
           taskId: '19',taskHeadImgUrl: 'https://live-ol.log56.com/sq_server_manage/shq/20200430/478c7ae1-945f-423d-8013-9558c30e3a85.jpg',taskName: '绑卡收运费',
           taskNote: '完善证件信息后可结算运费',miniTagList: [],
-          taskType: '5',taskAction: '去绑卡',status: '0',jumpUrl: '',reawrdNum: '5'
+          taskType: '5',taskAction: '去绑卡',status: '0',jumpUrl: '',reawrdNum: '5',viewCount: '5000人关注',
         },
         {
           taskId: '13',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '升级直属运力',
@@ -323,7 +329,7 @@ export default {
               "https://test-live-ol-cdn.log56.com/nsq/header/20200401/d6a323f7-1665-4b3d-8370-926ae7b80ece.jpg",
           ],
           status:'2',
-          taskId:'1',
+          taskId:'111',
           signCardText:'2.5W人已观看',
           note:'一分钟了解打卡',
           taskName:'打卡',
@@ -333,7 +339,7 @@ export default {
         {
           // taskNeedSum:'3',
           // taskNowSum:'1',
-            taskId:'2',
+          taskId:'112',
           headImg:require("../../assets/images/task/daka@2x.png"),
           status:'0',
           // signCardText:'2.5W人已观看',
@@ -355,7 +361,8 @@ export default {
         }
       ],//新手任务列表-本地测试用
       newTaskList:[],//新手任务列表
-      hasNewTask:true, // 是否有新手任务
+      showExclusiveList: true, //是否有专属任务；判断最后一条专属任务完成时，专属任务栏目整体消失;
+      hasNewTask:true, // 是否有新手任务；判断最后一条新手任务完成时，新手任务栏目整体消失;
       hasDailyTask:true, // 是否有每日任务
       exclusiveFlag:'0', //专属列表过渡状态：0在加载提示；1接口获取失败提示
       newTaskFlag:'0', //新手列表过渡状态：0在加载提示；1接口获取失败提示
@@ -483,51 +490,70 @@ export default {
       this.guideObj.guidePosition.top = 'initial';
       this.guideObj.guidePosition.bottom = '0rem';
     },
-    getCurrency(type,index,num){
-      if(this.showGuide && this.showGuide >0){
-        return;
-      }
-      var json_str = JSON.stringify({
-        addCount: num,
-        taskId:'1001'
-      })
-      if(typeof(AndroidAppCommonJs)!=='undefined'){
-        AndroidAppCommonJs.openIngotsReceiveDlg(json_str)
-      }else if(typeof(window.webkit) !== 'undefined'){
-        window.webkit.messageHandlers.openIngotsReceiveDlg.postMessage(json_str);
-      }
-      console.log(index);
+    getCurrency(type,index){
+      let task_id = type === '1' ? this.exclusiveList[index].taskId : type === '2' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
+      let num = type === '1' ? this.exclusiveList[index].reawrdNum : type === '2' ? this.newTaskList[index].reawrdNum : this.dailyTaskList[index].reawrdNum;
+      AppJsBridge.openIngotsReceiveDlg(task_id,num);
       setTimeout(() => {
+        this.closeTip();
         if(type === '1'){
-          this.closeTip();
           this.exclusiveList.splice(index, 1);
           if(this.exclusiveList.length === 0){
             this.showExclusiveList = false;
           }
+        } else if(type == '3'){
+          let _obj = this.daliyTaskList[index];
+          this.daliyTaskList.splice(index, 1);
+          this.daliyTaskList.push(_obj);
+        } else if(type == '2'){
+          this.newTaskList.splice(index, 1);
+          if(this.newTaskList.length === 0){
+            this.hasNewTask = false;
+          }
         }
       }, 4000)
+    },
+    clickRightBttn(type,index){
+      console.log(type,index);
+      if(this.showGuide && this.showGuide >0){
+        return;
+      }
+      let status = type === '1' ? this.exclusiveList[index].status : type === '2' ? this.newTaskList[index].status : this.dailyTaskList[index].status;
+      let _url = type === '1' ? this.exclusiveList[index].jumpUrl : type === '2' ? this.newTaskList[index].jumpUrl : this.dailyTaskList[index].jumpUrl;
+      if(status === '2'){ //领取元宝
+        //此次还需调接口更新状态后走下一步
+        this.getCurrency(type,index);
+      } else if (status === '3') { //已领取-置灰点击没反应
+        return;
+      } else { //跳转具体任务链接
+        this.goTaskUrl(_url);
+      }
+    },
+    // 点击整个栏跳转
+    clickUrl(status,url){
+      console.log(status,url);
+      if(this.showGuide && this.showGuide >0){
+        return;
+      }
+      if(status !== '2' && status !== '3'){
+         this.goTaskUrl(url);
+      }
+    },
+    goTaskUrl(jump_url){
+      console.log('jump_url>>>>'+jump_url);
+      if(jump_url){
+        if(jump_url.indexOf('?') < 0 ){
+          window.location.href=`${jump_url}?ttt=${new Date().getTime()}&NEW_WVW_HYB`;
+        }else{
+          window.location.href=`${jump_url}&ttt=${new Date().getTime()}&NEW_WVW_HYB`;
+        }
+      }
     },
     closeTip(){
       this.showFirstGetCury = false;
       AppJsBridge.storeInfo('TASK_GETCURY_KEY','1');
     },
-    goTaskUrl(index,jump_url){
-      if(this.showGuide && this.showGuide >0){
-        return;
-      }
-      if(jump_url === '-1'){
-        let _obj = this.exclusiveList[index];
-        this.exclusiveList.splice(index, 1);
-        this.exclusiveList.push(_obj);
-        return;
-      }
-      this.$toast({
-        position: 'top',
-        message: jump_url,
-        duration: 1500
-      });
-    },
-    guideTo(num){
+    guideTo(num){ //新手引导
       if(num === 3 && this.guideType > 0){
         num = 5;
       }
@@ -913,6 +939,20 @@ export default {
         color: #fff;
       }
     }
+    .task-btn-view {
+      background: #fff2f2;
+      border-radius: 0.125rem;
+      text-align: center;
+      position: absolute;
+      top: 3.75rem;
+      right: 0.875rem;
+      div {
+        font-size: 0.75rem;
+        transform: scale(0.9);
+        color: #D11414;
+        padding: 0 .175rem;
+      }
+    }
     .guideQuan2{
       background-color: #fff;
       border-radius: 60%;
@@ -1194,6 +1234,7 @@ export default {
         height: auto;
         background: #ffffff;
         .task-wrapper-div{
+            position: relative;
             margin-left: 1rem;
             border-bottom:0.0625rem solid #E8E8E8 ;
         }
@@ -1258,6 +1299,7 @@ export default {
             }
         }
         .task-btn-div{
+            position: relative;
             .task-btn{
                 width: 5.1875rem;
                 height: 1.9375rem;
@@ -1285,17 +1327,20 @@ export default {
                 height:1.0625rem;
                 background:rgba(255,242,242,1);
                 border-radius:0.125rem;
-                margin-top: 1.1875rem;
                 text-align: center;
                 position: absolute;
-                top: 50%;
-                right: 0.625rem;
+                top: 2.25rem;
+                right: 0;
                 // .font(0.75rem,#D11414,1.0625rem);
                 &>div{
                     font-size: 0.75rem;
                     transform: scale(0.9);
                     color: #D11414;
                 }
+            }
+            .sj-tag {
+                top: -2.2rem;
+                right: 0;
             }
             .guideQuan2 {
               background-color: #fff;

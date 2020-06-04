@@ -260,6 +260,22 @@ let AppJsBridge = {
             console.log(JSON.stringify(error));
         }
     },
+    // 【JS2057】元宝领取弹窗&气泡数变更
+    openIngotsReceiveDlg(taskId,num){
+        let json_str = JSON.stringify({
+            addCount: num,
+            taskId: taskId
+        })
+        try {
+            if(typeof(AndroidAppCommonJs)!=='undefined'){
+                AndroidAppCommonJs.openIngotsReceiveDlg(json_str)
+            }else if(typeof(window.webkit) !== 'undefined'){
+                window.webkit.messageHandlers.openIngotsReceiveDlg.postMessage(json_str);
+            }
+        } catch (error) {
+            console.log(JSON.stringify(error));
+        }
+    },
 }
 export {
     AppJsBridge,
