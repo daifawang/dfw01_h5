@@ -15,8 +15,8 @@ export default {
             message: "加载中...",
             forbidClick: true
         });
-        var name=this.$utils.GetQueryString("redirect");
-        console.log(name);
+        this.redirect=this.$utils.GetQueryString("redirect");
+        console.log(this.redirect);
         if(this.redirect){
             this.initData({"redirect":this.redirect});
         }else{
@@ -38,7 +38,7 @@ export default {
                     .then(res => {
                         console.log(res);
                         if (res.reCode == "0") {
-                            // window.location.href=res.result;
+                            window.location.href=res.result;
                         } else {
                             this.$toast(res.reInfo);
                         }

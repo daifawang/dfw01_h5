@@ -11,7 +11,7 @@
             </div>
         </div>
          <div class="task-wrapper" v-if="newTaskList && newTaskList.length>0">
-            <div v-for="(newItem,index) in newTaskList" :key="index" @click="clickUrl(index,dailyItem.jumpUrl)">
+            <div v-for="(newItem,index) in newTaskList" :key="index" @click="clickUrl(index,newItem.jumpUrl)">
                 <div class="task-box">
                     <div class="task-icon">
                         <!-- <img :src="newItem.headImg"> -->
