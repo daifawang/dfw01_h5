@@ -5,17 +5,28 @@
 import Const from "@/assets/js/const" 
 import { AppJsBridge, hybappObj } from "@/assets/js/hybApp_api.js";
 export default {
+    data() {
+        return {
+            redirect:''
+        }
+    },
     created() {
         this.$toast.loading({
             message: "加载中...",
             forbidClick: true
         });
-        this.initData();
+        var name=this.$utils.GetQueryString("redirect");
+        console.log(name);
+        if(this.redirect){
+            this.initData({"redirect":this.redirect});
+        }else{
+            this.initData({});
+        }
         document.title="元宝商城"
     },
     methods: {
-        initData() {
-            AppJsBridge.initSignData({}, 954009, param => {
+        initData(dataJson) {
+            AppJsBridge.initSignData(dataJson, 954009, param => {
                 this.$http({
                     apiType: "2",
                     headers: {

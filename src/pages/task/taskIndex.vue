@@ -419,9 +419,6 @@ export default {
     }
   },
   methods:{
-    GoDaily(){
-      window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html?t=${new Date().getTime()}/#/task/dailyTask?&NEW_WVW_HYB`;
-    },
     // 专属任务接口
     initExclusiveList(isInit){
       AppJsBridge.initSignData({},'954010',param => {
