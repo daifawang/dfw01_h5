@@ -38,7 +38,7 @@ export default {
                     .then(res => {
                         console.log(res);
                         if (res.reCode == "0") {
-                            window.location.href=res.result;
+                            // window.location.href=res.result;
                         } else {
                             this.$toast(res.reInfo);
                         }
