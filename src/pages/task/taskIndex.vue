@@ -526,7 +526,7 @@ export default {
           if(this.exclusiveList.length === 0){
             this.showExclusiveList = false;
           }
-        } else if(type == '3'){
+        } else if(type == '3' && this.daliyTaskList[index].taskNowSum == this.daliyTaskList[index].taskNeedSum){
           let _obj = this.daliyTaskList[index];
           this.daliyTaskList.splice(index, 1);
           this.daliyTaskList.push(_obj);
