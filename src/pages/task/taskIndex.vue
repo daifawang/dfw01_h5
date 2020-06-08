@@ -101,7 +101,7 @@
       </transition>
       <transition name="taskFade">
       <div v-if="hasNewTask" ref="newComer" class="task-main">
-        <div class="tasks-title task-title-new" >新手任务
+        <div class="tasks-title task-title-new" v-if="newTaskList && newTaskList.length>0">新手任务
           <div @click="goVideoList">
             <img class="task-title-new-icon1" src="../../assets/images/task/xinshou@2x.png"> 新手攻略
             <img class="task-title-new-icon2" src="../../assets/images/task/jiantou_you@2x.png">
