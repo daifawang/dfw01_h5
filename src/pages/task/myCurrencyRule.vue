@@ -4,15 +4,15 @@
     <div v-show="!loadSuccess" class="rule-wrapper">
         <div class="rule-box">
             <img src="../../assets/images/task/dingyi@2x.png" alt="">
-            <div>{{defineCoin}}</div>
+            <div v-html="defineCoin"></div>
         </div>
         <div class="rule-box">
             <img src="../../assets/images/task/huoqu@2x.png" alt="">
-            <div>{{getCoin}}</div>
+            <div v-html="getCoin"></div>
         </div>
         <div class="rule-box">
             <img src="../../assets/images/task/shiyong@2x.png" alt="">
-            <div>{{useCoin}}</div>
+            <div v-html="useCoin"></div>
         </div>
     </div>
 
@@ -53,9 +53,9 @@ export default {
                         console.log(res);
                         if (res.reCode == "0") {
                             this.loadSuccess = false;
-                            this.defineCoin = res.result.defineCoin;
-                            this.getCoin = res.result.getCoin;
-                            this.useCoin = res.result.useCoin;
+                            this.defineCoin = res.result.defineCoin.replace("\\n","<br/>");
+                            this.getCoin = res.result.getCoin.replace("\\n","<br/>");
+                            this.useCoin = res.result.useCoin.replace("\\n","<br/>");
                         } else {
                             this.$toast(res.reInfo);
                         }
@@ -65,7 +65,8 @@ export default {
                     });
             });
         }
-    }
+    },
+
 };
 </script>
 <style lang="less" scoped>
@@ -86,6 +87,8 @@ export default {
         font-size: 16px;
         color: rgba(0, 0, 0, 1);
         line-height: 23px;
+        word-wrap: break-word;
+        white-space: pre-line;
         img {
             width: 125px;
             height: auto;

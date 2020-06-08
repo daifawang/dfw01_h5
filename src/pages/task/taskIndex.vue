@@ -540,7 +540,7 @@ export default {
         }
       }, 4000)
     },
-    // 任务按钮
+    // 点击任务按钮
     clickRightBttn(type,index){
         console.log('------任务按钮-');
       console.log(type,index);
@@ -569,6 +569,7 @@ export default {
          this.goTaskUrl(index,url);
       }
     },
+    // 任务跳转处理
     goTaskUrl(index,jump_url){
       console.log('jump_url>>>>'+jump_url);
       if(jump_url){
