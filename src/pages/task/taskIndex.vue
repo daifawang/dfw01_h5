@@ -396,17 +396,18 @@ export default {
   mounted() {
     // 开启下拉刷新
     AppJsBridge.setClientRefresh('1');
+    this.initUserInfo();
     // 初始化专属任务-0
-    this.initExclusiveList('0');
-    setTimeout(() => {
-      // 初始化每日任务
-      this.initDailyTaskListData();
-      // 获取APP本地存储--是否展示快去领取元宝提示
-      AppJsBridge.getStoreInfo('TASK_GETCURY_KEY',backData => {
-        console.log('callback-backData>>',backData);
-        this.showFirstGetCury = backData.data === '1' ? false : true;
-      });
-    }, 100);
+    // this.initExclusiveList('0');
+    // setTimeout(() => {
+    //   // 初始化每日任务
+    //   this.initDailyTaskListData();
+    //   // 获取APP本地存储--是否展示快去领取元宝提示
+    //   AppJsBridge.getStoreInfo('TASK_GETCURY_KEY',backData => {
+    //     console.log('callback-backData>>',backData);
+    //     this.showFirstGetCury = backData.data === '1' ? false : true;
+    //   });
+    // }, 100);
 
     // 回调获取客户端返回的任务成功信息,taskType：1.专属任务 2.新手任务 3.每日任务---用来刷新哪个任务块
     window['AppJSApi_BackH5TaskOrdersInfo'] = (_json) => {
@@ -419,6 +420,26 @@ export default {
     }
   },
   methods:{
+    //   获取用户信息
+    initUserInfo(){
+        AppJsBridge.getUserInfo(param =>{
+            if(param){
+                // 初始化专属任务-0
+                this.initExclusiveList('0');
+                setTimeout(() => {
+                    // 初始化每日任务
+                    this.initDailyTaskListData();
+                    // 获取APP本地存储--是否展示快去领取元宝提示
+                    AppJsBridge.getStoreInfo('TASK_GETCURY_KEY',backData => {
+                        console.log('callback-backData>>',backData);
+                        this.showFirstGetCury = backData.data === '1' ? false : true;
+                    });
+                }, 100);
+            }else{
+                this.$toast("请重新登录");
+            }
+        })
+    },
     // 专属任务接口
     initExclusiveList(isInit){
       AppJsBridge.initSignData({},'954010',param => {

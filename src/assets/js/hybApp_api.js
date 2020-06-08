@@ -276,6 +276,34 @@ let AppJsBridge = {
             console.log(JSON.stringify(error));
         }
     },
+    //  【JS2045】h5获取用户信息
+    getUserInfo(callback){
+        console.log('获取用户信息');
+        
+        let userInfo = "";
+        try {
+            if(typeof(AndroidAppCommonJs) !== 'undefined'){
+                userInfo=AndroidAppCommonJs.getFullUserInfo("")
+                console.log(userInfo);
+                // param = JSON.parse(decodeURI(signData));
+                if( typeof callback === 'function' ){
+                    callback(userInfo);
+                }
+            }else if(typeof(window.webkit) !== 'undefined'){
+                console.log('userInfo--------------------ios');
+                window.webkit.messageHandlers.getFullUserInfo.postMessage('');
+                window.AppJSApi_GetFullUerInfo=(userInfo) => {
+                    // param = JSON.parse(decodeURI(userInfo));
+                    console.log(userInfo);
+                    if( typeof callback === 'function' ){
+                        callback(userInfo);
+                    }
+                } 
+            }    
+        } catch (error) {
+            console.log(JSON.stringify(error));
+        }
+    }
 }
 export {
     AppJsBridge,
