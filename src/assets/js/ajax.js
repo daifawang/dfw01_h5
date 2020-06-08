@@ -40,7 +40,7 @@ Axios.interceptors.request.use(
 Axios.interceptors.response.use(
     res => {
         //对响应数据做些事
-        if(res.data.reCode == '4'){
+        if(res.data.reCode == '4' || res.data.reCode == '-4'){
             // 重新登录来获取token
             AppJsBridge.goLogin(res.data.reInfo);
         }else if(res.data.reCode == '5'){
