@@ -1,7 +1,7 @@
 <template>
     <div>
-        <!-- <loading v-show="!loadSuccess"></loading> -->
-        <div  class="my-currency">
+        <loading v-show="!loadSuccess"></loading>
+        <div v-show="loadSuccess" class="my-currency">
             <div class="top-box" ref="topBox">
                 <div class="header">
                     <div class="header-top">
@@ -85,9 +85,9 @@ export default {
             coinDetail: [] //元宝列表
         };
     },
-    // components: {
-    //     loading: loading
-    // },
+    components: {
+        loading: loading
+    },
     created() {
         document.title = "我的元宝";
         AppJsBridge.hidenNavigation();
@@ -98,7 +98,9 @@ export default {
     },
     mounted() {
         console.log('this.$refs.topBox.clientHeight:'+this.$refs.topBox.clientHeight);
-        this.topBoxHeight = this.$refs.topBox.offsetHeight - 39;
+        setTimeout(() => {
+            this.topBoxHeight = this.$refs.topBox.offsetHeight - 39;
+        }, 200);
         window.addEventListener("scroll", this.loadeMore);
     },
     methods: {
@@ -116,7 +118,7 @@ export default {
                     .then(res => {
                         console.log(res);
                         if (res.reCode == "0") {
-                            // this.loadSuccess = true;
+                            this.loadSuccess = true;
                             this.coinNewCount = res.result.coinNewCount;
                             this.coinPoints = res.result.coinPoints;
                             this.coinSum = res.result.coinSum;
