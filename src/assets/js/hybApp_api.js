@@ -279,7 +279,6 @@ let AppJsBridge = {
     //  【JS2045】h5获取用户信息
     getUserInfo(callback){
         console.log('获取用户信息');
-        
         let userInfo = "";
         try {
             if(typeof(AndroidAppCommonJs) !== 'undefined'){

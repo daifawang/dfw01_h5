@@ -112,7 +112,7 @@
           <div class="task-wrapper-div" v-for="(newItem,index) in newTaskList" :key="newItem.taskId" @click.stop="clickUrl(index,newItem.status,newItem.jumpUrl)">
             <div class="task-box">
               <div class="task-icon">
-                <img :src="newItem.headImg">
+                <img :src="newItem.taskHeadImgUrl">
               </div>
               <div class="tasks-main">
                 <div class="task-main-title">
@@ -412,6 +412,13 @@ export default {
     // 回调获取客户端返回的任务成功信息,taskType：1.专属任务 2.新手任务 3.每日任务---用来刷新哪个任务块
     window['AppJSApi_BackH5TaskOrdersInfo'] = (_json) => {
       console.log("客户端返回的任务成功信息>>",JSON.parse(_json));
+      if(_json === "1"){
+          this.initExclusiveList();
+      }else if(_json === "2"){
+          this.initNewTaskListData();
+      }else if(_json === "3"){
+          this.initDailyTaskListData();
+      }
     }
     // 回调获取客户端返回的任务Tab点击通知---用来刷新每日任务块
     window['AppJSApi_BackH5TaskTabClick'] = (_json) => {
@@ -660,7 +667,6 @@ export default {
     },
     goVideoList(){  //新手任务挑战
         window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html?t=${new Date().getTime()}/#/task/taskVideoList?&NEW_WVW_HYB`;
-        // console.log(`${Const.APP_RUL}hyb_task_h5/dist/index.html#/task/taskVideoList?&NEW_WVW_HYB&t=${new Date().getTime()}`);
     },
     // 新手任务接口
     initNewTaskListData(isInit) {
