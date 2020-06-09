@@ -409,14 +409,14 @@ export default {
     //   });
     // }, 100);
 
-    // 回调获取客户端返回的任务成功信息,taskType：1.专属任务 2.新手任务 3.每日任务---用来刷新哪个任务块
+    // 回调获取客户端返回的任务成功信息,taskType：0.专属任务 1.新手任务 2.每日任务---用来刷新哪个任务块
     window['AppJSApi_BackH5TaskOrdersInfo'] = (_json) => {
       console.log("客户端返回的任务成功信息>>",JSON.parse(_json));
-      if(_json === "1"){
+      if(_json === "0"){
           this.initExclusiveList();
-      }else if(_json === "2"){
+      }else if(_json === "1"){
           this.initNewTaskListData();
-      }else if(_json === "3"){
+      }else if(_json === "2"){
           this.initDailyTaskListData();
       }
     }
