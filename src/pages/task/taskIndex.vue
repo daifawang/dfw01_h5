@@ -550,8 +550,9 @@ export default {
       let status = type === '1' ? this.exclusiveList[index].status : type === '2' ? this.newTaskList[index].status : this.dailyTaskList[index].status;
       let _url = type === '1' ? this.exclusiveList[index].jumpUrl : type === '2' ? this.newTaskList[index].jumpUrl : this.dailyTaskList[index].jumpUrl;
       let taskId = type === '1' ? this.exclusiveList[index].taskId : type === '2' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
+      let taskConfigId = type === '1' ? this.exclusiveList[index].taskConfigId   : type === '2' ? this.newTaskList[index].taskConfigId   : this.dailyTaskList[index].taskConfigId  ;
       if(status === '2'){ //领取元宝
-        this.getCurrencyData(taskId,type,index);
+        this.getCurrencyData(taskId,type,index,taskConfigId);
       } else if (status === '3') { //已领取-置灰点击没反应
         return;
       } else { //跳转具体任务链接
@@ -738,10 +739,10 @@ export default {
       });
     },
     // 领取元宝接口
-    getCurrencyData(taskId,type,index){
+    getCurrencyData(taskId,type,index,taskConfigId){
         // taskType  0 专属  1 新手  2每日
         console.log('taskId:'+taskId+',type:'+type+',index:'+index);
-        AppJsBridge.initSignData({taskId:taskId,taskType:Number(type)-1+''}, 954011, param => {
+        AppJsBridge.initSignData({taskId:taskId,taskType:Number(type)-1+'',taskConfigId:taskConfigId}, 954011, param => {
             this.$http({
             apiType: "2",
             headers: {
