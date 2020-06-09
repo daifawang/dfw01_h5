@@ -526,7 +526,7 @@ export default {
           if(this.exclusiveList.length === 0){
             this.showExclusiveList = false;
           }
-        } else if(type == '3' && this.dailyTaskList[index].taskNowSum == this.dailyTaskList[index].taskNeedSum){
+        } else if(type == '3' && this.dailyTaskList[index].taskNowSum >= this.dailyTaskList[index].taskNeedSum){
           let _obj = this.dailyTaskList[index];
           this.dailyTaskList.splice(index, 1);
           this.dailyTaskList.push(_obj);

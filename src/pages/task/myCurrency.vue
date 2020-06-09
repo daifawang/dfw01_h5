@@ -1,7 +1,6 @@
 <template>
     <div>
-        <loading v-show="!loadSuccess"></loading>
-        <div v-show="loadSuccess" class="my-currency">
+        <div  class="my-currency">
             <div class="top-box" ref="topBox">
                 <div class="header">
                     <div class="header-top">
@@ -61,7 +60,6 @@
 <script>
 import { AppJsBridge, hybappObj } from "@/assets/js/hybApp_api.js";
 import Const from "@/assets/js/const";
-import loading from "@/components/loading.vue";
 export default {
     name: "myCurrency",
     data() {
@@ -85,22 +83,20 @@ export default {
             coinDetail: [] //元宝列表
         };
     },
-    components: {
-        loading: loading
-    },
     created() {
         document.title = "我的元宝";
         AppJsBridge.hidenNavigation();
         this.initData();
         setTimeout(() => {
-            this.initListData(this.activeTag);
-        }, 100);
+            
+        }, 150);
     },
     mounted() {
         console.log('this.$refs.topBox.clientHeight:'+this.$refs.topBox.clientHeight);
+        this.topBoxHeight = this.$refs.topBox.offsetHeight - 39;
+        this.initListData(this.activeTag);
         setTimeout(() => {
-            this.topBoxHeight = this.$refs.topBox.offsetHeight - 39;
-        }, 200);
+        }, 150);
         window.addEventListener("scroll", this.loadeMore);
     },
     methods: {
@@ -193,7 +189,8 @@ export default {
                                 }
                             } else {
                                 this.$toast(res.reInfo);
-                                this.loadingMore = false;
+                                this.showLoading=true;
+                                // this.loadingMore = false;
                             }
                         })
                         .catch(e => {
