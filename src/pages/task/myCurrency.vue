@@ -87,16 +87,11 @@ export default {
         document.title = "我的元宝";
         AppJsBridge.hidenNavigation();
         this.initData();
-        setTimeout(() => {
-            
-        }, 150);
     },
     mounted() {
         console.log('this.$refs.topBox.clientHeight:'+this.$refs.topBox.clientHeight);
         this.topBoxHeight = this.$refs.topBox.offsetHeight - 39;
         this.initListData(this.activeTag);
-        setTimeout(() => {
-        }, 150);
         window.addEventListener("scroll", this.loadeMore);
     },
     methods: {
