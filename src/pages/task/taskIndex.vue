@@ -253,6 +253,7 @@ export default {
       showGuide: '', //本页面是否显示引导页
       guideType: 0, //引导页类型：0.有专属任务的引导；1.无专属任务的引导
       showFirstGetCury: false, //APP本地存储字段-是否展示快去领取元宝提示
+      showFirstCury: false, //任务列表去重-是否展示快去领取元宝提示
       guideObj: {
         text: '关于任务，你想了解的都在这里，快去看看吧！',
         guidePosition: {
@@ -367,6 +368,7 @@ export default {
       exclusiveFlag:'0', //专属列表过渡状态：0在加载提示；1接口获取失败提示
       newTaskFlag:'0', //新手列表过渡状态：0在加载提示；1接口获取失败提示
       dailyTaskFlag:'0' //每日列表过渡状态：0在加载提示；1接口获取失败提示
+      
     }
   },
   components:{
@@ -427,25 +429,25 @@ export default {
     }
   },
   methods:{
-    //   获取用户信息
+    // 获取用户信息
     initUserInfo(){
-        AppJsBridge.getUserInfo(param =>{
-            if(param){
-                // 初始化专属任务-0
-                this.initExclusiveList('0');
-                setTimeout(() => {
-                    // 初始化每日任务
-                    this.initDailyTaskListData();
-                    // 获取APP本地存储--是否展示快去领取元宝提示
-                    AppJsBridge.getStoreInfo('TASK_GETCURY_KEY',backData => {
-                        console.log('callback-backData>>',backData);
-                        this.showFirstGetCury = backData.data === '1' ? false : true;
-                    });
-                }, 100);
-            }else{
-                this.$toast("请重新登录");
-            }
-        })
+      AppJsBridge.getUserInfo(param =>{
+        if(param){
+          // 初始化专属任务-0
+          this.initExclusiveList('0');
+          setTimeout(() => {
+            // 初始化每日任务
+            this.initDailyTaskListData();
+            // 获取APP本地存储--是否展示快去领取元宝提示
+            AppJsBridge.getStoreInfo('TASK_GETCURY_KEY',backData => {
+              console.log('callback-backData>>',backData);
+              this.showFirstGetCury = backData.data === '1' ? false : true;
+            });
+          }, 100);
+        }else{
+          this.$toast("请重新登录");
+        }
+      })
     },
     // 专属任务接口
     initExclusiveList(isInit){
