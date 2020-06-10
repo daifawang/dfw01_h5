@@ -529,11 +529,11 @@ export default {
             this.showExclusiveList = false;
           }
         } else if(type == '3' && this.dailyTaskList[index].taskNowSum >= this.dailyTaskList[index].taskNeedSum){
+            this.dailyTaskList[index].buttonText="已完成";
+            this.dailyTaskList[index].status="3";
           let _obj = this.dailyTaskList[index];
           this.dailyTaskList.splice(index, 1);
           this.dailyTaskList.push(_obj);
-          this.dailyTaskList[index].buttonText="已完成";
-          this.dailyTaskList[index].status="3";
         } else if(type == '2'){
           this.newTaskList.splice(index, 1);
           if(this.newTaskList.length === 0){
