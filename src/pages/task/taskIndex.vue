@@ -537,23 +537,23 @@ export default {
       this.guideObj.guidePosition.bottom = '0rem';
     },
     getCurrency(type,index){
-      let task_id = type === '1' ? this.exclusiveList[index].taskId : type === '2' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
-      let num = type === '1' ? this.exclusiveList[index].rewardNum : type === '2' ? this.newTaskList[index].rewardNum : this.dailyTaskList[index].rewardNum;
+      let task_id = type === '0' ? this.exclusiveList[index].taskId : type === '1' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
+      let num = type === '0' ? this.exclusiveList[index].rewardNum : type === '1' ? this.newTaskList[index].rewardNum : this.dailyTaskList[index].rewardNum;
       AppJsBridge.openIngotsReceiveDlg(task_id,num);
       setTimeout(() => {
         this.closeTip();
-        if(type === '1'){
+        if(type === '0'){
           this.exclusiveList.splice(index, 1);
           if(this.exclusiveList.length === 0){
             this.showExclusiveList = false;
           }
-        } else if(type == '3' && this.dailyTaskList[index].taskNowSum >= this.dailyTaskList[index].taskNeedSum){
+        } else if(type == '2' && this.dailyTaskList[index].taskNowSum >= this.dailyTaskList[index].taskNeedSum){
             this.dailyTaskList[index].buttonText="已完成";
             this.dailyTaskList[index].status="3";
           let _obj = this.dailyTaskList[index];
           this.dailyTaskList.splice(index, 1);
           this.dailyTaskList.push(_obj);
-        } else if(type == '2'){
+        } else if(type == '1'){
           this.newTaskList.splice(index, 1);
           if(this.newTaskList.length === 0){
             this.hasNewTask = false;
