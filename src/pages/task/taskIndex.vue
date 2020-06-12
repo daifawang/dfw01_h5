@@ -828,7 +828,7 @@ export default {
             .then(res => {
                 console.log(res);
                 if (res.reCode == "0") {
-                    this.goTaskUrl(index,_url);
+                    this.goTaskUrl(index,url);
                     // 查看每日的特定文章，刷新每日接口和通知服务端任务已完成
                     if(taskConfigId == '8'){
                         this.sendStatus(taskId,type,status)
