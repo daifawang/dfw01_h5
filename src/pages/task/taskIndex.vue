@@ -397,10 +397,15 @@ export default {
     }
     //本地模拟数据测试用：----部署时候删除--☆☆☆☆☆☆☆----
   },
+  destroyed() {
+    window.removeEventListener('beforeunload', e => this.beforeunloadFn(e))
+  },
   mounted() {
     // 开启下拉刷新
     AppJsBridge.setClientRefresh('1');
     this.initUserInfo();
+    //监听页面刷新
+    window.addEventListener('beforeunload', e => this.beforeunloadFn(e))
 
     // 回调获取客户端返回的任务成功信息,taskType：0.专属任务 1.新手任务 2.每日任务---用来刷新哪个任务块
     window['AppJSApi_BackH5TaskOrdersInfo'] = (_json) => {
@@ -420,6 +425,9 @@ export default {
     }
   },
   methods:{
+    beforeunloadFn(e) {
+      alert('页面刷新啦~~');
+    },
     //初始化快去领取元宝气泡提示
     initGetCuryPao(list_json){
       if(this.showFirstGetCury && list_json && this.showCurypaoNum === 0){
