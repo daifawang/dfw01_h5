@@ -812,7 +812,7 @@ export default {
       });
     },
     // 点击更新任务状态
-    checkTaskStatus(taskId,type,status){
+    checkTaskStatus(taskId,type,status,index,url){
         // taskType  0 专属  1 新手  2每日
         console.log('taskId:'+taskId+',type:'+type+',index:'+index);
         let taskConfigId = type === '0' ? this.exclusiveList[index].taskConfigId : type === '1' ? this.newTaskList[index].taskConfigId : this.dailyTaskList[index].taskConfigId  ;
