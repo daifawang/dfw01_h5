@@ -28,7 +28,7 @@
         </div>
         <div class="task-wrapper" v-if="exclusiveList && exclusiveList.length>0">
           <transition-group appear name="taskList" tag="div">
-            <div v-for="(item, index) in exclusiveList" :key="item.taskId" class="task-li" @click.stop="clickUrl(index,item.status,item.jumpUrl)">
+            <div v-for="(item, index) in exclusiveList" :key="item.taskId" class="task-li" @click.stop="clickUrl('0',index)">
               <div class="task-li-t">
                 <img class="task-t-icon" :src="item.taskHeadImgUrl" />
                 <div class="task-t-div">
@@ -54,7 +54,7 @@
                   <img class="task-invitecard-headimg" :src="item.extra.inviteUserImg" />
                   <span>{{ item.extra.inviteUserName }}给您发了一份邀请...</span>
                 </div>
-                <div class="task-invitecard-bttn" @click.stop="clickUrl(index,item.status,item.jumpUrl)">立即查看</div>
+                <div class="task-invitecard-bttn" @click.stop="clickUrl('0',index)">立即查看</div>
                 <div class="task-invitecard-company">{{ item.extra.inviteCompany }}</div>
               </div>
               <div v-else-if="item.taskType === '3' && item.extra" class="task-li-business">
@@ -75,8 +75,8 @@
               </div>
               <div v-if="item.status === '2' && showFirstGetCury" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
               <div class="right-bttn" :class="{guideQuan2:showGuide === 4 && index === 0}">
-                <span v-if="item.status === '0' || item.status === '1'" class="bttn-span" @click.stop="clickRightBttn('1',index)">{{ item.taskAction }}</span>
-                <span v-else-if="item.status === '2'" class="bttn-span bttn-success" @click.stop="clickRightBttn('1',index)">领取元宝</span>
+                <span v-if="item.status === '0' || item.status === '1'" class="bttn-span" @click.stop="clickRightBttn('0',index)">{{ item.taskAction }}</span>
+                <span v-else-if="item.status === '2'" class="bttn-span bttn-success" @click.stop="clickRightBttn('0',index)">领取元宝</span>
               </div>
               <div v-if="item.viewCount" class="task-btn-view">
                 <div>{{item.viewCount}}</div>
@@ -109,7 +109,7 @@
         </div>
         <div class="task-wrapper" v-if="newTaskList && newTaskList.length>0">
           <transition-group appear name="taskList" tag="div">
-          <div class="task-wrapper-div" v-for="(newItem,index) in newTaskList" :key="newItem.taskId" @click.stop="clickUrl(index,newItem.status,newItem.jumpUrl)">
+          <div class="task-wrapper-div" v-for="(newItem,index) in newTaskList" :key="newItem.taskId" @click.stop="clickUrl('1',index)">
             <div class="task-box">
               <div class="task-icon">
                 <img :src="newItem.taskHeadImgUrl">
@@ -135,7 +135,7 @@
               </div>
               <div class="task-btn-div">
                 <div v-if="newItem.status === '2' && showFirstGetCury" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
-                <div @click.stop="clickRightBttn('2',index)" class="task-btn" :class="{guideQuan2:showGuide === 5 && index === 0}">
+                <div @click.stop="clickRightBttn('1',index)" class="task-btn" :class="{guideQuan2:showGuide === 5 && index === 0}">
                   <div :class="{'to-do':newItem.status=='0' || newItem.status=='1','doing':newItem.status=='2','done':newItem.status=='3',}">{{newItem.taskAction}}</div>
                 </div>
                 <div v-if="newItem.signCardText" class="task-btn-text">
@@ -192,7 +192,7 @@
         <div class="tasks-title">每日任务</div>
         <div class="task-wrapper" v-if="dailyTaskList && dailyTaskList.length>0">
           <transition-group appear name="taskList" tag="div">
-          <div class="task-wrapper-div" v-for="(dailyItem,index) in dailyTaskList" :key="dailyItem.taskId" @click.stop="clickUrl(index,dailyItem.status,dailyItem.jumpUrl)">
+          <div class="task-wrapper-div" v-for="(dailyItem,index) in dailyTaskList" :key="dailyItem.taskId" @click.stop="clickUrl('2',index)">
             <div class="task-box">
               <div class="task-icon">
                 <img :src="dailyItem.headImg">
@@ -218,7 +218,7 @@
               </div>
               <div class="task-btn-div">
                 <div v-if="dailyItem.status === '2' && showFirstGetCury" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
-                <div @click.stop="clickRightBttn('3',index)" class="task-btn">
+                <div @click.stop="clickRightBttn('2',index)" class="task-btn">
                   <div :class="{'to-do':dailyItem.status=='1','doing':dailyItem.status=='2','done':dailyItem.status=='3',}">{{dailyItem.buttonText}}</div>
                 </div>
                 <div v-if="dailyItem.signCardText" class="task-btn-text">
@@ -549,28 +549,32 @@ export default {
       if(this.showGuide && this.showGuide >0){
         return;
       }
-      let status = type === '1' ? this.exclusiveList[index].status : type === '2' ? this.newTaskList[index].status : this.dailyTaskList[index].status;
-      let _url = type === '1' ? this.exclusiveList[index].jumpUrl : type === '2' ? this.newTaskList[index].jumpUrl : this.dailyTaskList[index].jumpUrl;
-      let taskId = type === '1' ? this.exclusiveList[index].taskId : type === '2' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
-      let taskConfigId = type === '1' ? this.exclusiveList[index].taskConfigId   : type === '2' ? this.newTaskList[index].taskConfigId   : this.dailyTaskList[index].taskConfigId  ;
+      let status = type === '0' ? this.exclusiveList[index].status : type === '1' ? this.newTaskList[index].status : this.dailyTaskList[index].status;
+      let _url = type === '0' ? this.exclusiveList[index].jumpUrl : type === '1' ? this.newTaskList[index].jumpUrl : this.dailyTaskList[index].jumpUrl;
+      let taskId = type === '0' ? this.exclusiveList[index].taskId : type === '1' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
+      let taskConfigId = type === '0' ? this.exclusiveList[index].taskConfigId   : type === '1' ? this.newTaskList[index].taskConfigId   : this.dailyTaskList[index].taskConfigId  ;
       if(status === '2'){ //领取元宝
         this.getCurrencyData(taskId,type,index,taskConfigId);
       } else if (status === '3') { //已领取-置灰点击没反应
         return;
       } else { //跳转具体任务链接
-        this.goTaskUrl(index,_url);
+        this.checkTaskStatus(taskId,type,stutas,index,_url);
       }
     },
     // 点击整个栏跳转
-    clickUrl(index,status,url){
+    clickUrl(type,index){
         console.log('------点击整个栏跳转--------');
-      console.log(status,url);
-      if(this.showGuide && this.showGuide >0){
-        return;
-      }
-      if(status !== '2' && status !== '3'){
-         this.goTaskUrl(index,url);
-      }
+        console.log(status,url);
+        let url = type === '0' ? this.exclusiveList[index].jumpUrl : type === '1' ? this.newTaskList[index].jumpUrl : this.dailyTaskList[index].jumpUrl;
+        let status = type === '0' ? this.exclusiveList[index].status : type === '1' ? this.newTaskList[index].status : this.dailyTaskList[index].status;
+        let taskId = type === '0' ? this.exclusiveList[index].taskId : type === '1' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
+        if(this.showGuide && this.showGuide >0){
+            return;
+        }
+        if(status !== '2' && status !== '3'){
+            this.checkTaskStatus(taskId,type,stutas,index,url);
+            // this.goTaskUrl(index,url);
+        }
     },
     // 任务跳转处理
     goTaskUrl(index,jump_url){
@@ -744,7 +748,7 @@ export default {
     getCurrencyData(taskId,type,index,taskConfigId){
         // taskType  0 专属  1 新手  2每日
         console.log('taskId:'+taskId+',type:'+type+',index:'+index);
-        AppJsBridge.initSignData({taskId:taskId,taskType:Number(type)-1+'',taskConfigId:taskConfigId}, 954011, param => {
+        AppJsBridge.initSignData({taskId:taskId,taskType:type+'',taskConfigId:taskConfigId}, 954011, param => {
             this.$http({
             apiType: "2",
             headers: {
@@ -765,8 +769,65 @@ export default {
                 console.log(e);
             });
       });
+    },
+     // 查看《**》通知服务端任务已完成
+    sendStatus(taskId,type,stutas){
+        // taskType  0 专属  1 新手  2每日
+        console.log('查看《**》通知服务端任务已完成');
+        AppJsBridge.initSignData({taskId:taskId,taskType:type+'',stutas:stutas}, 954012, param => {
+            this.$http({
+            apiType: "2",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            url: "/gateway.do",
+            data: param
+            })
+            .then(res => {
+                console.log(res);
+                if (res.reCode == "0") {
+                   this.initDailyTaskListData();
+                } else {
+                    this.$toast(res.reInfo);
+                }
+            })
+            .catch(e => {
+                console.log(e);
+            });
+      });
+    },
+    // 点击更新任务状态
+    checkTaskStatus(taskId,type,stutas){
+        // taskType  0 专属  1 新手  2每日
+        console.log('taskId:'+taskId+',type:'+type+',index:'+index);
+        let taskConfigId = type === '0' ? this.exclusiveList[index].taskConfigId : type === '1' ? this.newTaskList[index].taskConfigId : this.dailyTaskList[index].taskConfigId  ;
+        AppJsBridge.initSignData({taskId:taskId,taskType:type+'',stutas:stutas}, 954013, param => {
+            this.$http({
+            apiType: "2",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            url: "/gateway.do",
+            data: param
+            })
+            .then(res => {
+                console.log(res);
+                if (res.reCode == "0") {
+                    this.goTaskUrl(index,_url);
+                    // 查看每日的特定文章，刷新每日接口和通知服务端任务已完成
+                    if(taskConfigId == '8'){
+                        this.sendStatus(taskId,type,stutas)
+                    }
+                } else {
+                    this.$toast(res.reInfo);
+                }
+            })
+            .catch(e => {
+                console.log(e);
+            });
+      });
+    },
     }
-  }
 }
 </script>
 
