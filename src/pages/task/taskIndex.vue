@@ -754,6 +754,11 @@ export default {
             this.dailyTaskList = res.result.taskList;
             if(this.dailyTaskList && this.dailyTaskList.length > 0){
               this.initGetCuryPao(this.dailyTaskList);
+              if(1===1){
+                let _obj = this.dailyTaskList[3];
+                this.dailyTaskList.splice(3, 1);
+                this.dailyTaskList.unshift(_obj);
+              }
             }else{
               this.hasDailyTask = false;
             }
