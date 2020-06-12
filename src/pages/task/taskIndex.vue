@@ -73,7 +73,7 @@
                 <div class="task-oilcard-last">余额：￥{{ item.extra.lastCount }}</div>
                 <div class="task-oilcard-add">最新到账{{ item.extra.onAddCount }}元</div>
               </div>
-              <div v-if="item.status === '2' && showFirstGetCury" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
+              <div v-if="item.status === '2' && showFirstGetCury && item.showCurypao" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
               <div class="right-bttn" :class="{guideQuan2:showGuide === 4 && index === 0}">
                 <span v-if="item.status === '0' || item.status === '1'" class="bttn-span" @click.stop="clickRightBttn('1',index)">{{ item.taskAction }}</span>
                 <span v-else-if="item.status === '2'" class="bttn-span bttn-success" @click.stop="clickRightBttn('1',index)">领取元宝</span>
@@ -101,7 +101,7 @@
       </transition>
       <transition name="taskFade">
       <div v-if="hasNewTask" ref="newComer" class="task-main">
-        <div class="tasks-title task-title-new" v-if="newTaskList && newTaskList.length>0">新手任务
+        <div class="tasks-title task-title-new">新手任务
           <div @click="goVideoList">
             <img class="task-title-new-icon1" src="../../assets/images/task/xinshou@2x.png"> 新手攻略
             <img class="task-title-new-icon2" src="../../assets/images/task/jiantou_you@2x.png">
@@ -134,7 +134,7 @@
                 </div>
               </div>
               <div class="task-btn-div">
-                <div v-if="newItem.status === '2' && showFirstGetCury" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
+                <div v-if="newItem.status === '2' && showFirstGetCury && newItem.showCurypao" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
                 <div @click.stop="clickRightBttn('2',index)" class="task-btn" :class="{guideQuan2:showGuide === 5 && index === 0}">
                   <div :class="{'to-do':newItem.status=='0' || newItem.status=='1','doing':newItem.status=='2','done':newItem.status=='3',}">{{newItem.taskAction}}</div>
                 </div>
@@ -217,7 +217,7 @@
                 </div>
               </div>
               <div class="task-btn-div">
-                <div v-if="dailyItem.status === '2' && showFirstGetCury" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
+                <div v-if="dailyItem.status === '2' && showFirstGetCury && dailyItem.showCurypao" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
                 <div @click.stop="clickRightBttn('3',index)" class="task-btn">
                   <div :class="{'to-do':dailyItem.status=='1','doing':dailyItem.status=='2','done':dailyItem.status=='3',}">{{dailyItem.buttonText}}</div>
                 </div>
@@ -253,7 +253,7 @@ export default {
       showGuide: '', //本页面是否显示引导页
       guideType: 0, //引导页类型：0.有专属任务的引导；1.无专属任务的引导
       showFirstGetCury: false, //APP本地存储字段-是否展示快去领取元宝提示
-      showFirstCury: false, //任务列表去重-是否展示快去领取元宝提示
+      showCurypaoNum: 0, //任务列表去重-是否展示快去领取元宝提示气泡数量
       guideObj: {
         text: '关于任务，你想了解的都在这里，快去看看吧！',
         guidePosition: {
@@ -288,7 +288,7 @@ export default {
         {
           taskId: '19',taskHeadImgUrl: 'https://live-ol.log56.com/sq_server_manage/shq/20200430/478c7ae1-945f-423d-8013-9558c30e3a85.jpg',taskName: '绑卡收运费',
           taskNote: '完善证件信息后可结算运费',miniTagList: [],
-          taskType: '5',taskAction: '去绑卡',status: '0',jumpUrl: '',rewardNum: '5',viewCount: '5000人关注',
+          taskType: '5',taskAction: '去绑卡',status: '2',jumpUrl: '',rewardNum: '5',viewCount: '5000人关注',
         },
         {
           taskId: '13',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '升级直属运力',
@@ -381,8 +381,10 @@ export default {
       setTimeout(() => {
         this.loadingFlag = false;
         this.exclusiveList = this.exclusiveList1;
-        // this.newTaskList = this.newTaskList1;
         this.showFirstGetCury = true;
+        this.initGetCuryPao(this.exclusiveList);
+        this.newTaskList = this.newTaskList1;
+        this.initGetCuryPao(this.newTaskList);
         // this.exclusiveFlag = '1'
         // this.newTaskFlag = '1';
         // setTimeout(() => {
@@ -399,17 +401,6 @@ export default {
     // 开启下拉刷新
     AppJsBridge.setClientRefresh('1');
     this.initUserInfo();
-    // 初始化专属任务-0
-    // this.initExclusiveList('0');
-    // setTimeout(() => {
-    //   // 初始化每日任务
-    //   this.initDailyTaskListData();
-    //   // 获取APP本地存储--是否展示快去领取元宝提示
-    //   AppJsBridge.getStoreInfo('TASK_GETCURY_KEY',backData => {
-    //     console.log('callback-backData>>',backData);
-    //     this.showFirstGetCury = backData.data === '1' ? false : true;
-    //   });
-    // }, 100);
 
     // 回调获取客户端返回的任务成功信息,taskType：0.专属任务 1.新手任务 2.每日任务---用来刷新哪个任务块
     window['AppJSApi_BackH5TaskOrdersInfo'] = (_json) => {
@@ -429,6 +420,24 @@ export default {
     }
   },
   methods:{
+    //初始化快去领取元宝气泡提示
+    initGetCuryPao(list_json){
+      if(this.showFirstGetCury && list_json && this.showCurypaoNum === 0){
+        for (let m = 0; m < list_json.length; m++) {
+          const json = list_json[m];
+          console.log(json);
+          if(this.showCurypaoNum > 0){
+            break;
+          }
+          if(this.showCurypaoNum === 0 && json.status === '2'){
+            this.showCurypaoNum = this.showCurypaoNum+1;
+            this.$set(json,'showCurypao',true);
+          }else{
+            this.$set(json,'showCurypao',false);
+          }
+        }
+      }
+    },
     // 获取用户信息
     initUserInfo(){
       AppJsBridge.getUserInfo(param =>{
@@ -468,7 +477,9 @@ export default {
           }
           if (res.reCode === "0") {
             this.exclusiveList = res.result;
-            if(this.exclusiveList.length === 0){
+            if(this.exclusiveList && this.exclusiveList.length > 0){
+              this.initGetCuryPao(this.exclusiveList);
+            }else{
               this.showExclusiveList = false;
             }
           } else {
@@ -688,7 +699,9 @@ export default {
           this.loadingFlag = false;
           if (res.reCode === "0") {
             this.newTaskList=res.result;
-            if(this.newTaskList.length === 0){
+            if(this.newTaskList && this.newTaskList.length > 0){
+              this.initGetCuryPao(this.newTaskList);
+            }else{
               this.hasNewTask = false;
             }
           } else {
@@ -725,7 +738,9 @@ export default {
           this.loadingFlag = false;
           if (res.reCode == "0") {
             this.dailyTaskList = res.result.taskList;
-            if(this.dailyTaskList.length === 0){
+            if(this.dailyTaskList && this.dailyTaskList.length > 0){
+              this.initGetCuryPao(this.dailyTaskList);
+            }else{
               this.hasDailyTask = false;
             }
           } else {
