@@ -569,7 +569,7 @@ export default {
       } else if (status === '3') { //已领取-置灰点击没反应
         return;
       } else { //跳转具体任务链接
-        this.checkTaskStatus(taskId,type,stutas,index,_url);
+        this.checkTaskStatus(taskId,type,status,index,_url);
       }
     },
     // 点击整个栏跳转
@@ -583,7 +583,7 @@ export default {
             return;
         }
         if(status !== '2' && status !== '3'){
-            this.checkTaskStatus(taskId,type,stutas,index,url);
+            this.checkTaskStatus(taskId,type,status,index,url);
             // this.goTaskUrl(index,url);
         }
     },
@@ -786,10 +786,10 @@ export default {
       });
     },
      // 查看《**》通知服务端任务已完成
-    sendStatus(taskId,type,stutas){
+    sendStatus(taskId,type,status){
         // taskType  0 专属  1 新手  2每日
         console.log('查看《**》通知服务端任务已完成');
-        AppJsBridge.initSignData({taskId:taskId,taskType:type+'',stutas:stutas}, 954012, param => {
+        AppJsBridge.initSignData({taskId:taskId,taskType:type+'',status:status}, 954012, param => {
             this.$http({
             apiType: "2",
             headers: {
@@ -812,11 +812,11 @@ export default {
       });
     },
     // 点击更新任务状态
-    checkTaskStatus(taskId,type,stutas){
+    checkTaskStatus(taskId,type,status){
         // taskType  0 专属  1 新手  2每日
         console.log('taskId:'+taskId+',type:'+type+',index:'+index);
         let taskConfigId = type === '0' ? this.exclusiveList[index].taskConfigId : type === '1' ? this.newTaskList[index].taskConfigId : this.dailyTaskList[index].taskConfigId  ;
-        AppJsBridge.initSignData({taskId:taskId,taskType:type+'',stutas:stutas}, 954013, param => {
+        AppJsBridge.initSignData({taskId:taskId,taskType:type+'',status:status}, 954013, param => {
             this.$http({
             apiType: "2",
             headers: {
@@ -831,7 +831,7 @@ export default {
                     this.goTaskUrl(index,_url);
                     // 查看每日的特定文章，刷新每日接口和通知服务端任务已完成
                     if(taskConfigId == '8'){
-                        this.sendStatus(taskId,type,stutas)
+                        this.sendStatus(taskId,type,status)
                     }
                 } else {
                     this.$toast(res.reInfo);
