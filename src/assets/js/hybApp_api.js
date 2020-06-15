@@ -289,10 +289,8 @@ let AppJsBridge = {
                     callback(userInfo);
                 }
             }else if(typeof(window.webkit) !== 'undefined'){
-                console.log('userInfo--------------------ios');
                 window.webkit.messageHandlers.getFullUserInfo.postMessage('');
                 window.AppJSApi_GetFullUerInfo=(userInfo) => {
-                    // param = JSON.parse(decodeURI(userInfo));
                     console.log(userInfo);
                     if( typeof callback === 'function' ){
                         callback(userInfo);

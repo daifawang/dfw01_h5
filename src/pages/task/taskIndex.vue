@@ -16,179 +16,181 @@
           </div>
         </div>
       </div>
-      <transition name="taskFade">
-      <div v-show="showExclusiveList" class="task-main">
-        <div class="task-title">
-          <span ref="zsGuide" :class="{guideQuan:showGuide === 3}">专属任务</span>
-          <div v-if="showGuide === 3" class="task-guide">
-            <img class="guide-four-jt" src="../../assets/images/task/task_jian_r1.png" />
-            <div class="guide-text"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
-            <div class="guide-bttn" @click.stop="guideTo(4)"><img src="../../assets/images/task/task_know.png" /></div>
-          </div>
-        </div>
-        <div class="task-wrapper" v-if="exclusiveList && exclusiveList.length>0">
-          <transition-group appear name="taskList" tag="div">
-            <div v-for="(item, index) in exclusiveList" :key="item.taskId" class="task-li" @click.stop="clickUrl('0',index)">
-              <div class="task-li-t">
-                <img class="task-t-icon" :src="item.taskHeadImgUrl" />
-                <div class="task-t-div">
-                  <div class="task-t-name">
-                    <span>{{ item.taskName }}</span><img v-for="(item1, index1) in item.miniTagList" :key="index1" :src="item1" />
-                  </div>
-                  <div v-if="item.taskNote" class="task-t-note">完善证件信息后可结算运费</div>
-                  <div class="task-t-currency">
-                    <img src="../../assets/images/task/xiaoyuanbao@2x.png" /><span>+{{ item.rewardNum }}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="clear-float"></div>
-              <div v-if="item.taskType === '1' && item.extra" class="task-li-content">
-                <img class="task-comp-img" :src="item.extra.companyImgUrl" />
-                <div class="task-li-line">{{ item.extra.showScriptOne }}</div>
-                <div class="task-li-line">{{ item.extra.showScriptTwo }}</div>
-                <div class="task-li-line">{{ item.extra.showScriptThree }}</div>
-              </div>
-              <div v-else-if="item.taskType === '2' && item.extra" class="task-li-invitecard">
-                <img class="task-invitecard-img" src="../../assets/images/task/task_invite_bg.png" />
-                <div class="task-invitecard-name">
-                  <img class="task-invitecard-headimg" :src="item.extra.inviteUserImg" />
-                  <span>{{ item.extra.inviteUserName }}给您发了一份邀请...</span>
-                </div>
-                <div class="task-invitecard-bttn" @click.stop="clickUrl('0',index)">立即查看</div>
-                <div class="task-invitecard-company">{{ item.extra.inviteCompany }}</div>
-              </div>
-              <div v-else-if="item.taskType === '3' && item.extra" class="task-li-business">
-                <img class="task-business-img" :src="item.extra.businessUserImg" />
-                <div class="task-business-right">
-                  <div class="business-name">
-                    <span>{{ item.extra.businessUserName }}</span><img :src="item.extra.businessLevel" />
-                  </div>
-                  <div class="business-company">{{ item.extra.businessCompany }}</div>
-                  <div class="business-note-li"><div v-for="(business, b) in item.extra.businessNoteList" :key="b" class="business-note">{{ business }}</div></div>
-                </div>
-                <div class="clear-float"></div>
-              </div>
-              <div v-else-if="item.taskType === '4' && item.extra" class="task-li-oilcard">
-                <img class="task-oilcard-img" src="../../assets/images/task/task_oilcard_bg.png" />
-                <div class="task-oilcard-last">余额：￥{{ item.extra.lastCount }}</div>
-                <div class="task-oilcard-add">最新到账{{ item.extra.onAddCount }}元</div>
-              </div>
-              <div v-if="item.status === '2' && showFirstGetCury && item.showCurypao" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
-              <div class="right-bttn" :class="{guideQuan2:showGuide === 4 && index === 0}">
-                <span v-if="item.status === '0' || item.status === '1'" class="bttn-span" @click.stop="clickRightBttn('0',index)">{{ item.taskAction }}</span>
-                <span v-else-if="item.status === '2'" class="bttn-span bttn-success" @click.stop="clickRightBttn('0',index)">领取元宝</span>
-              </div>
-              <div v-if="item.viewCount" class="task-btn-view">
-                <div>{{item.viewCount}}</div>
-              </div>
-              <div v-if="showGuide === 4 && index === 0" class="right-bttn-guide" >
-                <div class="task-guide task-guide-four">
-                  <img class="guide-four-jt" src="../../assets/images/task/task_jian_l1.png" />
-                  <div class="guide-text"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
-                  <div class="guide-bttn" @click.stop="guideTo('')"><img src="../../assets/images/task/task_know.png" /></div>
-                </div>
+      <div v-if="showExclusiveList !== '-1'">
+        <transition name="taskFade">
+          <div v-show="showExclusiveList === '1'" class="task-main">
+            <div class="task-title">
+              <span ref="zsGuide" :class="{guideQuan:showGuide === 3}">专属任务</span>
+              <div v-if="showGuide === 3" class="task-guide">
+                <img class="guide-four-jt" src="../../assets/images/task/task_jian_r1.png" />
+                <div class="guide-text"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
+                <div class="guide-bttn" @click.stop="guideTo(4)"><img src="../../assets/images/task/task_know.png" /></div>
               </div>
             </div>
-          </transition-group>
-        </div>
-        <div class="task-wrapper task-server-failed" v-else-if="exclusiveFlag === '0'">
-          <van-loading type="spinner" size="24px">专属任务正在全力加载中...</van-loading>
-        </div>
-        <div class="task-wrapper task-server-failed" v-else-if="exclusiveFlag === '1'">
-          <van-loading type="spinner" size="24px">获取专属任务失败，稍后再试试吧~</van-loading>
-        </div>
-      </div>
-      </transition>
-      <div v-if="hasNewTask">
-      <transition name="taskFade">
-      <div v-show="hasNewTask" ref="newComer" class="task-main">
-        <div class="tasks-title task-title-new">新手任务
-          <div @click="goVideoList">
-            <img class="task-title-new-icon1" src="../../assets/images/task/xinshou@2x.png"> 新手攻略
-            <img class="task-title-new-icon2" src="../../assets/images/task/jiantou_you@2x.png">
-          </div>
-        </div>
-        <div class="task-wrapper" v-if="newTaskList && newTaskList.length>0">
-          <transition-group appear name="taskList" tag="div">
-          <div class="task-wrapper-div" v-for="(newItem,index) in newTaskList" :key="newItem.taskId" @click.stop="clickUrl('1',index)">
-            <div class="task-box">
-              <div class="task-icon">
-                <img :src="newItem.taskHeadImgUrl">
-              </div>
-              <div class="tasks-main">
-                <div class="task-main-title">
-                  <div>{{newItem.taskName}}</div>
-                  <div v-if="newItem.miniTagList">
-                    <div v-for="(miniTagItem,index) in newItem.miniTagList" :key="index" class="task-main-tag">
-                      <img  :src="miniTagItem">
+            <div class="task-wrapper" v-if="exclusiveList && exclusiveList.length>0">
+              <transition-group appear name="taskList" tag="div">
+                <div v-for="(item, index) in exclusiveList" :key="item.taskId" class="task-li" @click.stop="clickUrl('0',index)">
+                  <div class="task-li-t">
+                    <img class="task-t-icon" :src="item.taskHeadImgUrl" />
+                    <div class="task-t-div">
+                      <div class="task-t-name">
+                        <span>{{ item.taskName }}</span><img v-for="(item1, index1) in item.miniTagList" :key="index1" :src="item1" />
+                      </div>
+                      <div v-if="item.taskNote" class="task-t-note">完善证件信息后可结算运费</div>
+                      <div class="task-t-currency">
+                        <img src="../../assets/images/task/xiaoyuanbao@2x.png" /><span>+{{ item.rewardNum }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="clear-float"></div>
+                  <div v-if="item.taskType === '1' && item.extra" class="task-li-content">
+                    <img class="task-comp-img" :src="item.extra.companyImgUrl" />
+                    <div class="task-li-line">{{ item.extra.showScriptOne }}</div>
+                    <div class="task-li-line">{{ item.extra.showScriptTwo }}</div>
+                    <div class="task-li-line">{{ item.extra.showScriptThree }}</div>
+                  </div>
+                  <div v-else-if="item.taskType === '2' && item.extra" class="task-li-invitecard">
+                    <img class="task-invitecard-img" src="../../assets/images/task/task_invite_bg.png" />
+                    <div class="task-invitecard-name">
+                      <img class="task-invitecard-headimg" :src="item.extra.inviteUserImg" />
+                      <span>{{ item.extra.inviteUserName }}给您发了一份邀请...</span>
+                    </div>
+                    <div class="task-invitecard-bttn" @click.stop="clickUrl('0',index)">立即查看</div>
+                    <div class="task-invitecard-company">{{ item.extra.inviteCompany }}</div>
+                  </div>
+                  <div v-else-if="item.taskType === '3' && item.extra" class="task-li-business">
+                    <img class="task-business-img" :src="item.extra.businessUserImg" />
+                    <div class="task-business-right">
+                      <div class="business-name">
+                        <span>{{ item.extra.businessUserName }}</span><img :src="item.extra.businessLevel" />
+                      </div>
+                      <div class="business-company">{{ item.extra.businessCompany }}</div>
+                      <div class="business-note-li"><div v-for="(business, b) in item.extra.businessNoteList" :key="b" class="business-note">{{ business }}</div></div>
+                    </div>
+                    <div class="clear-float"></div>
+                  </div>
+                  <div v-else-if="item.taskType === '4' && item.extra" class="task-li-oilcard">
+                    <img class="task-oilcard-img" src="../../assets/images/task/task_oilcard_bg.png" />
+                    <div class="task-oilcard-last">余额：￥{{ item.extra.lastCount }}</div>
+                    <div class="task-oilcard-add">最新到账{{ item.extra.onAddCount }}元</div>
+                  </div>
+                  <div v-if="item.status === '2' && showFirstGetCury && item.showCurypao" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
+                  <div class="right-bttn" :class="{guideQuan2:showGuide === 4 && index === 0}">
+                    <span v-if="item.status === '0' || item.status === '1'" class="bttn-span" @click.stop="clickRightBttn('0',index)">{{ item.taskAction }}</span>
+                    <span v-else-if="item.status === '2'" class="bttn-span bttn-success" @click.stop="clickRightBttn('0',index)">领取元宝</span>
+                  </div>
+                  <div v-if="item.viewCount" class="task-btn-view">
+                    <div>{{item.viewCount}}</div>
+                  </div>
+                  <div v-if="showGuide === 4 && index === 0" class="right-bttn-guide" >
+                    <div class="task-guide task-guide-four">
+                      <img class="guide-four-jt" src="../../assets/images/task/task_jian_l1.png" />
+                      <div class="guide-text"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
+                      <div class="guide-bttn" @click.stop="guideTo('')"><img src="../../assets/images/task/task_know.png" /></div>
                     </div>
                   </div>
                 </div>
-                <div class="task-main-info" v-if="newItem.note">{{newItem.note}}</div>
-                <div class="task-main-desc">
-                  <img src="../../assets/images/task/xiaoyuanbao@2x.png">
-                  <div class="task-main-desc-num">+{{newItem.rewardNum}}</div>
-                  <div v-if="newItem.taskNeedSum > 1" class="task-main-desc-text">
-                    <span>已完成</span>
-                    <span :class="{'red-font':Number(newItem.taskNowSum) > 0}">{{newItem.taskNowSum}}</span><span>/{{newItem.taskNeedSum}}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="task-btn-div">
-                <div v-if="newItem.status === '2' && showFirstGetCury && newItem.showCurypao" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
-                <div @click.stop="clickRightBttn('1',index)" class="task-btn" :class="{guideQuan2:showGuide === 5 && index === 0}">
-                  <div :class="{'to-do':newItem.status=='0' || newItem.status=='1','doing':newItem.status=='2','done':newItem.status=='3',}">{{newItem.taskAction}}</div>
-                </div>
-                <div v-if="newItem.signCardText" class="task-btn-text">
-                  <div>{{newItem.signCardText}}</div>
-                </div>
-              </div>
-              <div v-if="showGuide === 5 && index === 0" class="right-bttn-guide" >
-                <div class="task-guide task-guide-four">
-                  <img class="guide-four-jt" src="../../assets/images/task/task_jian_l1.png" />
-                  <div class="guide-text"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
-                  <div class="guide-bttn" @click.stop="guideTo('')"><img src="../../assets/images/task/task_know.png" /></div>
-                </div>
+              </transition-group>
+            </div>
+            <div class="task-wrapper task-server-failed" v-else-if="exclusiveFlag === '0'">
+              <van-loading type="spinner" size="24px">专属任务正在全力加载中...</van-loading>
+            </div>
+            <div class="task-wrapper task-server-failed" v-else-if="exclusiveFlag === '1'">
+              <van-loading type="spinner" size="24px">获取专属任务失败，稍后再试试吧~</van-loading>
+            </div>
+          </div>
+        </transition>
+      </div>
+      <div v-if="hasNewTask !== '-1'">
+        <transition name="taskFade">
+          <div v-show="hasNewTask === '1'" ref="newComer" class="task-main">
+            <div class="tasks-title task-title-new">新手任务
+              <div @click="goVideoList">
+                <img class="task-title-new-icon1" src="../../assets/images/task/xinshou@2x.png"> 新手攻略
+                <img class="task-title-new-icon2" src="../../assets/images/task/jiantou_you@2x.png">
               </div>
             </div>
-            <div v-if="newItem.meansSonTasks">
-              <div class="new-task-card">
-                <div v-for="(meansSonItem,index) in newItem.meansSonTasks" :key="index" >
-                  <div class="line-box">
-                    <div v-if="meansSonItem.taskStatus == '0'" class="new-task-status-to">
-                      <div>
-                        <div>
-                          <img src="../../assets/images/task/yuanbao_xiao@2x.png">
-                          <div>+{{meansSonItem.rewardNum}}</div>
+            <div class="task-wrapper" v-if="newTaskList && newTaskList.length>0">
+              <transition-group appear name="taskList" tag="div">
+              <div class="task-wrapper-div" v-for="(newItem,index) in newTaskList" :key="newItem.taskId" @click.stop="clickUrl('1',index)">
+                <div class="task-box">
+                  <div class="task-icon">
+                    <img :src="newItem.taskHeadImgUrl">
+                  </div>
+                  <div class="tasks-main">
+                    <div class="task-main-title">
+                      <div>{{newItem.taskName}}</div>
+                      <div v-if="newItem.miniTagList">
+                        <div v-for="(miniTagItem,index) in newItem.miniTagList" :key="index" class="task-main-tag">
+                          <img  :src="miniTagItem">
                         </div>
                       </div>
                     </div>
-                    <div v-else class="new-task-status-done">
-                      <div>
-                        <img src="../../assets/images/task/wancheng.png">
+                    <div class="task-main-info" v-if="newItem.note">{{newItem.note}}</div>
+                    <div class="task-main-desc">
+                      <img src="../../assets/images/task/xiaoyuanbao@2x.png">
+                      <div class="task-main-desc-num">+{{newItem.rewardNum}}</div>
+                      <div v-if="newItem.taskNeedSum > 1" class="task-main-desc-text">
+                        <span>已完成</span>
+                        <span :class="{'red-font':Number(newItem.taskNowSum) > 0}">{{newItem.taskNowSum}}</span><span>/{{newItem.taskNeedSum}}</span>
                       </div>
                     </div>
-                    <div v-if="index==0" class="short-line line short-a" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
-                    <div v-if="index==1" class="long-line line long-a" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
-                    <div v-if="index==1" class="long-line line long-b" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
-                    <div v-if="index==2 && meansSonItem.taskStatus>='1'" class="long-line line long-c" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
-                    <div v-if="index==2" class="short-line line short-b" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
                   </div>
-                  <div>{{meansSonItem.taskName}}</div>
+                  <div class="task-btn-div">
+                    <div v-if="newItem.status === '2' && showFirstGetCury && newItem.showCurypao" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
+                    <div @click.stop="clickRightBttn('1',index)" class="task-btn" :class="{guideQuan2:showGuide === 5 && index === 0}">
+                      <div :class="{'to-do':newItem.status=='0' || newItem.status=='1','doing':newItem.status=='2','done':newItem.status=='3',}">{{newItem.taskAction}}</div>
+                    </div>
+                    <div v-if="newItem.signCardText" class="task-btn-text">
+                      <div>{{newItem.signCardText}}</div>
+                    </div>
+                  </div>
+                  <div v-if="showGuide === 5 && index === 0" class="right-bttn-guide" >
+                    <div class="task-guide task-guide-four">
+                      <img class="guide-four-jt" src="../../assets/images/task/task_jian_l1.png" />
+                      <div class="guide-text"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
+                      <div class="guide-bttn" @click.stop="guideTo('')"><img src="../../assets/images/task/task_know.png" /></div>
+                    </div>
+                  </div>
+                </div>
+                <div v-if="newItem.meansSonTasks">
+                  <div class="new-task-card">
+                    <div v-for="(meansSonItem,index) in newItem.meansSonTasks" :key="index" >
+                      <div class="line-box">
+                        <div v-if="meansSonItem.taskStatus == '0'" class="new-task-status-to">
+                          <div>
+                            <div>
+                              <img src="../../assets/images/task/yuanbao_xiao@2x.png">
+                              <div>+{{meansSonItem.rewardNum}}</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div v-else class="new-task-status-done">
+                          <div>
+                            <img src="../../assets/images/task/wancheng.png">
+                          </div>
+                        </div>
+                        <div v-if="index==0" class="short-line line short-a" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
+                        <div v-if="index==1" class="long-line line long-a" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
+                        <div v-if="index==1" class="long-line line long-b" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
+                        <div v-if="index==2 && meansSonItem.taskStatus>='1'" class="long-line line long-c" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
+                        <div v-if="index==2" class="short-line line short-b" :class="{'active-line':meansSonItem.taskStatus>='1'}"></div>
+                      </div>
+                      <div>{{meansSonItem.taskName}}</div>
+                    </div>
+                  </div>
                 </div>
               </div>
+              </transition-group>
+            </div>
+            <div class="task-wrapper task-server-failed" v-else-if="newTaskFlag === '0'">
+              <van-loading type="spinner" size="24px">新手任务正在全力加载中...</van-loading>
+            </div>
+            <div class="task-wrapper task-server-failed" v-else-if="newTaskFlag === '1'">
+              <van-loading type="spinner" size="24px">获取新手任务失败，稍后再试试吧~</van-loading>
             </div>
           </div>
-          </transition-group>
-        </div>
-        <div class="task-wrapper task-server-failed" v-else-if="newTaskFlag === '0'">
-          <van-loading type="spinner" size="24px">新手任务正在全力加载中...</van-loading>
-        </div>
-        <div class="task-wrapper task-server-failed" v-else-if="newTaskFlag === '1'">
-          <van-loading type="spinner" size="24px">获取新手任务失败，稍后再试试吧~</van-loading>
-        </div>
-      </div>
-      </transition>
+        </transition>
       </div>
       <div v-if="hasDailyTask" class="task-main">
         <div class="tasks-title">每日任务</div>
@@ -364,12 +366,12 @@ export default {
         }
       ],//新手任务列表-本地测试用
       newTaskList:[],//新手任务列表
-      showExclusiveList: true, //是否有专属任务；判断最后一条专属任务完成时，专属任务栏目整体消失;
-      hasNewTask:true, // 是否有新手任务；判断最后一条新手任务完成时，新手任务栏目整体消失;
-      hasDailyTask:true, // 是否有每日任务
+      showExclusiveList: '1', //-1,初始化列表无数据不展示任务栏和div;0,操作后列表任务栏整体消失;；1，展示任务栏
+      hasNewTask:'1', // -1,初始化列表无数据不展示任务栏和div;0,操作后列表任务栏整体消失;；1，展示任务栏
+      hasDailyTask:true, //  是否有每日任务
       exclusiveFlag:'0', //专属列表过渡状态：0在加载提示；1接口获取失败提示
-      newTaskFlag:'0', //新手列表过渡状态：0在加载提示；1接口获取失败提示
-      dailyTaskFlag:'0' //每日列表过渡状态：0在加载提示；1接口获取失败提示
+      newTaskFlag:'0', //新手列表过渡状态：同上
+      dailyTaskFlag:'0' //每日列表过渡状态：同上
       
     }
   },
@@ -379,24 +381,25 @@ export default {
   created() {
     document.title = '任务';
     //本地模拟数据测试用：----部署时候删除--☆☆☆☆☆☆☆----
-    if(process.env.VUE_APP_ENV === 'development'){
-      setTimeout(() => {
-        this.loadingFlag = false;
-        this.exclusiveList = this.exclusiveList1;
-        this.showFirstGetCury = true;
-        this.initGetCuryPao(this.exclusiveList);
-        this.newTaskList = this.newTaskList1;
-        this.initGetCuryPao(this.newTaskList);
-        // this.exclusiveFlag = '1'
-        // this.newTaskFlag = '1';
-        // setTimeout(() => {
-        //   this.dailyTaskFlag = '1';
-        //   this.showGuide = 1;
-        //   this.guideType = 0;
-        //   this.goGuideApi();
-        // }, 1000);
-      }, 1000);
-    }
+    // if(process.env.VUE_APP_ENV === 'development'){
+    //   setTimeout(() => {
+    //     this.loadingFlag = false;
+    //     this.exclusiveList = this.exclusiveList1;
+    //     this.showFirstGetCury = true;
+    //     this.initGetCuryPao(this.exclusiveList);
+    //     this.newTaskList = this.newTaskList1;
+    //     this.initGetCuryPao(this.newTaskList);
+    //     // this.hasNewTask = '-1';
+    //     // this.exclusiveFlag = '1'
+    //     // this.newTaskFlag = '1';
+    //     // setTimeout(() => {
+    //     //   this.dailyTaskFlag = '1';
+    //     //   this.showGuide = 1;
+    //     //   this.guideType = 0;
+    //     //   this.goGuideApi();
+    //     // }, 1000);
+    //   }, 1000);
+    // }
     //本地模拟数据测试用：----部署时候删除--☆☆☆☆☆☆☆----
   },
   destroyed() {
@@ -405,6 +408,7 @@ export default {
   mounted() {
     // 开启下拉刷新
     AppJsBridge.setClientRefresh('1');
+    // 初始化用户信息及任务列表
     this.initUserInfo();
     //监听页面刷新
     window.addEventListener('beforeunload', e => this.beforeunloadFn(e))
@@ -420,9 +424,10 @@ export default {
           this.initDailyTaskListData();
       }
     }
-    // 回调获取客户端返回的任务Tab点击通知---用来刷新每日任务块
-    window['AppJSApi_BackH5TaskTabClick'] = (_json) => {
-      console.log("客户端返回的任务Tab点击通知>>",_json);
+    // 回调获取客户端返回的任务Tab点击通知---用来刷新每个任务列表；0-是切换点击；1-是再次点击
+    window['AppJSApi_BackH5TaskTabClick'] = (jstr) => {
+      console.log("客户端返回的任务Tab点击通知>>",jstr);
+      this.initExclusiveList('1');
       this.initDailyTaskListData();
     }
   },
@@ -448,20 +453,20 @@ export default {
         }
       }
     },
-    // 获取用户信息
+    // 初始化用户信息及任务列表
     initUserInfo(){
       AppJsBridge.getUserInfo(param =>{
         if(param){
-          // 初始化专属任务-0
+          // 获取APP本地存储--是否展示快去领取元宝提示
+          AppJsBridge.getStoreInfo('TASK_GETCURY_KEY',backData => {
+            console.log('callback-backData>>',backData);
+            this.showFirstGetCury = backData.data === '1' ? false : true;
+          });
+          // 初始化专属任务(和新手任务)-0
           this.initExclusiveList('0');
           setTimeout(() => {
             // 初始化每日任务
             this.initDailyTaskListData();
-            // 获取APP本地存储--是否展示快去领取元宝提示
-            AppJsBridge.getStoreInfo('TASK_GETCURY_KEY',backData => {
-              console.log('callback-backData>>',backData);
-              this.showFirstGetCury = backData.data === '1' ? false : true;
-            });
           }, 100);
         }else{
           this.$toast("请重新登录");
@@ -482,15 +487,16 @@ export default {
         .then(res => {
           console.log('---ExclusiveList--',res);
           // 初始化新手任务
-          if(isInit === '0'){
+          if(isInit === '0' || isInit === '1'){
             this.initNewTaskListData(isInit);
           }
           if (res.reCode === "0") {
             this.exclusiveList = res.result;
             if(this.exclusiveList && this.exclusiveList.length > 0){
+              this.showExclusiveList = '1';
               this.initGetCuryPao(this.exclusiveList);
             }else{
-              this.showExclusiveList = false;
+              this.showExclusiveList = '-1';
             }
           } else {
             this.exclusiveFlag = '1';
@@ -501,7 +507,7 @@ export default {
           console.log(e);
           this.exclusiveFlag = '1';
           // 初始化新手任务
-          if(isInit === '0'){
+          if(isInit === '0' || isInit === '1'){
             this.initNewTaskListData(isInit);
           }
         });
@@ -547,7 +553,7 @@ export default {
         if(type === '0'){
           this.exclusiveList.splice(index, 1);
           if(this.exclusiveList.length === 0){
-            this.showExclusiveList = false;
+            this.showExclusiveList = '0';
           }
         } else if(type == '2' && this.dailyTaskList[index].taskNowSum >= this.dailyTaskList[index].taskNeedSum){
             this.dailyTaskList[index].buttonText="已完成";
@@ -558,7 +564,7 @@ export default {
         } else if(type == '1'){
           this.newTaskList.splice(index, 1);
           if(this.newTaskList.length === 0){
-            this.hasNewTask = false;
+            this.hasNewTask = '0';
           }
         }
       }, 4000)
@@ -575,6 +581,7 @@ export default {
       let taskId = type === '0' ? this.exclusiveList[index].taskId : type === '1' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
       let taskConfigId = type === '0' ? this.exclusiveList[index].taskConfigId   : type === '1' ? this.newTaskList[index].taskConfigId   : this.dailyTaskList[index].taskConfigId  ;
       if(status === '2'){ //领取元宝
+        // this.getCurrency(type,index);
         this.getCurrencyData(taskId,type,index,taskConfigId);
       } else if (status === '3') { //已领取-置灰点击没反应
         return;
@@ -714,9 +721,10 @@ export default {
           if (res.reCode === "0") {
             this.newTaskList=res.result;
             if(this.newTaskList && this.newTaskList.length > 0){
+              this.hasNewTask = '1';
               this.initGetCuryPao(this.newTaskList);
             }else{
-              this.hasNewTask = false;
+              this.hasNewTask = '-1';
             }
           } else {
             this.newTaskFlag = '1';
@@ -1162,7 +1170,7 @@ export default {
         font-family: Source Han Sans SC;
         font-weight: 400;
         color: rgba(0,0,0,1);
-        line-height: 1.5625rem;
+        line-height: 1.625rem;
       }
     }
     .task-li-oilcard,.task-li-invitecard{
