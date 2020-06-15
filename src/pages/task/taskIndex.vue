@@ -234,7 +234,7 @@
           </transition-group>
         </div>
         <div class="task-wrapper task-server-failed" v-else-if="dailyTaskFlag === '0'">
-          <van-loading type="spinner" size="24px">每日任务正在全力加载中...</van-loading>
+          <van-loading type="spinner" size="24px">每日任务在全力加载中...</van-loading>
         </div>
         <div class="task-wrapper task-server-failed" v-else-if="dailyTaskFlag === '1'">
           <van-loading type="spinner" size="24px">获取每日任务失败，稍后再试试吧~</van-loading>
@@ -415,7 +415,7 @@ export default {
 
     // 回调获取客户端返回的任务成功信息,taskType：0.专属任务 1.新手任务 2.每日任务---用来刷新哪个任务块
     window['AppJSApi_BackH5TaskOrdersInfo'] = (_json) => {
-      console.log("客户端返回的任务成功信息>>",JSON.parse(_json));
+      console.log("客户端返回的任务成功信息>>",_json);
       if(_json === "0"){
           this.initExclusiveList();
       }else if(_json === "1"){
@@ -428,7 +428,9 @@ export default {
     window['AppJSApi_BackH5TaskTabClick'] = (jstr) => {
       console.log("客户端返回的任务Tab点击通知>>",jstr);
       this.initExclusiveList('1');
-      this.initDailyTaskListData();
+      setTimeout(() => {
+        this.initDailyTaskListData();
+      }, 100);
     }
   },
   methods:{
@@ -763,7 +765,8 @@ export default {
                 this.dailyTaskList.unshift(_obj);
               }
             }else{
-              this.hasDailyTask = false;
+              // this.hasDailyTask = false;
+              this.dailyTaskFlag = '0';
             }
           } else {
             this.dailyTaskFlag = '1';
