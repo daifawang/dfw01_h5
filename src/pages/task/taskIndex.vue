@@ -105,7 +105,7 @@
         <transition name="taskFade">
           <div v-show="hasNewTask === '1'" ref="newComer" class="task-main">
             <div class="tasks-title task-title-new">新手任务
-              <div @click="goVideoList">
+              <div v-if="newTaskList && newTaskList.length>0" @click="goVideoList">
                 <img class="task-title-new-icon1" src="../../assets/images/task/xinshou@2x.png"> 新手攻略
                 <img class="task-title-new-icon2" src="../../assets/images/task/jiantou_you@2x.png">
               </div>
@@ -366,7 +366,7 @@ export default {
         }
       ],//新手任务列表-本地测试用
       newTaskList:[],//新手任务列表
-      showExclusiveList: '1', //-1,初始化列表无数据不展示任务栏和div;0,操作后列表任务栏整体消失;；1，展示任务栏
+      showExclusiveList: '-1', //-1,初始化列表无数据不展示任务栏和div;0,操作后列表任务栏整体消失;；1，展示任务栏
       hasNewTask:'1', // -1,初始化列表无数据不展示任务栏和div;0,操作后列表任务栏整体消失;；1，展示任务栏
       hasDailyTask:true, //  是否有每日任务
       exclusiveFlag:'0', //专属列表过渡状态：0在加载提示；1接口获取失败提示
@@ -440,7 +440,6 @@ export default {
       if(this.showFirstGetCury && list_json && this.showCurypaoNum === 0){
         for (let m = 0; m < list_json.length; m++) {
           const json = list_json[m];
-          console.log(json);
           if(this.showCurypaoNum > 0){
             break;
           }
