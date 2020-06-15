@@ -28,6 +28,7 @@ Axios.interceptors.request.use(
         } else {
             config.baseURL = Const.SERVER_URL;
         }
+        console.log(config.baseURL);
         return config;
     },
     error => {

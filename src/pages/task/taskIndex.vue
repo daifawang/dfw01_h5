@@ -29,7 +29,7 @@
             </div>
             <div class="task-wrapper" v-if="exclusiveList && exclusiveList.length>0">
               <transition-group appear name="taskList" tag="div">
-                <div v-for="(item, index) in exclusiveList" :key="item.taskId" class="task-li" @click.stop="clickUrl('0',index)">
+                <div :id="item.taskId" v-for="(item, index) in exclusiveList" :key="item.taskId" class="task-li" @click.stop="clickUrl('0',index)">
                   <div class="task-li-t">
                     <img class="task-t-icon" :src="item.taskHeadImgUrl" />
                     <div class="task-t-div">
@@ -112,7 +112,7 @@
             </div>
             <div class="task-wrapper" v-if="newTaskList && newTaskList.length>0">
               <transition-group appear name="taskList" tag="div">
-              <div class="task-wrapper-div" v-for="(newItem,index) in newTaskList" :key="newItem.taskId" @click.stop="clickUrl('1',index)">
+              <div :id="newItem.taskId" class="task-wrapper-div" v-for="(newItem,index) in newTaskList" :key="newItem.taskId" @click.stop="clickUrl('1',index)">
                 <div class="task-box">
                   <div class="task-icon">
                     <img :src="newItem.taskHeadImgUrl">
@@ -192,11 +192,11 @@
           </div>
         </transition>
       </div>
-      <div v-if="hasDailyTask" class="task-main">
+      <div v-if="hasDailyTask" id="dayTask" class="task-main">
         <div class="tasks-title">每日任务</div>
         <div class="task-wrapper" v-if="dailyTaskList && dailyTaskList.length>0">
           <transition-group appear name="taskList" tag="div">
-          <div class="task-wrapper-div" v-for="(dailyItem,index) in dailyTaskList" :key="dailyItem.taskId" @click.stop="clickUrl('2',index)">
+          <div :id="dailyItem.taskId" class="task-wrapper-div" v-for="(dailyItem,index) in dailyTaskList" :key="dailyItem.taskId" @click.stop="clickUrl('2',index)">
             <div class="task-box">
               <div class="task-icon">
                 <img :src="dailyItem.headImg">
@@ -384,6 +384,7 @@ export default {
     // if(process.env.VUE_APP_ENV === 'development'){
     //   setTimeout(() => {
     //     this.loadingFlag = false;
+    //     this.showExclusiveList = '1';
     //     this.exclusiveList = this.exclusiveList1;
     //     this.showFirstGetCury = true;
     //     this.initGetCuryPao(this.exclusiveList);
@@ -428,17 +429,22 @@ export default {
     window['AppJSApi_BackH5TaskTabClick'] = (jstr) => {
       console.log("客户端返回的任务Tab点击通知>>",jstr);
       this.initExclusiveList('1');
-      setTimeout(() => {
-        this.initDailyTaskListData();
-      }, 100);
+      // setTimeout(() => {
+      //   this.initDailyTaskListData();
+      // }, 100);
     }
   },
   methods:{
     beforeunloadFn(e) {
-      alert('页面刷新啦~~');
+      this.$toast({
+        position: 'top',
+        message: '页面刷新啦~~',
+        duration: 1500
+      });
     },
     //初始化快去领取元宝气泡提示
     initGetCuryPao(list_json){
+      console.log(this.showFirstGetCury);
       if(this.showFirstGetCury && list_json && this.showCurypaoNum === 0){
         for (let m = 0; m < list_json.length; m++) {
           const json = list_json[m];
@@ -448,6 +454,10 @@ export default {
           if(this.showCurypaoNum === 0 && json.status === '2'){
             this.showCurypaoNum = this.showCurypaoNum+1;
             this.$set(json,'showCurypao',true);
+            setTimeout(() => {
+              console.log(document.getElementById(''+json.taskId).offsetTop); //getBoundingClientRect()
+              window.scrollTo(0,document.getElementById(''+json.taskId).offsetTop-18);
+            },180);
           }else{
             this.$set(json,'showCurypao',false);
           }
@@ -463,12 +473,8 @@ export default {
             console.log('callback-backData>>',backData);
             this.showFirstGetCury = backData.data === '1' ? false : true;
           });
-          // 初始化专属任务(和新手任务)-0
+          // 初始化任务-0，初始化；1，切换任务tab刷新
           this.initExclusiveList('0');
-          setTimeout(() => {
-            // 初始化每日任务
-            this.initDailyTaskListData();
-          }, 100);
         }else{
           this.$toast("请重新登录");
         }
@@ -690,14 +696,6 @@ export default {
         AppJsBridge.storeInfo('TASK_GUIDE_KEY','1');
       }
     },
-    toastD(){
-      console.log(2);
-      this.$toast({
-        position: 'top',
-        message: 'toastdddddd',
-        duration: 1500
-      });
-    },
     goVideoList(){  //新手任务挑战
         window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html?t=${new Date().getTime()}/#/task/taskVideoList?&NEW_WVW_HYB`;
     },
@@ -727,16 +725,22 @@ export default {
             this.newTaskFlag = '1';
             console.log(res.reInfo);
           }
-          if(isInit === '0'){
-            this.getGuideStoreApi();
+          if(isInit === '0' || isInit === '1'){
+            this.initDailyTaskListData();
+            if(isInit === '0'){
+              this.getGuideStoreApi();
+            }
           }
         })
         .catch(e => {
           console.log(e);
           this.loadingFlag = false;
           this.newTaskFlag = '1';
-          if(isInit === '0'){
-            this.getGuideStoreApi();
+          if(isInit === '0' || isInit === '1'){
+            this.initDailyTaskListData();
+            if(isInit === '0'){
+              this.getGuideStoreApi();
+            }
           }
         });
       });
@@ -759,11 +763,6 @@ export default {
             this.dailyTaskList = res.result.taskList;
             if(this.dailyTaskList && this.dailyTaskList.length > 0){
               this.initGetCuryPao(this.dailyTaskList);
-              if(1===1){
-                let _obj = this.dailyTaskList[3];
-                this.dailyTaskList.splice(3, 1);
-                this.dailyTaskList.unshift(_obj);
-              }
             }else{
               // this.hasDailyTask = false;
               this.dailyTaskFlag = '0';
