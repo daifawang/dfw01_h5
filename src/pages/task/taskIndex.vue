@@ -579,28 +579,24 @@ export default {
       } else if (status === '3') { //已领取-置灰点击没反应
         return;
       } else { //跳转具体任务链接
-        this.checkTaskStatus(taskId,type,status,index,_url);
+        this.checkTaskStatus(type,index);
       }
     },
     // 点击整个栏跳转
     clickUrl(type,index){
         console.log('------点击整个栏跳转--------');
         console.log(status,url);
-        let url = type === '0' ? this.exclusiveList[index].jumpUrl : type === '1' ? this.newTaskList[index].jumpUrl : this.dailyTaskList[index].jumpUrl;
-        let status = type === '0' ? this.exclusiveList[index].status : type === '1' ? this.newTaskList[index].status : this.dailyTaskList[index].status;
-        let taskId = type === '0' ? this.exclusiveList[index].taskId : type === '1' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
         if(this.showGuide && this.showGuide >0){
             return;
         }
         if(status !== '2' && status !== '3'){
-            this.checkTaskStatus(taskId,type,status,index,url);
-            // this.goTaskUrl(index,url);
+            this.checkTaskStatus(type,index);
         }
     },
     // 任务跳转处理
-    goTaskUrl(index,jump_url){
+    goTaskUrl(index,jump_url,status){
       console.log('jump_url>>>>'+jump_url);
-      if(jump_url){
+      if(jump_url && status !== '2' && status !== '3'){
           if (jump_url =='-1') {
             // 跳转刷一刷tab
             AppJsBridge.appBackMainTab('REFRESH');
@@ -800,38 +796,15 @@ export default {
             });
       });
     },
-     // 查看《**》通知服务端任务已完成
-    sendStatus(taskId,type,status){
-        // taskType  0 专属  1 新手  2每日
-        console.log('查看《**》通知服务端任务已完成');
-        AppJsBridge.initSignData({taskId:taskId,taskType:type+'',status:status}, 954012, param => {
-            this.$http({
-            apiType: "2",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            url: "/gateway.do",
-            data: param
-            })
-            .then(res => {
-                console.log(res);
-                if (res.reCode == "0") {
-                   this.initDailyTaskListData();
-                } else {
-                    this.$toast(res.reInfo);
-                }
-            })
-            .catch(e => {
-                console.log(e);
-            });
-      });
-    },
     // 点击更新任务状态
-    checkTaskStatus(taskId,type,status,index,url){
+    checkTaskStatus(type,index){
         // taskType  0 专属  1 新手  2每日
         console.log('taskId:'+taskId+',type:'+type+',index:'+index);
-        let taskConfigId = type === '0' ? this.exclusiveList[index].taskConfigId : type === '1' ? this.newTaskList[index].taskConfigId : this.dailyTaskList[index].taskConfigId  ;
-        AppJsBridge.initSignData({taskId:taskId,taskType:type+'',status:status}, 954013, param => {
+        let _url = type === '0' ? this.exclusiveList[index].jumpUrl : type === '1' ? this.newTaskList[index].jumpUrl : this.dailyTaskList[index].jumpUrl;
+        let status = type === '0' ? this.exclusiveList[index].status : type === '1' ? this.newTaskList[index].status : this.dailyTaskList[index].status;
+        let taskId = type === '0' ? this.exclusiveList[index].taskId : type === '1' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
+        let taskConfigId = type === '0' ? this.exclusiveList[index].taskConfigId : type === '1' ? this.newTaskList[index].taskConfigId : this.dailyTaskList[index].taskConfigId;
+        AppJsBridge.initSignData({taskConfigId:taskConfigId,taskId:taskId,taskType:type+'',status:status}, 954013, param => {
             this.$http({
             apiType: "2",
             headers: {
@@ -843,11 +816,23 @@ export default {
             .then(res => {
                 console.log(res);
                 if (res.reCode == "0") {
-                    this.goTaskUrl(index,url);
-                    // 查看每日的特定文章，刷新每日接口和通知服务端任务已完成
-                    if(taskConfigId == '8'){
-                        this.sendStatus(taskId,type,status)
+                    if(res.result.gap === '1'){
+                        // 0 未改变  1已改变
+                        if(type === '0'){
+                            this.exclusiveList[index].status = res.result.status;
+                        }else if(type === '1'){
+                            this.newTaskList[index].status = res.result.status;
+                        }else if(type === '2'){
+                            this.dailyTaskList[index].status = res.result.status;
+                        }
                     }
+                    this.goTaskUrl(index,_url,res.result.status);
+                    // 查看类任务，H5自己刷新页面
+                    setTimeout(() => {
+                        if(taskConfigId === '8'){
+                            this.initDailyTaskListData();
+                        }
+                    }, 1000);
                 } else {
                     this.$toast(res.reInfo);
                 }
