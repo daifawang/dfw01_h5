@@ -300,6 +300,26 @@ let AppJsBridge = {
         } catch (error) {
             console.log(JSON.stringify(error));
         }
+    },
+    // 【JS2066】点击通知栏跳转H5任务首页-- 冷启动拉起app
+    taskNotifyBarMsg(callback){
+        try {
+            if(typeof(AndroidAppCommonJs) !== 'undefined'){
+                let jsonStr=AndroidAppCommonJs.getPushNotifyBarkMsgInfo("")
+                if( typeof callback === 'function' ){
+                    callback(jsonStr);
+                }
+            }else if(typeof(window.webkit) !== 'undefined'){
+                window.webkit.messageHandlers.getPushNotifyBarkMsgInfo.postMessage('');
+                window.AppJSApi_BackH5PushMsgInfo = (jsonStr) => {
+                    if( typeof callback === 'function' ){
+                        callback(jsonStr);
+                    }
+                } 
+            }    
+        } catch (error) {
+            console.log(JSON.stringify(error));
+        }
     }
 }
 export {

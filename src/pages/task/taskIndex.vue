@@ -322,8 +322,7 @@ export default {
           extra: {onAddCount: '2600',lastCount: '6100'}
         }
       ],
-      exclusiveList:[ //专属任务列表
-      ],
+      exclusiveList:[], //专属任务列表
       dailyTaskList:[],//每日任务列表
       newTaskList1:[
         {
@@ -429,10 +428,11 @@ export default {
     window['AppJSApi_BackH5TaskTabClick'] = (jstr) => {
       console.log("客户端返回的任务Tab点击通知>>",jstr);
       this.initExclusiveList('1');
-      // setTimeout(() => {
-      //   this.initDailyTaskListData();
-      // }, 100);
     }
+    // 【JS2066】应用进程中 -- 点击任务通知栏消息进任务页面，客户端回调H5 JS：
+    window.AppJSApi_BackH5PushMsgInfo = (jsonStr) => {
+      console.log("应用进程中点击任务通知栏消息进任务页面，客户端回调H5 JS>>",JSON.parse(jsonStr));
+    } 
   },
   methods:{
     beforeunloadFn(e) {
@@ -1066,7 +1066,7 @@ export default {
             width: 1.8125rem;
             position: relative;
             left: .3125rem;
-            top: .1875rem;
+            top: .1rem;
           }
         }
         .task-t-note {
