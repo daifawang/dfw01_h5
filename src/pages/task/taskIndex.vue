@@ -76,8 +76,8 @@
                   </div>
                   <div v-if="item.status === '2' && showFirstGetCury && item.showCurypao" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
                   <div class="right-bttn" :class="{guideQuan2:showGuide === 4 && index === 0}">
-                    <span v-if="item.status === '0' || item.status === '1'" class="bttn-span" @click.stop="clickRightBttn('0',index)">{{ item.taskAction }}</span>
-                    <span v-else-if="item.status === '2'" class="bttn-span bttn-success" @click.stop="clickRightBttn('0',index)">领取元宝</span>
+                    <span class="bttn-span" :class="{bttnSuccess:item.status === '2'}" @click.stop="clickRightBttn('0',index)">{{ item.taskAction }}</span>
+                    <!-- <span class="bttn-span bttn-success" @click.stop="clickRightBttn('0',index)">领取元宝</span> -->
                   </div>
                   <div v-if="item.viewCount" class="task-btn-view">
                     <div>{{item.viewCount}}</div>
@@ -1116,7 +1116,7 @@ export default {
         display: inline-block;
         text-align: center;
       }
-      .bttn-success {
+      .bttnSuccess {
         background: linear-gradient(90deg,rgba(255,94,23,1),rgba(254,52,45,1));
         box-shadow: 0rem .3125rem .625rem 0rem rgba(255,52,47,0.3);
         color: #fff;
