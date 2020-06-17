@@ -139,7 +139,7 @@ let AppJsBridge = {
             key: key,
             data: ''
         })
-        console.log(_json);
+        // console.log(_json);
         try {
             if(typeof(AndroidAppCommonJs)!=='undefined'){
                 AndroidAppCommonJs.manageH5Data(_json)
@@ -171,7 +171,7 @@ let AppJsBridge = {
         try {
             if(typeof(AndroidAppGoodsJs) !== 'undefined'){
                 signData=AndroidAppCommonJs.signRequestBody(_json);
-                console.log(signData);
+                // console.log(signData);
                 param = JSON.parse(decodeURI(signData));
                 if( typeof callback === 'function' ){
                     callback(param);
@@ -180,7 +180,7 @@ let AppJsBridge = {
                 window.webkit.messageHandlers.signRequestBody.postMessage(_json);
                 window.AppJSApi_BackSignRequestBody=(signData) => {
                     param = JSON.parse(decodeURI(signData));
-                    console.log('AppJSApi_BackSignRequestBody>>',param);
+                    // console.log('AppJSApi_BackSignRequestBody>>',param);
                     if( typeof callback === 'function' ){
                         callback(param);
                     }
@@ -283,15 +283,14 @@ let AppJsBridge = {
         try {
             if(typeof(AndroidAppCommonJs) !== 'undefined'){
                 userInfo=AndroidAppCommonJs.getFullUserInfo("")
-                console.log(userInfo);
-                // param = JSON.parse(decodeURI(signData));
+                // console.log(userInfo);
                 if( typeof callback === 'function' ){
                     callback(userInfo);
                 }
             }else if(typeof(window.webkit) !== 'undefined'){
                 window.webkit.messageHandlers.getFullUserInfo.postMessage('');
                 window.AppJSApi_GetFullUerInfo=(userInfo) => {
-                    console.log(userInfo);
+                    // console.log(userInfo);
                     if( typeof callback === 'function' ){
                         callback(userInfo);
                     }
@@ -302,20 +301,12 @@ let AppJsBridge = {
         }
     },
     // 【JS2066】点击通知栏跳转H5任务首页-- 冷启动拉起app
-    taskNotifyBarMsg(callback){
+    taskNotifyBarMsg(){
         try {
             if(typeof(AndroidAppCommonJs) !== 'undefined'){
-                let jsonStr=AndroidAppCommonJs.getPushNotifyBarkMsgInfo("")
-                if( typeof callback === 'function' ){
-                    callback(jsonStr);
-                }
+                AndroidAppCommonJs.getPushNotifyBarkMsgInfo("")
             }else if(typeof(window.webkit) !== 'undefined'){
                 window.webkit.messageHandlers.getPushNotifyBarkMsgInfo.postMessage('');
-                window.AppJSApi_BackH5PushMsgInfo = (jsonStr) => {
-                    if( typeof callback === 'function' ){
-                        callback(jsonStr);
-                    }
-                } 
             }    
         } catch (error) {
             console.log(JSON.stringify(error));

@@ -402,16 +402,11 @@ export default {
     // }
     //本地模拟数据测试用：----部署时候删除--☆☆☆☆☆☆☆----
   },
-  destroyed() {
-    window.removeEventListener('beforeunload', e => this.beforeunloadFn(e))
-  },
   mounted() {
     // 开启下拉刷新
     AppJsBridge.setClientRefresh('1');
     // 初始化用户信息及任务列表
     this.initUserInfo();
-    //监听页面刷新
-    window.addEventListener('beforeunload', e => this.beforeunloadFn(e))
 
     // 回调获取客户端返回的任务成功信息,taskType：0.专属任务 1.新手任务 2.每日任务---用来刷新哪个任务块
     window['AppJSApi_BackH5TaskOrdersInfo'] = (_json) => {
@@ -427,21 +422,14 @@ export default {
     // 回调获取客户端返回的任务Tab点击通知---用来刷新每个任务列表；0-是切换点击；1-是再次点击
     window['AppJSApi_BackH5TaskTabClick'] = (jstr) => {
       console.log("客户端返回的任务Tab点击通知>>",jstr);
-      this.initExclusiveList('1');
+      // this.initExclusiveList('1');
     }
-    // 【JS2066】应用进程中 -- 点击任务通知栏消息进任务页面，客户端回调H5 JS：
+    // 【JS2066】冷启动/应用进程中 -- 点击任务通知栏消息进任务页面，客户端回调H5 JS：
     window.AppJSApi_BackH5PushMsgInfo = (jsonStr) => {
       console.log("应用进程中点击任务通知栏消息进任务页面，客户端回调H5 JS>>",JSON.parse(jsonStr));
     } 
   },
   methods:{
-    beforeunloadFn(e) {
-      this.$toast({
-        position: 'top',
-        message: '页面刷新啦~~',
-        duration: 1500
-      });
-    },
     //初始化快去领取元宝气泡提示
     initGetCuryPao(list_json){
       console.log(this.showFirstGetCury);
@@ -455,6 +443,7 @@ export default {
             this.showCurypaoNum = this.showCurypaoNum+1;
             this.$set(json,'showCurypao',true);
             setTimeout(() => {
+              AppJsBridge.storeInfo('TASK_GETCURY_KEY','1');
               console.log(document.getElementById(''+json.taskId).offsetTop); //getBoundingClientRect()
               window.scrollTo(0,document.getElementById(''+json.taskId).offsetTop-18);
             },180);
@@ -473,6 +462,8 @@ export default {
             console.log('callback-backData>>',backData);
             this.showFirstGetCury = backData.data === '1' ? false : true;
           });
+          // 【JS2066】点击通知栏跳转H5任务首页-- 冷启动拉起app
+          AppJsBridge.taskNotifyBarMsg();
           // 初始化任务-0，初始化；1，切换任务tab刷新
           this.initExclusiveList('0');
         }else{
