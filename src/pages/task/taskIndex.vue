@@ -433,7 +433,7 @@ export default {
     //初始化快去领取元宝气泡提示
     initGetCuryPao(list_json){
       console.log(this.showFirstGetCury);
-      if(this.showFirstGetCury && list_json && this.showCurypaoNum === 0){
+      if(this.showFirstGetCury && this.showCurypaoNum === 0 && list_json && list_json.length > 0){
         for (let m = 0; m < list_json.length; m++) {
           const json = list_json[m];
           if(this.showCurypaoNum > 0){
@@ -494,7 +494,6 @@ export default {
             this.exclusiveList = res.result;
             if(this.exclusiveList && this.exclusiveList.length > 0){
               this.showExclusiveList = '1';
-              this.initGetCuryPao(this.exclusiveList);
             }else{
               this.showExclusiveList = '-1';
             }
@@ -710,7 +709,6 @@ export default {
             this.newTaskList=res.result;
             if(this.newTaskList && this.newTaskList.length > 0){
               this.hasNewTask = '1';
-              this.initGetCuryPao(this.newTaskList);
             }else{
               this.hasNewTask = '-1';
             }
@@ -719,10 +717,12 @@ export default {
             console.log(res.reInfo);
           }
           if(isInit === '0' || isInit === '1'){
-            this.initDailyTaskListData();
             if(isInit === '0'){
               this.getGuideStoreApi();
             }
+            this.initDailyTaskListData();
+            this.initGetCuryPao(this.exclusiveList);
+            this.initGetCuryPao(this.newTaskList);
           }
         })
         .catch(e => {
