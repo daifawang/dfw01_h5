@@ -444,8 +444,10 @@ export default {
             this.$set(json,'showCurypao',true);
             setTimeout(() => {
               AppJsBridge.storeInfo('TASK_GETCURY_KEY','1');
-              console.log(document.getElementById(''+json.taskId).offsetTop); //getBoundingClientRect()
-              window.scrollTo(0,document.getElementById(''+json.taskId).offsetTop-18);
+              if(this.showGuide !== '1'){
+                console.log(document.getElementById(''+json.taskId).offsetTop); //getBoundingClientRect()
+                window.scrollTo(0,document.getElementById(''+json.taskId).offsetTop-18);
+              }
             },180);
           }else{
             this.$set(json,'showCurypao',false);
