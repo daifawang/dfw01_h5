@@ -11,17 +11,17 @@ switch (process.env.VUE_APP_ENV) {
     break;
   case 'testing':
     SERVER_URL = 'http://test-hybtask.log56.com/hyb-task-microserver';
-    GATEWAY_BASE_URL = 'http://test-basic.log56.com/luge';
+    GATEWAY_BASE_URL = 'https://test-basic.log56.com/luge';
     APP_RUL = 'http://test-hybtask.log56.com/';
     break;
   case 'prepub':
     SERVER_URL = 'https://pre-hybtask.log56.com/hyb-task-microserver';
-    GATEWAY_BASE_URL = 'http://pre-basic.log56.com/luge';
+    GATEWAY_BASE_URL = 'https://pre-basic.log56.com/luge';
     APP_RUL = 'https://pre-hybtask.log56.com/';
     break;
   case 'production':
     SERVER_URL = 'https://hybtask.log56.com/hyb-task-microserver';
-    GATEWAY_BASE_URL = 'http://basic.log56.com/luge';
+    GATEWAY_BASE_URL = 'https://basic.log56.com/luge';
     APP_RUL = 'https://hybtask.log56.com/';
     break;
   default:

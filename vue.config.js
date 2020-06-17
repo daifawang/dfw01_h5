@@ -49,7 +49,7 @@ module.exports = {
                 }
             },
             "/wgfw": {
-                target: "http://test-basic.log56.com/luge",
+                target: "https://test-basic.log56.com/luge",
                 changeOrigin: true, // 改变源
                 pathRewrite: {
                     "^/wgfw": '' // 路径重写
