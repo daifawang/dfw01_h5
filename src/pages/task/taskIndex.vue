@@ -430,9 +430,29 @@ export default {
     } 
   },
   methods:{
-    //初始化快去领取元宝气泡提示
+    // 初始化是否展示新手引导--获取APP本地存储
+    getGuideStoreApi(){
+      AppJsBridge.getStoreInfo('TASK_GUIDE_KEY',backData => {
+        console.log('callback-backData>>',backData);
+        this.showGuideStore = backData.data === '1' ? false : true;
+        if(this.showGuideStore){
+          if(this.exclusiveList.length > 0){
+            this.showGuide = 1;
+            this.guideType = 0;
+            this.goGuideApi();
+          }else if(this.exclusiveList.length === 0 && this.newTaskList.length > 0){
+            this.showGuide = 1;
+            this.guideType = 1;
+            // console.log("guide newcomer >>>>"+this.$refs.newComer.offsetTop);
+            // window.scrollTo(0,this.$refs.newComer.offsetTop);
+            this.goGuideApi();
+          }
+        }
+      });
+    },
+    // 初始化快去领取元宝气泡提示
     initGetCuryPao(list_json){
-      console.log(this.showFirstGetCury);
+      // console.log(this.showFirstGetCury);
       if(this.showFirstGetCury && this.showCurypaoNum === 0 && list_json && list_json.length > 0){
         for (let m = 0; m < list_json.length; m++) {
           const json = list_json[m];
@@ -512,26 +532,7 @@ export default {
         });
       });
     },
-    getGuideStoreApi(){
-      // 获取APP本地存储--是否展示新手引导
-      AppJsBridge.getStoreInfo('TASK_GUIDE_KEY',backData => {
-        console.log('callback-backData>>',backData);
-        this.showGuideStore = backData.data === '1' ? false : true;
-        if(this.showGuideStore){
-          if(this.exclusiveList.length > 0){
-            this.showGuide = 1;
-            this.guideType = 0;
-            this.goGuideApi();
-          }else if(this.exclusiveList.length === 0 && this.newTaskList.length > 0){
-            this.showGuide = 1;
-            this.guideType = 1;
-            // console.log("guide newcomer >>>>"+this.$refs.newComer.offsetTop);
-            // window.scrollTo(0,this.$refs.newComer.offsetTop);
-            this.goGuideApi();
-          }
-        }
-      });
-    },
+    // 新手引导-01
     goGuideApi(){
       AppJsBridge.guideTask(JSON.stringify({
         navMaskShow: '1',
@@ -543,6 +544,7 @@ export default {
       this.guideObj.guidePosition.top = 'initial';
       this.guideObj.guidePosition.bottom = '0rem';
     },
+    // 点击领取元宝奖励
     getCurrency(type,index){
       let task_id = type === '0' ? this.exclusiveList[index].taskId : type === '1' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
       let num = type === '0' ? this.exclusiveList[index].rewardNum : type === '1' ? this.newTaskList[index].rewardNum : this.dailyTaskList[index].rewardNum;
@@ -570,7 +572,6 @@ export default {
     },
     // 点击任务按钮
     clickRightBttn(type,index){
-        console.log('------任务按钮-');
       console.log(type,index);
       if(this.showGuide && this.showGuide >0){
         return;
@@ -588,7 +589,7 @@ export default {
         this.checkTaskStatus(type,index);
       }
     },
-    // 点击整个栏跳转
+    // 点击单个任务栏跳转
     clickUrl(type,index){
         console.log('------点击整个栏跳转--------');
         console.log(status,url);
@@ -649,11 +650,13 @@ export default {
             });
       });
     },
+    // 关闭快去领取元宝奖励气泡
     closeTip(){
       this.showFirstGetCury = false;
       AppJsBridge.storeInfo('TASK_GETCURY_KEY','1');
     },
-    guideTo(num){ //新手引导
+    // 新手引导每一步按钮点击逻辑
+    guideTo(num){
       if(num === 3 && this.guideType > 0){
         num = 5;
       }
@@ -688,7 +691,8 @@ export default {
         AppJsBridge.storeInfo('TASK_GUIDE_KEY','1');
       }
     },
-    goVideoList(){  //新手任务挑战
+    // 新手任务挑战
+    goVideoList(){
         window.location.href=`${Const.APP_RUL}hyb_task_h5/dist/index.html?t=${new Date().getTime()}/#/task/taskVideoList?&NEW_WVW_HYB`;
     },
     // 新手任务接口
@@ -774,28 +778,28 @@ export default {
     },
     // 领取元宝接口
     getCurrencyData(taskId,type,index,taskConfigId){
-        // taskType  0 专属  1 新手  2每日
-        console.log('taskId:'+taskId+',type:'+type+',index:'+index);
-        AppJsBridge.initSignData({taskId:taskId,taskType:type+'',taskConfigId:taskConfigId}, 954011, param => {
-            this.$http({
-            apiType: "2",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            url: "/gateway.do",
-            data: param
-            })
-            .then(res => {
-                console.log(res);
-                if (res.reCode == "0") {
-                    this.getCurrency(type,index);
-                } else {
-                    this.$toast(res.reInfo);
-                }
-            })
-            .catch(e => {
-                console.log(e);
-            });
+      // taskType  0 专属  1 新手  2每日
+      console.log('taskId:'+taskId+',type:'+type+',index:'+index);
+      AppJsBridge.initSignData({taskId:taskId,taskType:type+'',taskConfigId:taskConfigId}, 954011, param => {
+        this.$http({
+        apiType: "2",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        url: "/gateway.do",
+        data: param
+        })
+        .then(res => {
+            console.log(res);
+            if (res.reCode == "0") {
+                this.getCurrency(type,index);
+            } else {
+                this.$toast(res.reInfo);
+            }
+        })
+        .catch(e => {
+            console.log(e);
+        });
       });
     },
     // 点击更新任务状态
@@ -844,7 +848,7 @@ export default {
             });
       });
     },
-    }
+  }
 }
 </script>
 
