@@ -419,14 +419,14 @@ export default {
           this.initDailyTaskListData();
       }
     }
-    // 回调获取客户端返回的任务Tab点击通知---用来刷新每个任务列表；0-是切换点击；1-是再次点击
+    // 回调获取客户端返回的任务Tab点击通知---用来刷新每个任务列表；jstr：0-是切换点击；1-是再次点击
     window['AppJSApi_BackH5TaskTabClick'] = (jstr) => {
       console.log("客户端返回的任务Tab点击通知>>",jstr);
       this.initExclusiveList('1');
     }
     // 【JS2066】冷启动/应用进程中 -- 点击任务通知栏消息进任务页面，客户端回调H5 JS：
     window.AppJSApi_BackH5PushMsgInfo = (jsonStr) => {
-      console.log("应用进程中点击任务通知栏消息进任务页面，客户端回调H5 JS>>",JSON.parse(jsonStr));
+      console.log("冷启动/应用进程中，点击任务通知栏消息进任务页面，客户端回调H5 JS>>",JSON.parse(jsonStr));
     } 
   },
   methods:{
