@@ -15,7 +15,7 @@ export default {
         &>img{
             display: block;
             margin: 0 auto;
-            max-width: 75%;
+            max-width: 50%;
         }
     }
 </style>
