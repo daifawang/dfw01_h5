@@ -1,6 +1,8 @@
 <template>
     <div class="loading-box">
-        <img src="../assets/images/task/loading.gif">
+        <div>
+            <img src="../assets/images/task/loading.gif">
+        </div>
     </div>
 </template>
 <script>
@@ -12,10 +14,17 @@ export default {
     .loading-box{
         width: 100%;
         height: 100vh;
-        &>img{
-            display: block;
+        &>div{
+            width: 9.5rem;
+            height: auto;
             margin: 0 auto;
-            max-width: 50%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            &>img{
+                max-width: 100%;
+            }
         }
     }
 </style>
