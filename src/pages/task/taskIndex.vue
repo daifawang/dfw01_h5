@@ -268,7 +268,7 @@ export default {
   name: "taskIndex",
   data() {
     return {
-      loadingFlag: false,
+      loadingFlag: true,
       showGuideStore: false, //APP本地存储字段-引导页是否展示
       showGuide: '', //本页面是否显示引导页
       guideType: 0, //引导页类型：0.有专属任务的引导；1.无专属任务的引导
@@ -338,37 +338,7 @@ export default {
           extra: {onAddCount: '2600',lastCount: '6100'}
         }
       ],
-      exclusiveList:[
-            {
-            "taskName": "货到了，我要运费",
-            "taskConfigId": "1002",
-            "taskId": "527",
-            "status": "1",
-            "buttonText": "去传回单",
-            "jumpUrl": "跳转地址",
-            "headImg": "https://imgt.log56.com/sq_server/otherimg/hybrenwu/huidan@2x.png",
-            "note": "注释",
-            "rewardNum": 5,
-            "taskType": "1",
-            "extra": {
-                "endProvinceName": "江苏",
-                "orgName": "测试公司名称",
-                "startProvinceName": "安徽",
-                "goodsAmount": "2",
-                "endCountyName": "雨花台区",
-                "chargeEnsure": "2",
-                "allFreight": "1800",
-                "startCityName": "合肥市",
-                "goodsAmountType": "克",
-                "endCityName": "南京",
-                "transFeeInfo": "1800元 【到付",
-                "waybillId": "2",
-                "startCountyName": "蜀山区",
-                "goodsName": "测试商品"
-            },
-            "handleStatus": 0
-        }
-      ], //专属任务列表
+      exclusiveList:[], //专属任务列表
       dailyTaskList:[],//每日任务列表
       newTaskList1:[
         {
@@ -411,7 +381,7 @@ export default {
         }
       ],//新手任务列表-本地测试用
       newTaskList:[],//新手任务列表
-      showExclusiveList: '1', //-1,初始化列表无数据不展示任务栏和div;0,操作后列表任务栏整体消失;；1，展示任务栏
+      showExclusiveList: '-1', //-1,初始化列表无数据不展示任务栏和div;0,操作后列表任务栏整体消失;；1，展示任务栏
       hasNewTask:'1', // -1,初始化列表无数据不展示任务栏和div;0,操作后列表任务栏整体消失;；1，展示任务栏
       hasDailyTask:true, //  是否有每日任务
       exclusiveFlag:'0', //专属列表过渡状态：0在加载提示；1接口获取失败提示
