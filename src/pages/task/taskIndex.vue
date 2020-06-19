@@ -2,7 +2,7 @@
   <div id="taskIndex" class="wapperTask">
     <loading v-show="loadingFlag"></loading>
     <div v-show="!loadingFlag" class="task-show-wrapper">
-      <div class="wapperTaskGuide" :class="{guideBg:showGuide}" @touchmove.prevent>
+      <div class="wapperTaskGuide" :class="{guideBg:showGuide > 0 && showGuide < 4}" @touchmove.prevent>
         <div v-if="showGuide === 1 || showGuide === 2" class="task-guide" :style="{top:guideObj.guidePosition.top,bottom:guideObj.guidePosition.bottom}">
           <div class="guide-jian" :class="{guideJian1:showGuide === 1,guideJian2:showGuide === 2}">
             <img v-if="showGuide === 1" src="../../assets/images/task/task_jian_l2.png" />
@@ -20,16 +20,11 @@
         <transition name="taskFade">
           <div v-show="showExclusiveList === '1'" class="task-main">
             <div class="task-title">
-              <span ref="zsGuide" :class="{guideQuan:showGuide === 3}">专属任务</span>
-              <div v-if="showGuide === 3" class="task-guide">
-                <img class="guide-four-jt" src="../../assets/images/task/task_jian_r1.png" />
-                <div class="guide-text"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
-                <div class="guide-bttn" @click.stop="guideTo(4)"><img src="../../assets/images/task/task_know.png" /></div>
+              <span ref="zsGuide">专属任务</span>
               </div>
-            </div>
             <div class="task-wrapper" v-if="exclusiveList && exclusiveList.length>0">
               <transition-group appear name="taskList" tag="div">
-                <div :id="item.taskId" v-for="(item, index) in exclusiveList" :key="item.taskId" class="task-li" @click.stop="clickUrl('0',index)">
+                <div :id="item.taskId" v-for="(item, index) in exclusiveList" :key="item.taskId" @click.stop="clickUrl('0',index)" class="task-li" :class="{guideKuang:showGuide === 3 && guideType > 0 && index === 0}">
                   <div class="task-li-t">
                     <img class="task-t-icon" :src="item.taskHeadImgUrl" />
                     <div class="task-t-div">
@@ -75,19 +70,22 @@
                     <div class="task-oilcard-add">最新到账{{ item.extra.onAddCount }}元</div>
                   </div>
                   <div v-if="item.status === '2' && showFirstGetCury && item.showCurypao" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
-                  <div class="right-bttn" :class="{guideQuan2:showGuide === 4 && index === 0}">
+                  <div v-else-if="showGuide === 4 && index === 0 && guideType === 1" @click.stop="closeGuideTip()" class="sj-tag">点击这里去接单 ×</div>
+                  <div v-else-if="showGuide === 4 && index === 0 && guideType === 2" @click.stop="closeGuideTip()" class="sj-tag">点击这里传回单 ×</div>
+                  <div class="right-bttn">
                     <span class="bttn-span" :class="{bttnSuccess:item.status === '2'}" @click.stop="clickRightBttn('0',index)">{{ item.taskAction }}</span>
                     <!-- <span class="bttn-span bttn-success" @click.stop="clickRightBttn('0',index)">领取元宝</span> -->
+                  </div>
+                  <div v-if="item.taskConfigId === '1002'" @click.stop="closeGuideExgTip()" class="sj-tag-exg">
+                    到达卸货地，别忘了传回单哦~<br/>点击这里，即可完成回单上传<span>×</span>
                   </div>
                   <div v-if="item.viewCount" class="task-btn-view">
                     <div>{{item.viewCount}}</div>
                   </div>
-                  <div v-if="showGuide === 4 && index === 0" class="right-bttn-guide" >
-                    <div class="task-guide task-guide-four">
-                      <img class="guide-four-jt" src="../../assets/images/task/task_jian_l1.png" />
-                      <div class="guide-text"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
-                      <div class="guide-bttn" @click.stop="guideTo('')"><img src="../../assets/images/task/task_know.png" /></div>
-                    </div>
+                  <div v-if="showGuide === 3 && guideType > 0 && index === 0" class="task-guide task-guide-three">
+                    <img class="guide-four-jt" src="../../assets/images/task/task_jian_l1.png" />
+                    <div class="guide-text"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
+                    <div class="guide-bttn" @click.stop="guideTo(4)"><img src="../../assets/images/task/task_know.png" /></div>
                   </div>
                 </div>
               </transition-group>
@@ -138,18 +136,18 @@
                   </div>
                   <div class="task-btn-div">
                     <div v-if="newItem.status === '2' && showFirstGetCury && newItem.showCurypao" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
-                    <div @click.stop="clickRightBttn('1',index)" class="task-btn" :class="{guideQuan2:showGuide === 5 && index === 0}">
+                    <div @click.stop="clickRightBttn('1',index)" class="task-btn" :class="{guideQuan2:showGuide === 3 && guideType === 0 && index === 0}">
                       <div :class="{'to-do':newItem.status=='0' || newItem.status=='1','doing':newItem.status=='2','done':newItem.status=='3',}">{{newItem.taskAction}}</div>
                     </div>
                     <div v-if="newItem.signCardText" class="task-btn-text">
                       <div>{{newItem.signCardText}}</div>
                     </div>
                   </div>
-                  <div v-if="showGuide === 5 && index === 0" class="right-bttn-guide" >
+                  <div v-if="showGuide === 3 && guideType === 0 && index === 0" class="right-bttn-guide" >
                     <div class="task-guide task-guide-four">
                       <img class="guide-four-jt" src="../../assets/images/task/task_jian_l1.png" />
                       <div class="guide-text"><span v-html="guideObj.text"></span><img src="../../assets/images/task/task_hudie.png" /></div>
-                      <div class="guide-bttn" @click.stop="guideTo('')"><img src="../../assets/images/task/task_know.png" /></div>
+                      <div class="guide-bttn" @click.stop="guideTo(0)"><img src="../../assets/images/task/task_know.png" /></div>
                     </div>
                   </div>
                 </div>
@@ -254,8 +252,8 @@ export default {
     return {
       loadingFlag: true,
       showGuideStore: false, //APP本地存储字段-引导页是否展示
-      showGuide: '', //本页面是否显示引导页
-      guideType: 0, //引导页类型：0.有专属任务的引导；1.无专属任务的引导
+      showGuide: 0, //本页面是否显示引导页,0不显示
+      guideType: '', //引导页类型：0.无专属任务/无接单传回单任务的引导；1.有专属接单任务的引导；2.有专属传回单且无接单任务的引导
       showFirstGetCury: false, //APP本地存储字段-是否展示快去领取元宝提示
       showCurypaoNum: 0, //任务列表去重-是否展示快去领取元宝提示气泡数量
       guideObj: {
@@ -272,7 +270,7 @@ export default {
           miniTagList: [
             'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'
           ],
-          taskType: '1',taskAction: '去接单',status: '1',jumpUrl: '',rewardNum: '6',viewCount: '4000人在看',
+          taskConfigId: '1001',taskType: '1',taskAction: '去接单',status: '1',jumpUrl: '',rewardNum: '6',viewCount: '4000人在看',
           extra: {
             companyImgUrl: 'http://kydd.log56.com/sq_server/images/guidance_bg.png',
             showScriptOne: '北京昌平区⇀上海浦东',showScriptTwo: '普货【20吨】',showScriptThree: '1800元【到付】'
@@ -283,7 +281,7 @@ export default {
           miniTagList: [
             'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'
           ],
-          taskType: '1',taskAction: '去传回单',status: '2',jumpUrl: '',rewardNum: '10',
+          taskConfigId: '1002',taskType: '1',taskAction: '去传回单',status: '2',jumpUrl: '',rewardNum: '10',
           extra: {
             companyImgUrl: 'http://kydd.log56.com/sq_server/images/guidance_bg.png',
             showScriptOne: '北京昌平区2⇀上海浦东1',showScriptTwo: '普货【20吨】',showScriptThree: '1400元【到付】'
@@ -380,26 +378,28 @@ export default {
   created() {
     document.title = '任务';
     //本地模拟数据测试用：----部署时候删除--☆☆☆☆☆☆☆----
-    // if(process.env.VUE_APP_ENV === 'development'){
-    //   setTimeout(() => {
-    //     this.loadingFlag = false;
-    //     this.showExclusiveList = '1';
-    //     this.exclusiveList = this.exclusiveList1;
-    //     this.showFirstGetCury = true;
-    //     this.initGetCuryPao(this.exclusiveList);
-    //     this.newTaskList = this.newTaskList1;
-    //     this.initGetCuryPao(this.newTaskList);
-    //     // this.hasNewTask = '-1';
-    //     // this.exclusiveFlag = '1'
-    //     // this.newTaskFlag = '1';
-    //     // setTimeout(() => {
-    //     //   this.dailyTaskFlag = '1';
-    //     //   this.showGuide = 1;
-    //     //   this.guideType = 0;
-    //     //   this.goGuideApi();
-    //     // }, 1000);
-    //   }, 1000);
-    // }
+    if(process.env.VUE_APP_ENV === 'development'){
+      setTimeout(() => {
+        this.loadingFlag = false;
+        this.showExclusiveList = '1';
+        this.exclusiveList = this.exclusiveList1;
+        this.showFirstGetCury = true;
+        this.guideType = 1;
+        this.showGuide = 1;
+        this.initGetCuryPao(this.exclusiveList);
+        this.newTaskList = this.newTaskList1;
+        this.initGetCuryPao(this.newTaskList);
+          this.goGuideApi();
+        // this.hasNewTask = '-1';
+        // this.exclusiveFlag = '1'
+        // this.newTaskFlag = '1';
+        setTimeout(() => {
+          this.dailyTaskFlag = '1';
+          // this.showGuide = 1;
+          // this.guideType = 0;
+        }, 1000);
+      }, 1000);
+    }
     //本地模拟数据测试用：----部署时候删除--☆☆☆☆☆☆☆----
   },
   mounted() {
@@ -437,12 +437,26 @@ export default {
         this.showGuideStore = backData.data === '1' ? false : true;
         if(this.showGuideStore){
           if(this.exclusiveList.length > 0){
-            this.showGuide = 1;
-            this.guideType = 0;
+            for (let n = 0; n < this.exclusiveList.length; n++) {
+              const excl = this.exclusiveList[n];
+              if(excl.taskConfigId === '1001'){ // 有接单任务
+                this.showGuide = 1;
+                this.guideType = 1;
+                break;
+              }else if(excl.taskConfigId === '1002'){ // 有传回单任务
+                this.showGuide = 1;
+                this.guideType = 2;
+                break;
+              }
+            }
+            if(this.guideType === '' && this.newTaskList.length > 0){ // 既没有接单也没有传回单
+              this.showGuide = 1;
+              this.guideType = 0;
+            }
             this.goGuideApi();
           }else if(this.exclusiveList.length === 0 && this.newTaskList.length > 0){
             this.showGuide = 1;
-            this.guideType = 1;
+            this.guideType = 0;
             // console.log("guide newcomer >>>>"+this.$refs.newComer.offsetTop);
             // window.scrollTo(0,this.$refs.newComer.offsetTop);
             this.goGuideApi();
@@ -464,7 +478,7 @@ export default {
             this.$set(json,'showCurypao',true);
             setTimeout(() => {
               AppJsBridge.storeInfo('TASK_GETCURY_KEY','1');
-              if(this.showGuide !== '1'){
+              if(this.showGuide !== 1){
                 console.log(document.getElementById(''+json.taskId).offsetTop); //getBoundingClientRect()
                 window.scrollTo(0,document.getElementById(''+json.taskId).offsetTop-18);
               }
@@ -540,7 +554,7 @@ export default {
         tabMaskShow: '1',
         taskTabBtnEmpty: '1'
       }));
-      this.guideObj.text = '好运宝全新改版！<br/>这里是任务板块，你可以通过完成不同任务 来获取元宝奖励，元宝可用来兑换物品哦~';
+      this.guideObj.text = '好运宝全新改版！<br/>这里是任务板块，你可以通过完成不同任务来获取元宝奖励，元宝可用来兑换物品哦~';
       this.guideObj.guidePosition.top = 'initial';
       this.guideObj.guidePosition.bottom = '0rem';
     },
@@ -573,9 +587,10 @@ export default {
     // 点击任务按钮
     clickRightBttn(type,index){
       console.log(type,index);
-      if(this.showGuide && this.showGuide >0){
+      if(this.showGuide > 0 && this.showGuide < 4){
         return;
       }
+      this.closeGuideTip();
       let status = type === '0' ? this.exclusiveList[index].status : type === '1' ? this.newTaskList[index].status : this.dailyTaskList[index].status;
       let _url = type === '0' ? this.exclusiveList[index].jumpUrl : type === '1' ? this.newTaskList[index].jumpUrl : this.dailyTaskList[index].jumpUrl;
       let taskId = type === '0' ? this.exclusiveList[index].taskId : type === '1' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
@@ -593,7 +608,7 @@ export default {
     clickUrl(type,index){
         console.log('------点击整个栏跳转--------');
         console.log(status,url);
-        if(this.showGuide && this.showGuide >0){
+        if(this.showGuide > 0 && this.showGuide < 4){
             return;
         }
         if(status !== '2' && status !== '3'){
@@ -650,6 +665,10 @@ export default {
             });
       });
     },
+    // 关闭接单或传回单小手气泡
+    closeGuideTip(){
+      this.showGuide = 0;
+    },
     // 关闭快去领取元宝奖励气泡
     closeTip(){
       this.showFirstGetCury = false;
@@ -657,10 +676,8 @@ export default {
     },
     // 新手引导每一步按钮点击逻辑
     guideTo(num){
-      if(num === 3 && this.guideType > 0){
-        num = 5;
-      }
-      this.showGuide = num > 5 ? '' : num;
+      console.log(num);
+      this.showGuide = num;
       if(num === 2){
         AppJsBridge.guideTask(JSON.stringify({
           navMaskShow: '1',
@@ -673,15 +690,20 @@ export default {
         this.guideObj.guidePosition.top = '0';
         this.guideObj.guidePosition.marginTop = '1.5rem';
         this.guideObj.guidePosition.bottom = 'initial';
-      }else if(num === 3 || num === 4 || num === 5){
+      }else if(num === 3){
+        if(this.guideType === 0){
+          this.guideObj.text = '关于任务，你想了解的都在这里，快去看看吧！';
+          window.scrollTo(0,this.$refs.newComer.offsetTop);
+        }else{
+          this.guideObj.text = this.guideType === 1 ? '新版本在哪里接单？<br/>看这里，接单成功还能获得元宝奖励哦，快去接单吧！' : '新版本在哪里上传回单？<br/>看这里，上传成功还能获得元宝奖励哦，快去上传吧！';
+        }
         AppJsBridge.guideTask(JSON.stringify({
           navMaskShow: '1',
           navBtnEmpty: '0',
           tabMaskShow: '1',
           taskTabBtnEmpty: '0'
         }));
-        this.guideObj.text = num === 3 ? '这里是发货方派发的一些任务<br/>例如接单、传回单等，需要您及时完成哦~' : '关于任务，你想了解的都在这里，快去看看吧';
-      }else if(num > 5 || num === ''){
+      }else if(num > 3 || num === '' || num === 0){
         AppJsBridge.guideTask(JSON.stringify({
           navMaskShow: '0',
           navBtnEmpty: '0',
@@ -961,7 +983,7 @@ export default {
     font-family: Source Han Sans CN;
     font-weight: 500;
     padding: 0.5rem 0.125rem 0.5rem 0.375rem;
-    margin-top: .5rem;
+    margin-top: .35rem;
     img {
       position: absolute;
       width: 1.25rem;
@@ -988,7 +1010,7 @@ export default {
   }
   .guide-bttn {
     position: absolute;
-    bottom: -5.875rem;
+    bottom: -4.875rem;
     right: 8%;
     img {
       width: 5.125rem;
@@ -996,9 +1018,19 @@ export default {
     }
   }
 }
+.task-guide-three{
+  bottom: -7.25rem;
+  top: initial;
+  .guide-four-jt{
+    width: 2rem;
+    height: 2rem;
+    transform: rotate(-75deg);
+  }
+}
 .task-guide-four{
   top: 3.5rem;
   left: 0;
+  bottom: initial;
   .guide-four-jt {
     position: absolute;
     top: 0;
@@ -1031,8 +1063,7 @@ export default {
     color: rgba(0,0,0,1);
   }
   .task-li {
-    padding: 1.1875rem 0.875rem 1.1875rem 0;
-    margin-left: 0.875rem;
+    padding: 1.1875rem 0.875rem;
     position: relative;
     transition: all 1s;
     &:nth-last-child(n+2) { 
@@ -1315,9 +1346,6 @@ export default {
       }
     }
   }
-  .guideLi{
-    overflow: initial;
-  }
   .guideQuan {
     background-color: #fff;
     border-radius: 60%;
@@ -1327,8 +1355,57 @@ export default {
     z-index: 9990;
     padding: .6875rem;
   }
+  .guideLi {
+    padding: 1.1875rem 0.4rem;
+  }
+  .guideKuang {
+    padding: 1.1875rem 0.575rem;
+    margin: 0 0.3rem;
+    background-color: #fff;
+    z-index: 9990;
+    position: relative;
+  }
+  .sj-tag-exg{
+    min-width: 12.875rem;
+    padding: 0.5rem 1.55rem 0.5rem 0.75rem;
+    // height: 1.625rem;
+    line-height: 1.5825rem;
+    position: absolute;
+    right: 0.675rem;
+    top: 4.25rem;
+    clear: both;
+    background-color: #F4E3C0;
+    border-radius: .375rem;
+    text-align: center;
+    font-size: 1rem;
+    font-family: Source Han Sans SC;
+    font-weight: 400;
+    color: rgba(1,1,1,1);
+    &:before,&:after{
+      content: "";
+      display: block;
+      border-width: 1.125rem;
+      border-left-width: .375rem;
+      border-right-width: .375rem;
+      position: absolute;
+      top: -2rem;
+      right: 1.5rem;
+      border-style: solid dashed dashed;
+      border-color: #F4E3C0 transparent transparent;
+      font-size: 0;
+      line-height: 0;
+      transform: rotate(180deg);
+    }
+    span {
+      position: absolute;
+      display: inline-block;
+      top: -0.0625rem;
+      right: .3125rem;
+    }
+  }
   .sj-tag{
-    width: 8.375rem;
+    min-width: 6.75rem;
+    padding: 0 0.55rem;
     height: 1.625rem;
     line-height: 1.5825rem;
     position: absolute;
