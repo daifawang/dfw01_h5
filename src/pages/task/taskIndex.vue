@@ -36,20 +36,36 @@
                       <div class="task-t-name">
                         <span>{{ item.taskName }}</span><img v-for="(item1, index1) in item.miniTagList" :key="index1" :src="item1" />
                       </div>
-                      <div v-if="item.taskNote" class="task-t-note">完善证件信息后可结算运费</div>
+                      <div v-if="item.taskNote" class="task-t-note">{{item.taskNote}}</div>
                       <div class="task-t-currency">
                         <img src="../../assets/images/task/xiaoyuanbao@2x.png" /><span>+{{ item.rewardNum }}</span>
                       </div>
                     </div>
                   </div>
                   <div class="clear-float"></div>
-                  <div v-if="item.taskType === '1' && item.extra" class="task-li-content">
-                    <img class="task-comp-img" :src="item.extra.companyImgUrl" />
-                    <div class="task-li-line">{{ item.extra.showScriptOne }}</div>
-                    <div class="task-li-line">{{ item.extra.showScriptTwo }}</div>
-                    <div class="task-li-line">{{ item.extra.showScriptThree }}</div>
+                  <!--  1001 完成接单、1002 货到了，我要运费、1003提前收款，立马拿运费、1005证件识别、1006卡收运费、1009使用电子油卡 taskConfigId -->
+                  <div v-if="(item.taskConfigId === '1001' || item.taskConfigId === '1002' || item.taskConfigId === '1003' || item.taskConfigId === '1004')&& item.extra" class="task-li-content">
+                    <div v-if="item.taskConfigId === '1001' || item.taskConfigId === '1002' || item.taskConfigId === '1003' " class="task-li-company">
+                        <img src="../../assets/images/task/qi@2x.png">
+                        <div class="task-li-company-name">{{item.extra.orgName}}</div>
+                    </div>
+                    <div v-if="item.taskConfigId === '1004'">
+                        <!-- 1004第一次没有这个任务 -->
+                        <img src="../../assets/images/task/qi@2x.png">
+                    </div>
+                    <!-- <img class="task-comp-img" :src="item.extra.companyImgUrl" /> -->
+                    <div v-if="item.taskConfigId === '1001' || item.taskConfigId === '1002' || item.taskConfigId === '1003' " class="task-li-line">
+                        <div>{{item.extra.startProvinceName}}{{item.extra.startCityName}}{{item.extra.startCountyName}}</div>
+                        <div class="arrow-img"><img  src="../../assets/images/task/jiantou@2x.png"></div>
+                        <div>{{ item.extra.endProvinceName }}{{ item.extra.endCityName }}{{ item.extra.endCountyName }}</div>                        
+                    </div>
+                    <div class="task-li-line">{{ item.extra.goodsName }}{{ item.extra.goodsAmount }}{{ item.extra.goodsAmountType }}</div>
+                    <div class="task-li-line">{{ item.extra.transFeeInfo }}
+                        <img class="text-logo" src="../../assets/images/task/tiqianshoukuan@2x.png">
+                        <img class="text-logo" src="../../assets/images/task/yunfeibaozhang@2x.png">
+                    </div>
                   </div>
-                  <div v-else-if="item.taskType === '2' && item.extra" class="task-li-invitecard">
+                  <!-- <div v-else-if="item.taskConfigId === '1007' && item.extra" class="task-li-invitecard">
                     <img class="task-invitecard-img" src="../../assets/images/task/task_invite_bg.png" />
                     <div class="task-invitecard-name">
                       <img class="task-invitecard-headimg" :src="item.extra.inviteUserImg" />
@@ -57,8 +73,8 @@
                     </div>
                     <div class="task-invitecard-bttn" @click.stop="clickUrl('0',index)">立即查看</div>
                     <div class="task-invitecard-company">{{ item.extra.inviteCompany }}</div>
-                  </div>
-                  <div v-else-if="item.taskType === '3' && item.extra" class="task-li-business">
+                  </div> -->
+                  <!-- <div v-else-if="item.taskConfigId === '1008' && item.extra" class="task-li-business">
                     <img class="task-business-img" :src="item.extra.businessUserImg" />
                     <div class="task-business-right">
                       <div class="business-name">
@@ -68,15 +84,15 @@
                       <div class="business-note-li"><div v-for="(business, b) in item.extra.businessNoteList" :key="b" class="business-note">{{ business }}</div></div>
                     </div>
                     <div class="clear-float"></div>
-                  </div>
-                  <div v-else-if="item.taskType === '4' && item.extra" class="task-li-oilcard">
+                  </div> -->
+                  <div v-else-if="item.taskConfigId === '1009' && item.extra" class="task-li-oilcard">
                     <img class="task-oilcard-img" src="../../assets/images/task/task_oilcard_bg.png" />
-                    <div class="task-oilcard-last">余额：￥{{ item.extra.lastCount }}</div>
-                    <div class="task-oilcard-add">最新到账{{ item.extra.onAddCount }}元</div>
+                    <div class="task-oilcard-last">余额：￥{{ item.extra.cardBalance }}</div>
+                    <div class="task-oilcard-add">最新到账{{ item.extra.rechargeNum }}元</div>
                   </div>
                   <div v-if="item.status === '2' && showFirstGetCury && item.showCurypao" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
                   <div class="right-bttn" :class="{guideQuan2:showGuide === 4 && index === 0}">
-                    <span class="bttn-span" :class="{bttnSuccess:item.status === '2'}" @click.stop="clickRightBttn('0',index)">{{ item.taskAction }}</span>
+                    <span class="bttn-span" :class="{bttnSuccess:item.status === '2'}" @click.stop="clickRightBttn('0',index)">{{ item.buttonText }}</span>
                     <!-- <span class="bttn-span bttn-success" @click.stop="clickRightBttn('0',index)">领取元宝</span> -->
                   </div>
                   <div v-if="item.viewCount" class="task-btn-view">
@@ -252,7 +268,7 @@ export default {
   name: "taskIndex",
   data() {
     return {
-      loadingFlag: true,
+      loadingFlag: false,
       showGuideStore: false, //APP本地存储字段-引导页是否展示
       showGuide: '', //本页面是否显示引导页
       guideType: 0, //引导页类型：0.有专属任务的引导；1.无专属任务的引导
@@ -322,7 +338,37 @@ export default {
           extra: {onAddCount: '2600',lastCount: '6100'}
         }
       ],
-      exclusiveList:[], //专属任务列表
+      exclusiveList:[
+            {
+            "taskName": "货到了，我要运费",
+            "taskConfigId": "1002",
+            "taskId": "527",
+            "status": "1",
+            "buttonText": "去传回单",
+            "jumpUrl": "跳转地址",
+            "headImg": "https://imgt.log56.com/sq_server/otherimg/hybrenwu/huidan@2x.png",
+            "note": "注释",
+            "rewardNum": 5,
+            "taskType": "1",
+            "extra": {
+                "endProvinceName": "江苏",
+                "orgName": "测试公司名称",
+                "startProvinceName": "安徽",
+                "goodsAmount": "2",
+                "endCountyName": "雨花台区",
+                "chargeEnsure": "2",
+                "allFreight": "1800",
+                "startCityName": "合肥市",
+                "goodsAmountType": "克",
+                "endCityName": "南京",
+                "transFeeInfo": "1800元 【到付",
+                "waybillId": "2",
+                "startCountyName": "蜀山区",
+                "goodsName": "测试商品"
+            },
+            "handleStatus": 0
+        }
+      ], //专属任务列表
       dailyTaskList:[],//每日任务列表
       newTaskList1:[
         {
@@ -365,7 +411,7 @@ export default {
         }
       ],//新手任务列表-本地测试用
       newTaskList:[],//新手任务列表
-      showExclusiveList: '-1', //-1,初始化列表无数据不展示任务栏和div;0,操作后列表任务栏整体消失;；1，展示任务栏
+      showExclusiveList: '1', //-1,初始化列表无数据不展示任务栏和div;0,操作后列表任务栏整体消失;；1，展示任务栏
       hasNewTask:'1', // -1,初始化列表无数据不展示任务栏和div;0,操作后列表任务栏整体消失;；1，展示任务栏
       hasDailyTask:true, //  是否有每日任务
       exclusiveFlag:'0', //专属列表过渡状态：0在加载提示；1接口获取失败提示
@@ -511,7 +557,7 @@ export default {
             this.initNewTaskListData(isInit);
           }
           if (res.reCode === "0") {
-            this.exclusiveList = res.result;
+            // this.exclusiveList = res.result;
             if(this.exclusiveList && this.exclusiveList.length > 0){
               this.showExclusiveList = '1';
             }else{
@@ -853,6 +899,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.space-flex(@flex:center) {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: @flex;
+    justify-content: @flex;
+}
 .wapperTask {
   min-height: 100vh;
   background-color: #E8E8E8;
@@ -1154,6 +1208,23 @@ export default {
         font-weight: 400;
         color: rgba(0,0,0,1);
         line-height: 1.625rem;
+       .space-flex(flex-start);        
+        .arrow-img{
+            width:22px;
+            height: auto;
+            margin: 0 5px;
+            display: flex;
+            align-items: center;
+            &>img{
+                max-width: 100%;
+            }
+        }
+       .text-logo{
+            width: 4.875rem;
+            height: auto;
+            margin-right: 0.625rem;
+            vertical-align: middle;
+        }
       }
     }
     .task-li-oilcard,.task-li-invitecard{
@@ -1364,19 +1435,35 @@ export default {
         color: @color;
         line-height: @lh;
     }
-    .space-flex(@flex:center) {
-        display: -webkit-flex;
-        display: flex;
-        -webkit-align-items: center;
-        align-items: center;
-        -webkit-justify-content: @flex;
-        justify-content: @flex;
-    }
+    
     .center(){
         position: absolute;
         // left: 50%;
         top: 50%;
         transform: translate(-50%,-50%);
+    }
+    .task-li-company{
+        .space-flex(flex-start);
+        &>img{
+            width: 1.5625rem;
+            height: auto;
+            z-index: 2;
+        }
+        .task-li-company-name{
+            height: 1.25rem;
+            line-height: 1.25rem;
+            background: linear-gradient(90deg,rgba(255,147,82,1) 0%,rgba(254,94,55,1) 100%);
+            box-shadow: 0rem 0rem 0.1875rem 0rem rgba(254,95,55,0.66);
+            border-radius: 0.125rem;
+            font-size: 0.8125rem;
+            font-family: Source Han Sans SC;
+            font-weight: 500;
+            color: rgba(255,255,255,1);
+            line-height: 1.1875rem;
+            padding: 0rem 0.4375rem 0rem 0.75rem;
+            margin-left: -0.875rem;
+            z-index: 1;
+        }
     }
     .daily-task{
         width: 100%;
