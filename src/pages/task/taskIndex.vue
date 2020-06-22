@@ -848,7 +848,8 @@ export default {
         let status = type === '0' ? this.exclusiveList[index].status : type === '1' ? this.newTaskList[index].status : this.dailyTaskList[index].status;
         let taskId = type === '0' ? this.exclusiveList[index].taskId : type === '1' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
         let taskConfigId = type === '0' ? this.exclusiveList[index].taskConfigId : type === '1' ? this.newTaskList[index].taskConfigId : this.dailyTaskList[index].taskConfigId;
-        AppJsBridge.initSignData({taskConfigId:taskConfigId,taskId:taskId,taskType:type+'',status:status}, 954013, param => {
+        let related = type === '0' ? this.exclusiveList[index].related : type === '1' ? this.newTaskList[index].related : this.dailyTaskList[index].related;
+        AppJsBridge.initSignData({taskConfigId:taskConfigId,taskId:taskId,taskType:type+'',status:status,related:related}, 954013, param => {
             this.$http({
             apiType: "2",
             headers: {
