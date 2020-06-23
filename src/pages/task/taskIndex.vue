@@ -1181,17 +1181,16 @@ export default {
       .guide-img-loading{
         width: 0.5625rem;
         height: auto;
-        right: 0.5625rem;
-        bottom: 0.125rem;
+        right: 0.6rem;
+        bottom: 0.2rem;
         animation: lodingAnimation 0.8s infinite ease-in-out;
       }
       @keyframes handAnimation {
         from {
             transform: translate(0, 0);
         }
-        
         to {
-           transform: translate(-4px, -4px);
+           transform: translate(-0.2rem, -0.2rem);
         }
       }
       .guide-img-hand{
