@@ -1200,7 +1200,7 @@ export default {
         right: -0.6875rem;
         bottom: -1.3125rem;
         z-index: 1;
-        animation: handAnimation-data-v-a06adf72 0.5s infinite linear alternate;
+        animation: handAnimation 0.5s infinite linear alternate;
       }
       .bttn-span {
         width: 5.1875rem;
