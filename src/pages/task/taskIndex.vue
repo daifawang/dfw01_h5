@@ -1167,11 +1167,32 @@ export default {
       .guide-img{
           position: absolute;
       }
+      @keyframes lodingAnimation {
+        from {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.1;
+        }
+        to {
+            opacity: 1;
+        }
+      }
       .guide-img-loading{
         width: 0.5625rem;
         height: auto;
         right: 0.5625rem;
         bottom: 0.125rem;
+        animation: lodingAnimation 0.8s infinite ease-in-out;
+      }
+      @keyframes handAnimation {
+        from {
+            transform: translate(0, 0);
+        }
+        
+        to {
+           transform: translate(-4px, -4px);
+        }
       }
       .guide-img-hand{
         width: 1.75rem;
@@ -1179,6 +1200,7 @@ export default {
         right: -0.6875rem;
         bottom: -1.3125rem;
         z-index: 1;
+        animation: handAnimation-data-v-a06adf72 0.5s infinite linear alternate;
       }
       .bttn-span {
         width: 5.1875rem;
