@@ -304,9 +304,9 @@ let AppJsBridge = {
     taskNotifyBarMsg(){
         try {
             if(typeof(AndroidAppCommonJs) !== 'undefined'){
-                AndroidAppCommonJs.getPushNotifyBarkMsgInfo("")
+                AndroidAppCommonJs.getPushNotifyBackMsgInfo("")
             }else if(typeof(window.webkit) !== 'undefined'){
-                window.webkit.messageHandlers.getPushNotifyBarkMsgInfo.postMessage('');
+                window.webkit.messageHandlers.getPushNotifyBackMsgInfo.postMessage('');
             }    
         } catch (error) {
             console.log(JSON.stringify(error));

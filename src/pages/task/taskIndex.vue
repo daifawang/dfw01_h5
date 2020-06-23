@@ -91,6 +91,10 @@
                   <div class="right-bttn">
                     <span class="bttn-span" :class="{bttnSuccess:item.status === '2'}" @click.stop="clickRightBttn('0',index)">{{ item.buttonText }}</span>
                     <!-- <span class="bttn-span bttn-success" @click.stop="clickRightBttn('0',index)">领取元宝</span> -->
+                    <div v-if="showGuide === 4 && index === 0 && (guideType === 1 || guideType === 2)">
+                        <img class="guide-img guide-img-loading" src="../../assets/images/task/dian@2x.png">
+                        <img class="guide-img guide-img-hand" src="../../assets/images/task/shou@2x.png">
+                    </div>
                   </div>
                   <div v-if="item.taskConfigId === '1002'" @click.stop="closeGuideExgTip()" class="sj-tag-exg">
                     到达卸货地，别忘了传回单哦~<br/>点击这里，即可完成回单上传<span>×</span>
@@ -286,7 +290,7 @@ export default {
           miniTagList: [
             'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'
           ],
-          taskConfigId: '1001',taskType: '1',taskAction: '去接单',status: '1',jumpUrl: '',rewardNum: '6',viewCount: '4000人在看',
+          taskConfigId: '1001',taskType: '1',buttonText: '去接单',status: '1',jumpUrl: '',rewardNum: '6',viewCount: '4000人在看',
           extra: {
             companyImgUrl: 'http://kydd.log56.com/sq_server/images/guidance_bg.png',
             showScriptOne: '北京昌平区⇀上海浦东',showScriptTwo: '普货【20吨】',showScriptThree: '1800元【到付】'
@@ -297,7 +301,7 @@ export default {
           miniTagList: [
             'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'
           ],
-          taskConfigId: '1002',taskType: '1',taskAction: '去传回单',status: '2',jumpUrl: '',rewardNum: '10',
+          taskConfigId: '1002',taskType: '1',buttonText: '去传回单',status: '2',jumpUrl: '',rewardNum: '10',
           extra: {
             companyImgUrl: 'http://kydd.log56.com/sq_server/images/guidance_bg.png',
             showScriptOne: '北京昌平区2⇀上海浦东1',showScriptTwo: '普货【20吨】',showScriptThree: '1400元【到付】'
@@ -306,14 +310,14 @@ export default {
         {
           taskId: '19',taskHeadImgUrl: 'https://live-ol.log56.com/sq_server_manage/shq/20200430/478c7ae1-945f-423d-8013-9558c30e3a85.jpg',taskName: '绑卡收运费',
           taskNote: '完善证件信息后可结算运费',miniTagList: [],
-          taskType: '5',taskAction: '去绑卡',status: '2',jumpUrl: '',rewardNum: '5',viewCount: '5000人关注',
+          taskType: '5',buttonText: '去绑卡',status: '2',jumpUrl: '',rewardNum: '5',viewCount: '5000人关注',
         },
         {
           taskId: '13',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '升级直属运力',
           miniTagList: [
             'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'
           ],
-          taskType: '2',taskAction: '立即查看',status: '0',jumpUrl: '-1',rewardNum: '8',
+          taskType: '2',buttonText: '立即查看',status: '0',jumpUrl: '-1',rewardNum: '8',
           extra: {inviteUserImg: 'https://live-ol-cdn.log56.com/nsq/header/20191231/788713f0-303e-4d07-9c82-8cdb90909db7.jpg',inviteUserName: '李大全',inviteCompany: '招商成都物流分公司'}
         },
         {
@@ -321,7 +325,7 @@ export default {
           miniTagList: [
             'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'
           ],
-          taskType: '3',taskAction: '去发展',status: '0',jumpUrl: '',rewardNum: '5',
+          taskType: '3',buttonText: '去发展',status: '0',jumpUrl: '',rewardNum: '5',
           extra: {
             businessUserImg: 'https://live-ol-cdn.log56.com/nsq/header/20191231/788713f0-303e-4d07-9c82-8cdb90909db7.jpg',businessUserName: '王大全',businessCompany: '招商成都物流分公司',
             businessLevel: 'http://kydd.log56.com/sq_server/images/guidance_bg.png',businessNoteList: ['合作过：1单/10,000元','1个共同人脉']
@@ -332,7 +336,7 @@ export default {
           miniTagList: [
             'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'
           ],
-          taskType: '4',taskAction: '去使用',status: '0',jumpUrl: '',rewardNum: '5',
+          taskType: '4',buttonText: '去使用',status: '0',jumpUrl: '',rewardNum: '5',
           extra: {onAddCount: '2600',lastCount: '6100'}
         }
       ],
@@ -1160,6 +1164,22 @@ export default {
       font-family: Source Han Sans SC;
       font-weight: 400;
       color: rgba(0,0,0,1);
+      .guide-img{
+          position: absolute;
+      }
+      .guide-img-loading{
+        width: 0.5625rem;
+        height: auto;
+        right: 0.5625rem;
+        bottom: 0.125rem;
+      }
+      .guide-img-hand{
+        width: 1.75rem;
+        height: 1.625rem;
+        right: -0.6875rem;
+        bottom: -1.3125rem;
+        z-index: 1;
+      }
       .bttn-span {
         width: 5.1875rem;
         height: 1.9375rem;
@@ -1413,6 +1433,7 @@ export default {
     // height: 1.625rem;
     line-height: 1.5825rem;
     position: absolute;
+    z-index: 1;
     right: 0.675rem;
     top: 4.25rem;
     clear: both;
