@@ -855,7 +855,6 @@ export default {
     checkTaskStatus(type,index){
         // taskType  0 专属  1 新手  2每日
         console.log('taskId:'+taskId+',type:'+type+',index:'+index);
-        let _url = type === '0' ? this.exclusiveList[index].jumpUrl : type === '1' ? this.newTaskList[index].jumpUrl : this.dailyTaskList[index].jumpUrl;
         let status = type === '0' ? this.exclusiveList[index].status : type === '1' ? this.newTaskList[index].status : this.dailyTaskList[index].status;
         let taskId = type === '0' ? this.exclusiveList[index].taskId : type === '1' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
         let taskConfigId = type === '0' ? this.exclusiveList[index].taskConfigId : type === '1' ? this.newTaskList[index].taskConfigId : this.dailyTaskList[index].taskConfigId;
@@ -894,6 +893,9 @@ export default {
                     console.log(res.result.jumpUrl);
                     
                     let _url = type === '0' ? this.exclusiveList[index].jumpUrl : type === '1' ? this.newTaskList[index].jumpUrl : this.dailyTaskList[index].jumpUrl;
+                    console.log(_url);
+                    console.log( this.exclusiveList[index].jumpUrl);
+                     console.log( this.exclusiveList);
                     console.log('点击更新任务状态------------jumpUrl:'+_url);
                     this.goTaskUrl(index,_url,res.result.status);
                     // 查看类任务，H5自己刷新页面
