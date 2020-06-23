@@ -520,7 +520,11 @@ export default {
             console.log('callback-backData>>',backData);
             this.showFirstGetCury = backData.data === '1' ? false : true;
           });
-        //    this.showGuideExgTip = backData.data === '1' ? false : true;
+        //    AppJsBridge.getStoreInfo('TASK_GUIDETXET_KEY',backData => {
+        //     console.log('callback-backData---TASK_GUIDETXET_KEY>>',backData);
+        //     this.showGuideExgTip = backData.data === '1' ? false : true;
+        //   });
+        //    
           // 【JS2066】点击通知栏跳转H5任务首页-- 冷启动拉起app
           AppJsBridge.taskNotifyBarMsg();
           // 初始化任务-0，初始化；1，切换任务tab刷新
@@ -887,6 +891,8 @@ export default {
                             }
                         }
                     }
+                    console.log(res.result.jumpUrl);
+                    
                     let _url = type === '0' ? this.exclusiveList[index].jumpUrl : type === '1' ? this.newTaskList[index].jumpUrl : this.dailyTaskList[index].jumpUrl;
                     console.log('点击更新任务状态------------jumpUrl:'+_url);
                     this.goTaskUrl(index,_url,res.result.status);
