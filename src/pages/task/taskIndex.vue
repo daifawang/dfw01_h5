@@ -871,7 +871,7 @@ export default {
             .then(res => {
                 console.log(res);
                 if (res.reCode == "0") {
-                    if(res.result.gap === '1'){
+                    // if(res.result.gap === '1'){
                         // 0 未改变  1已改变
                         if(type === '0'){
                             this.exclusiveList[index].status = res.result.status;
@@ -892,7 +892,7 @@ export default {
                                 this.dailyTaskList[index].jumpUrl = res.result.jumpUrl;
                             }
                         }
-                    }
+                    // }
                     console.log(res.result.jumpUrl);
                     
                     let _url = type === '0' ? this.exclusiveList[index].jumpUrl : type === '1' ? this.newTaskList[index].jumpUrl : this.dailyTaskList[index].jumpUrl;
