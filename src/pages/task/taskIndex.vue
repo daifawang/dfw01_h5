@@ -541,7 +541,7 @@ export default {
             this.initNewTaskListData(isInit);
           }
           if (res.reCode === "0") {
-            // this.exclusiveList = res.result;
+            this.exclusiveList = res.result;
             if(this.exclusiveList && this.exclusiveList.length > 0){
               this.showExclusiveList = '1';
             }else{
