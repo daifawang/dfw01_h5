@@ -876,7 +876,10 @@ export default {
                         if(type === '0'){
                             this.exclusiveList[index].status = res.result.status;
                             if(res.result.jumpUrl != '-1'){
+                                console.log(11111111111111111);
+                                
                                 this.exclusiveList[index].jumpUrl = res.result.jumpUrl;
+                                 console.log(this.exclusiveList[index].jumpUrl);
                             }
                         }else if(type === '1'){
                             this.newTaskList[index].status = res.result.status;
