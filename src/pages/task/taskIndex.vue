@@ -875,17 +875,17 @@ export default {
                         // 0 未改变  1已改变
                         if(type === '0'){
                             this.exclusiveList[index].status = res.result.status;
-                            if(res.jump_url != '-1'){
+                            if(res.result.jumpUrl != '-1'){
                                 this.exclusiveList[index].jumpUrl = res.result.jumpUrl;
                             }
                         }else if(type === '1'){
                             this.newTaskList[index].status = res.result.status;
-                            if(res.jump_url != '-1'){
+                            if(res.result.jumpUrl != '-1'){
                                 this.newTaskList[index].jumpUrl = res.result.jumpUrl;
                             }
                         }else if(type === '2'){
                             this.dailyTaskList[index].status = res.result.status;
-                             if(res.jump_url != '-1'){
+                             if(res.result.jumpUrl != '-1'){
                                 this.dailyTaskList[index].jumpUrl = res.result.jumpUrl;
                             }
                         }
