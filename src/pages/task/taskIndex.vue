@@ -26,7 +26,7 @@
               <transition-group appear name="taskList" tag="div">
                 <div :id="item.taskId" v-for="(item, index) in exclusiveList" :key="item.taskId" @click.stop="clickUrl('0',index)" class="task-li" :class="{guideKuang:showGuide === 3 && guideType > 0 && index === 0}">
                   <div class="task-li-t">
-                    <img class="task-t-icon" :src="item.taskHeadImgUrl" />
+                    <img class="task-t-icon" :src="item.headImg" />
                     <div class="task-t-div">
                       <div class="task-t-name">
                         <span>{{ item.taskName }}</span><img v-for="(item1, index1) in item.miniTagList" :key="index1" :src="item1" />
