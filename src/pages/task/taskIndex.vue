@@ -1199,7 +1199,7 @@ export default {
         height: 1.625rem;
         right: -0.6875rem;
         bottom: -1.3125rem;
-        z-index: 1;
+        z-index: 2;
         animation: handAnimation 0.5s infinite linear alternate;
       }
       .bttn-span {
