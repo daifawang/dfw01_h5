@@ -96,7 +96,7 @@
                         <img class="guide-img guide-img-hand" src="../../assets/images/task/shou@2x.png">
                     </div>
                   </div>
-                  <div v-if="item.taskConfigId === '1002'" @click.stop="closeGuideExgTip()" class="sj-tag-exg">
+                  <div v-if="item.taskConfigId === '1002' && item.firstTaxWaybill === '1' && showGuideExgTip" @click.stop="closeGuideExgTip()" class="sj-tag-exg">
                     到达卸货地，别忘了传回单哦~<br/>点击这里，即可完成回单上传<span>×</span>
                   </div>
                   <div v-if="item.viewCount" class="task-btn-view">
@@ -275,6 +275,7 @@ export default {
       showGuide: 0, //本页面是否显示引导页,0不显示
       guideType: '', //引导页类型：0.无专属任务/无接单传回单任务的引导；1.有专属接单任务的引导；2.有专属传回单且无接单任务的引导
       showFirstGetCury: false, //APP本地存储字段-是否展示快去领取元宝提示
+      showGuideExgTip:false,//APP本地存储字段-是否展示到达卸货地，别忘了传回单哦~<br/>点击这里，即可完成回单上传
       showCurypaoNum: 0, //任务列表去重-是否展示快去领取元宝提示气泡数量
       guideObj: {
         text: '关于任务，你想了解的都在这里，快去看看吧！',
@@ -290,7 +291,7 @@ export default {
           miniTagList: [
             'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'
           ],
-          taskConfigId: '1001',taskType: '1',buttonText: '去接单',status: '1',jumpUrl: '',rewardNum: '6',viewCount: '4000人在看',
+          taskConfigId: '1001',taskType: '1',buttonText: '去接接单',status: '1',jumpUrl: '',rewardNum: '6',viewCount: '4000人在看',
           extra: {
             companyImgUrl: 'http://kydd.log56.com/sq_server/images/guidance_bg.png',
             showScriptOne: '北京昌平区⇀上海浦东',showScriptTwo: '普货【20吨】',showScriptThree: '1800元【到付】'
@@ -404,6 +405,7 @@ export default {
         this.showExclusiveList = '1';
         this.exclusiveList = this.exclusiveList1;
         this.showFirstGetCury = true;
+        this.showGuideExgTip = true;
         this.guideType = 1;
         this.showGuide = 1;
         this.initGetCuryPao(this.exclusiveList);
@@ -518,6 +520,7 @@ export default {
             console.log('callback-backData>>',backData);
             this.showFirstGetCury = backData.data === '1' ? false : true;
           });
+        //    this.showGuideExgTip = backData.data === '1' ? false : true;
           // 【JS2066】点击通知栏跳转H5任务首页-- 冷启动拉起app
           AppJsBridge.taskNotifyBarMsg();
           // 初始化任务-0，初始化；1，切换任务tab刷新
@@ -869,12 +872,23 @@ export default {
                         // 0 未改变  1已改变
                         if(type === '0'){
                             this.exclusiveList[index].status = res.result.status;
+                            if(res.jump_url != '-1'){
+                                this.exclusiveList[index].jumpUrl = res.result.jumpUrl;
+                            }
                         }else if(type === '1'){
                             this.newTaskList[index].status = res.result.status;
+                            if(res.jump_url != '-1'){
+                                this.newTaskList[index].jumpUrl = res.result.jumpUrl;
+                            }
                         }else if(type === '2'){
                             this.dailyTaskList[index].status = res.result.status;
+                             if(res.jump_url != '-1'){
+                                this.dailyTaskList[index].jumpUrl = res.result.jumpUrl;
+                            }
                         }
                     }
+                    let _url = type === '0' ? this.exclusiveList[index].jumpUrl : type === '1' ? this.newTaskList[index].jumpUrl : this.dailyTaskList[index].jumpUrl;
+                    console.log('点击更新任务状态------------jumpUrl:'+_url);
                     this.goTaskUrl(index,_url,res.result.status);
                     // 查看类任务，H5自己刷新页面
                     setTimeout(() => {
@@ -891,6 +905,11 @@ export default {
             });
       });
     },
+    // 关闭文字提示
+    closeGuideExgTip(){
+        this.showGuideExgTip=false;
+        // AppJsBridge.storeInfo('TASK_GETCURY_KEY','1');
+    }
   }
 }
 </script>
@@ -1181,7 +1200,7 @@ export default {
       .guide-img-loading{
         width: 0.5625rem;
         height: auto;
-        right: 0.6rem;
+        right: 0.4rem;
         bottom: 0.2rem;
         animation: lodingAnimation 0.8s infinite ease-in-out;
       }
@@ -1196,7 +1215,7 @@ export default {
       .guide-img-hand{
         width: 1.75rem;
         height: 1.625rem;
-        right: -0.6875rem;
+        right: -0.78rem;
         bottom: -1.3125rem;
         z-index: 2;
         animation: handAnimation 0.5s infinite linear alternate;
