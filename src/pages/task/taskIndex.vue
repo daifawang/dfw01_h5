@@ -348,8 +348,8 @@ export default {
           taskNeedSum:'1',
           taskNowSum:'1',
           headImg:require("../../assets/images/task/daka@2x.png"),
-          miniTags:[
-              "https://test-live-ol-cdn.log56.com/nsq/header/20200401/d6a323f7-1665-4b3d-8370-926ae7b80ece.jpg",
+          miniTagList:[
+              "https://imgt.log56.com/sq_server/otherimg/hybrenwu/remen@2x.png","https://imgt.log56.com/sq_server/otherimg/hybrenwu/jiangli@2x.png",
           ],
           status:'2',
           taskId:'111',
@@ -390,6 +390,7 @@ export default {
       exclusiveFlag:'0', //专属列表过渡状态：0在加载提示；1接口获取失败提示
       newTaskFlag:'0', //新手列表过渡状态：同上
       dailyTaskFlag:'0', //每日列表过渡状态：同上
+      clickType:'',//"我知道了"记录时间戳---遮罩类型
       guideTimeA:'',//"我知道了"记录时间戳
       guideTimeB:'',//"我知道了"记录时间戳
       guideTimeC:''//"我知道了"记录时间戳
@@ -728,9 +729,11 @@ export default {
           this.guideTimeB = new Date().getTime();
         if(this.guideType === 0){
           this.guideObj.text = '关于任务，你想了解的都在这里，快去看看吧！';
+          this.clickType=1;
           window.scrollTo(0,this.$refs.newComer.offsetTop);
         }else{
-          this.guideObj.text = this.guideType === 1 ? '新版本在哪里接单？<br/>看这里，接单成功还能获得元宝奖励哦，快去接单吧！' : '新版本在哪里上传回单？<br/>看这里，上传成功还能获得元宝奖励哦，快去上传吧！';
+            this.guideObj.text = this.guideType === 1 ? '新版本在哪里接单？<br/>看这里，接单成功还能获得元宝奖励哦，快去接单吧！' : '新版本在哪里上传回单？<br/>看这里，上传成功还能获得元宝奖励哦，快去上传吧！';
+            this.clickType = this.guideType === 1 ? 2 : 3;
         }
         AppJsBridge.guideTask(JSON.stringify({
           navMaskShow: '1',
@@ -748,7 +751,11 @@ export default {
         }));
         AppJsBridge.storeInfo('TASK_GUIDE_KEY','1');
         console.log('--------我知道了埋点的时间戳---------');
-        console.log('guideTimeA:'+this.guideTimeA+',guideTimeB:'+this.guideTimeB+',guideTimeC:'+this.guideTimeC);        
+        console.log('guideTimeA:'+this.guideTimeA+',guideTimeB:'+this.guideTimeB+',guideTimeC:'+this.guideTimeC);    
+        // 1、有专属任务的用户/无接单和传回单任务的用户  clickType==1
+        // 2、有接单任务的用户  clickType==2
+        // 3、有传回单任务的用户  clickType==3
+        this.clickLog(this.guideTimeA,this.guideTimeB,this.guideTimeC,this.clickType)    
       }
     },
     // 新手任务挑战
@@ -936,7 +943,36 @@ export default {
     closeGuideExgTip(){
         this.showGuideExgTip=false;
         AppJsBridge.storeInfo('TASK_GUIDETXET_KEY','1');
-    }
+    },
+    //日志-我知道了
+     clickLog(blankingOne,blankingTwo,blankingThree,type){
+        AppJsBridge.initSignData(
+            {blankingOne:blankingOne,
+            blankingTwo:blankingTwo+'',
+            blankingThree:blankingThree,
+            type:type},
+             954019, param => {
+        this.$http({
+        apiType: "2",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        url: "/gateway.do",
+        data: param
+        })
+        .then(res => {
+            console.log(res);
+            if (res.reCode == "0") {
+               
+            } else {
+                this.$toast(res.reInfo);
+            }
+        })
+        .catch(e => {
+            console.log(e);
+        });
+      });
+     }
   }
 }
 </script>
@@ -1667,11 +1703,12 @@ export default {
                 .font(1.125rem, #000000, 1.25rem);
                 font-weight: bold;
                 .task-main-tag{
+                    display: inline-block;
                     width: fit-content;
                     height: 1.0625rem;
                     overflow: hidden;
                     width: auto;
-                    margin:0 0.3125rem;
+                    margin:0 0.3125rem 0 0;
                     &>img{
                         max-height: 100%;
                     }
