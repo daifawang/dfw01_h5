@@ -389,8 +389,10 @@ export default {
       hasDailyTask:true, //  是否有每日任务
       exclusiveFlag:'0', //专属列表过渡状态：0在加载提示；1接口获取失败提示
       newTaskFlag:'0', //新手列表过渡状态：同上
-      dailyTaskFlag:'0' //每日列表过渡状态：同上
-      
+      dailyTaskFlag:'0', //每日列表过渡状态：同上
+      guideTimeA:'',//"我知道了"记录时间戳
+      guideTimeB:'',//"我知道了"记录时间戳
+      guideTimeC:''//"我知道了"记录时间戳
     }
   },
   components:{
@@ -520,11 +522,11 @@ export default {
             console.log('callback-backData>>',backData);
             this.showFirstGetCury = backData.data === '1' ? false : true;
           });
-        //    AppJsBridge.getStoreInfo('TASK_GUIDETXET_KEY',backData => {
-        //     console.log('callback-backData---TASK_GUIDETXET_KEY>>',backData);
-        //     this.showGuideExgTip = backData.data === '1' ? false : true;
-        //   });
-        //    
+        //获取APP本地存储--是否展示到达卸货地，别忘了传回单哦~<br/>点击这里，即可完成回单上传
+           AppJsBridge.getStoreInfo('TASK_GUIDETXET_KEY',backData => {
+            console.log('callback-backData---TASK_GUIDETXET_KEY>>',backData);
+            this.showGuideExgTip = backData.data === '1' ? false : true;
+          }); 
           // 【JS2066】点击通知栏跳转H5任务首页-- 冷启动拉起app
           AppJsBridge.taskNotifyBarMsg();
           // 初始化任务-0，初始化；1，切换任务tab刷新
@@ -622,6 +624,9 @@ export default {
       let _url = type === '0' ? this.exclusiveList[index].jumpUrl : type === '1' ? this.newTaskList[index].jumpUrl : this.dailyTaskList[index].jumpUrl;
       let taskId = type === '0' ? this.exclusiveList[index].taskId : type === '1' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
       let taskConfigId = type === '0' ? this.exclusiveList[index].taskConfigId   : type === '1' ? this.newTaskList[index].taskConfigId   : this.dailyTaskList[index].taskConfigId  ;
+      if(taskConfigId === '1002' && this.showGuideExgTip){
+          this.closeGuideExgTip()
+      }
       if(status === '2'){ //领取元宝
         // this.getCurrency(type,index);
         this.getCurrencyData(taskId,type,index,taskConfigId);
@@ -704,8 +709,10 @@ export default {
     // 新手引导每一步按钮点击逻辑
     guideTo(num){
       console.log(num);
+      console.log(new Date().getTime());
       this.showGuide = num;
       if(num === 2){
+          this.guideTimeA = new Date().getTime();
         AppJsBridge.guideTask(JSON.stringify({
           navMaskShow: '1',
           navBtnEmpty: '1',
@@ -718,6 +725,7 @@ export default {
         this.guideObj.guidePosition.marginTop = '1.5rem';
         this.guideObj.guidePosition.bottom = 'initial';
       }else if(num === 3){
+          this.guideTimeB = new Date().getTime();
         if(this.guideType === 0){
           this.guideObj.text = '关于任务，你想了解的都在这里，快去看看吧！';
           window.scrollTo(0,this.$refs.newComer.offsetTop);
@@ -731,6 +739,7 @@ export default {
           taskTabBtnEmpty: '0'
         }));
       }else if(num > 3 || num === '' || num === 0){
+          this.guideTimeC = new Date().getTime();
         AppJsBridge.guideTask(JSON.stringify({
           navMaskShow: '0',
           navBtnEmpty: '0',
@@ -738,6 +747,8 @@ export default {
           taskTabBtnEmpty: '0'
         }));
         AppJsBridge.storeInfo('TASK_GUIDE_KEY','1');
+        console.log('--------我知道了埋点的时间戳---------');
+        console.log('guideTimeA:'+this.guideTimeA+',guideTimeB:'+this.guideTimeB+',guideTimeC:'+this.guideTimeC);        
       }
     },
     // 新手任务挑战
@@ -871,34 +882,39 @@ export default {
             .then(res => {
                 console.log(res);
                 if (res.reCode == "0") {
+                   
                     // if(res.result.gap === '1'){
                         // 0 未改变  1已改变
                         if(type === '0'){
                             this.exclusiveList[index].status = res.result.status;
+                            if(res.result.jumpUrl === '-2'){
+                                this.$toast(res.result.bombInfo);
+                                return;
+                            }
                             if(res.result.jumpUrl != '-1'){
-                                console.log(11111111111111111);
-                                
                                 this.exclusiveList[index].jumpUrl = res.result.jumpUrl;
-                                 console.log(this.exclusiveList[index].jumpUrl);
                             }
                         }else if(type === '1'){
                             this.newTaskList[index].status = res.result.status;
+                            if(res.result.jumpUrl === '-2'){
+                                this.$toast(res.result.bombInfo);
+                                return;
+                            }
                             if(res.result.jumpUrl != '-1'){
                                 this.newTaskList[index].jumpUrl = res.result.jumpUrl;
                             }
                         }else if(type === '2'){
                             this.dailyTaskList[index].status = res.result.status;
+                            if(res.result.jumpUrl === '-2'){
+                                this.$toast(res.result.bombInfo);
+                                return;
+                            }
                              if(res.result.jumpUrl != '-1'){
                                 this.dailyTaskList[index].jumpUrl = res.result.jumpUrl;
                             }
                         }
                     // }
-                    console.log(res.result.jumpUrl);
-                    
                     let _url = type === '0' ? this.exclusiveList[index].jumpUrl : type === '1' ? this.newTaskList[index].jumpUrl : this.dailyTaskList[index].jumpUrl;
-                    console.log(_url);
-                    console.log( this.exclusiveList[index].jumpUrl);
-                     console.log( this.exclusiveList);
                     console.log('点击更新任务状态------------jumpUrl:'+_url);
                     this.goTaskUrl(index,_url,res.result.status);
                     // 查看类任务，H5自己刷新页面
@@ -919,7 +935,7 @@ export default {
     // 关闭文字提示
     closeGuideExgTip(){
         this.showGuideExgTip=false;
-        // AppJsBridge.storeInfo('TASK_GETCURY_KEY','1');
+        AppJsBridge.storeInfo('TASK_GUIDETXET_KEY','1');
     }
   }
 }
