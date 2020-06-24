@@ -640,7 +640,6 @@ export default {
     // 点击单个任务栏跳转
     clickUrl(type,index){
         console.log('------点击整个栏跳转--------');
-        console.log(status,url);
         if(this.showGuide > 0 && this.showGuide < 4){
             return;
         }
