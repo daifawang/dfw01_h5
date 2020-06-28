@@ -38,7 +38,9 @@
                     </div>
                 </div>
             </div>
-            <div class="coin-detail" id="coinDetail" :style="{marginTop:topBoxHeight+'px'}" ref="coinDetail">
+            <div :style="{height:topBoxHeight+31+'px'}"></div>
+            <div class="coin-detail" id="coinDetail" :style="{minHeight:boxHeight-topBoxHeight+'px'}" ref="coinDetail">
+            <!-- <div class="coin-detail" id="coinDetail" :style="{marginTop:topBoxHeight+'px'}" ref="coinDetail"> -->
                 <van-loading v-if="showLoading" size="24px" vertical>加载中...</van-loading>
                 <div v-if="coinDetail.length>0">
                     <div v-for="(item,index) in coinDetail" :key="index" class="coin-detail-wrapper">
@@ -46,7 +48,7 @@
                             <div class="goods-name">{{item.goodsName}}</div>
                             <div class="created-time">{{item.createdTime}}</div>
                         </div>
-                        <div class="coin-num" :class="{'red-font':Number(item.coinNum)<0}">{{item.coinNum}}</div>
+                        <div class="coin-num" :class="{'red-font':Number(item.coinNum)<0}"><span v-if="Number(item.coinNum)>0">+</span>{{item.coinNum}}</div>
                     </div>
                 </div>
                 <div v-if="showNoData" class="load-more">暂无元宝数据</div>
@@ -91,9 +93,14 @@ export default {
     mounted() {
         console.log('this.$refs.topBox.clientHeight:'+this.$refs.topBox.clientHeight);
         this.topBoxHeight = this.$refs.topBox.offsetHeight - 39;
-        document.documentElement.scrollTop = this.topBoxHeight;
         this.initListData(this.activeTag);
         window.addEventListener("scroll", this.loadeMore);
+        // setTimeout(() => {
+        //     if (document.getElementById('coinDetail').clientHeight > document.documentElement.clientHeight) {
+        //     }else{
+        //         this.loadingMore = false;
+        //     }
+        // }, 1000);
     },
     methods: {
         //数据初始化
@@ -128,6 +135,10 @@ export default {
             let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
             let windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
             let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+            // let coinDetailBox = document.getElementById('coinDetail');
+            // let scrollTop = coinDetailBox.scrollTop;
+            // let windowHeight = coinDetailBox.clientHeight;
+            // let scrollHeight = coinDetailBox.scrollHeight;
             console.log("---scrollTop:" + scrollTop + "---windowHeight:" + windowHeight + "---scrollHeight:" + scrollHeight);
             if (scrollTop + windowHeight >= scrollHeight - 2) {
                 console.log(22222222222);
@@ -301,7 +312,7 @@ export default {
     top: -35px;
     left: 0;
     // width: 100%;
-    width: calc(100% - 1.25rem);
+    width: calc(100% - 20px);
     height: 100%;
     padding: 0 0.625rem;
     .total-box {
