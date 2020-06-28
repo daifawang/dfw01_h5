@@ -95,12 +95,6 @@ export default {
         this.topBoxHeight = this.$refs.topBox.offsetHeight - 39;
         this.initListData(this.activeTag);
         window.addEventListener("scroll", this.loadeMore);
-        // setTimeout(() => {
-        //     if (document.getElementById('coinDetail').clientHeight > document.documentElement.clientHeight) {
-        //     }else{
-        //         this.loadingMore = false;
-        //     }
-        // }, 1000);
     },
     methods: {
         //数据初始化
@@ -135,10 +129,6 @@ export default {
             let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
             let windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
             let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-            // let coinDetailBox = document.getElementById('coinDetail');
-            // let scrollTop = coinDetailBox.scrollTop;
-            // let windowHeight = coinDetailBox.clientHeight;
-            // let scrollHeight = coinDetailBox.scrollHeight;
             console.log("---scrollTop:" + scrollTop + "---windowHeight:" + windowHeight + "---scrollHeight:" + scrollHeight);
             if (scrollTop + windowHeight >= scrollHeight - 2) {
                 console.log(22222222222);
@@ -177,6 +167,9 @@ export default {
                                 if (this.coinDetail.length <= 0 && res.result.length <= 0) {
                                     console.log(1111111111);
                                     this.showNoData = true;
+                                }
+                                if (this.coinDetail.length > 0 && this.pageNum === 0 && res.result.length < 10){
+                                    this.loadingMore = false;
                                 }
                                 if (this.coinDetail.length > 0 && res.result.length <= 0) {
                                     this.loadingMore = false;
