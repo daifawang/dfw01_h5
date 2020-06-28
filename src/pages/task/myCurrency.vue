@@ -91,6 +91,7 @@ export default {
     mounted() {
         console.log('this.$refs.topBox.clientHeight:'+this.$refs.topBox.clientHeight);
         this.topBoxHeight = this.$refs.topBox.offsetHeight - 39;
+        document.documentElement.scrollTop = this.topBoxHeight;
         this.initListData(this.activeTag);
         window.addEventListener("scroll", this.loadeMore);
     },
@@ -124,22 +125,10 @@ export default {
         },
         /* 加载更多 */
         loadeMore: function() {
-            let scrollTop =
-                document.documentElement.scrollTop || document.body.scrollTop;
-            let windowHeight =
-                document.documentElement.clientHeight ||
-                document.body.clientHeight;
-            let scrollHeight =
-                document.documentElement.scrollHeight ||
-                document.body.scrollHeight;
-            console.log(
-                "---scrollTop:" +
-                    scrollTop +
-                    "---windowHeight:" +
-                    windowHeight +
-                    "---scrollHeight:" +
-                    scrollHeight
-            );
+            let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            let windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+            let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+            console.log("---scrollTop:" + scrollTop + "---windowHeight:" + windowHeight + "---scrollHeight:" + scrollHeight);
             if (scrollTop + windowHeight >= scrollHeight - 2) {
                 console.log(22222222222);
                 if (this.loadingMore) {
@@ -309,7 +298,7 @@ export default {
     // position: absolute;
     // top:8.4375rem;
     position: relative;
-    top: -2.1875rem;
+    top: -35px;
     left: 0;
     // width: 100%;
     width: calc(100% - 1.25rem);
