@@ -345,7 +345,7 @@ export default {
         box-sizing: border-box;
         background: rgba(255, 255, 255, 1);
         border-radius: 0.5rem 0.5rem 0 0;
-        padding: 1.1875rem 1rem 0rem;
+        padding: 1.1875rem 1rem 0.1875rem 1.1875rem;
         .cl-tag {
             .space-flex(flex-start);
             margin-bottom: 0.1875rem;
