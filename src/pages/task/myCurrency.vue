@@ -38,7 +38,7 @@
                     </div>
                 </div>
             </div>
-            <div :style="{height:topBoxHeight+31+'px'}"></div>
+            <div :style="{height:topBoxHeight+35+'px'}"></div>
             <div class="coin-detail" id="coinDetail" :style="{'maxHeight':coinDetail.length < 10 ? boxHeight-topBoxHeight+'px' : none}" ref="coinDetail">
                 <van-loading v-if="showLoading" size="24px" vertical>加载中...</van-loading>
                 <div v-if="coinDetail.length>0">
