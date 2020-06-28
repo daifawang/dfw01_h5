@@ -677,7 +677,7 @@ export default {
             AppJsBridge.goVideoTopicDetail(tid);
           }else if(jump_url =='-3'){
             //   跳转任务视频详情
-            let id = this.newTaskList[index].taskId;
+            let id = this.newTaskList[index].taskConfigId;
             console.log('跳转任务视频详情id===='+id);
             this.getVideoInfo(id);
           }else{
