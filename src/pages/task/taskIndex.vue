@@ -922,18 +922,18 @@ export default {
                                 this.$toast(res.result.bombInfo);
                                 return;
                             }
-                            if(res.result.jumpUrl != '-1'){
-                                this.newTaskList[index].jumpUrl = res.result.jumpUrl;
-                            }
+                            // if(res.result.jumpUrl != '-1'){
+                            //     this.newTaskList[index].jumpUrl = res.result.jumpUrl;
+                            // }
                         }else if(type === '2'){
                             this.dailyTaskList[index].status = res.result.status;
                             if(res.result.jumpUrl === '-2'){
                                 this.$toast(res.result.bombInfo);
                                 return;
                             }
-                             if(res.result.jumpUrl != '-1'){
-                                this.dailyTaskList[index].jumpUrl = res.result.jumpUrl;
-                            }
+                            //  if(res.result.jumpUrl != '-1'){
+                            //     this.dailyTaskList[index].jumpUrl = res.result.jumpUrl;
+                            // }
                         }
                     // }
                     let _url = type === '0' ? this.exclusiveList[index].jumpUrl : type === '1' ? this.newTaskList[index].jumpUrl : this.dailyTaskList[index].jumpUrl;
