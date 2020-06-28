@@ -39,7 +39,7 @@
                 </div>
             </div>
             <div :style="{height:topBoxHeight+31+'px'}"></div>
-            <div class="coin-detail" id="coinDetail" v-if="coinDetail.length<10" :style="{minHeight:boxHeight-topBoxHeight+'px'}" ref="coinDetail">
+            <div class="coin-detail" id="coinDetail" :style="{minHeight:boxHeight-topBoxHeight+'px'}" ref="coinDetail">
                 <van-loading v-if="showLoading" size="24px" vertical>加载中...</van-loading>
                 <div v-if="coinDetail.length>0">
                     <div v-for="(item,index) in coinDetail" :key="index" class="coin-detail-wrapper">
