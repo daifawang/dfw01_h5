@@ -309,10 +309,10 @@ export default {
     // position: absolute;
     // top:8.4375rem;
     position: relative;
-    top: -35px;
+    top: -2.1875rem;
     left: 0;
     // width: 100%;
-    width: calc(100% - 20px);
+    width: calc(100% - 1.25rem);
     height: 100%;
     padding: 0 0.625rem;
     .total-box {

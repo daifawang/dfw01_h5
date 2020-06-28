@@ -452,6 +452,12 @@ export default {
     // 【JS2066】冷启动/应用进程中 -- 点击任务通知栏消息进任务页面，客户端回调H5 JS：
     window.AppJSApi_BackH5PushMsgInfo = (jsonStr) => {
       console.log("冷启动/应用进程中，点击任务通知栏消息进任务页面，客户端回调H5 JS>>",JSON.parse(jsonStr));
+      if(jsonStr){
+          let backMsgInfo = JSON.parse(jsonStr);
+          if(backMsgInfo.msgType === 'HYBSJ:TaskNotifyBarMsg' && backMsgInfo.extra.taskType === '0'){
+              this.initExclusiveList('3',backMsgInfo.extra.taskId);
+          }
+      }
     } 
   },
   methods:{
@@ -530,7 +536,7 @@ export default {
           }); 
           // 【JS2066】点击通知栏跳转H5任务首页-- 冷启动拉起app
           AppJsBridge.taskNotifyBarMsg();
-          // 初始化任务-0，初始化；1，切换任务tab刷新
+          // 初始化任务-0，初始化；1，切换任务tab刷新;3-【JS2066】冷启动/应用进程中 -- 点击任务通知栏消息进任务页面，客户端回调H5 JS
           this.initExclusiveList('0');
         }else{
           this.$toast("请重新登录");
@@ -538,7 +544,7 @@ export default {
       })
     },
     // 专属任务接口
-    initExclusiveList(isInit){
+    initExclusiveList(isInit,taskId){
       AppJsBridge.initSignData({},'954010',param => {
         this.$http({
           apiType: '2',
@@ -560,6 +566,16 @@ export default {
               this.showExclusiveList = '1';
             }else{
               this.showExclusiveList = '-1';
+            }
+            if(isInit === '3'){
+                // 【JS2066】冷启动/应用进程中 -- 点击任务通知栏消息进任务页面 刷新专属任务并根据taskId置顶任务
+                for (let index = 0; index < this.exclusiveList.length; index++) {
+                    if(taskId === this.exclusiveList[index].taskId){
+                        let _obj = this.exclusiveList[index];
+                        this.exclusiveList.splice(index, 1);
+                        this.exclusiveList.unshift(_obj);
+                    }
+                }
             }
           } else {
             this.exclusiveFlag = '1';
