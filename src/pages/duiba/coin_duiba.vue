@@ -40,7 +40,7 @@ export default {
                     .then(res => {
                         console.log(res);
                         if (res.reCode == "0") {
-                            window.location.replace=res.result;
+                            window.location.replace(res.result);
                         } else {
                             this.$toast(res.reInfo);
                         }
