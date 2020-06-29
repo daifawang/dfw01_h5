@@ -94,6 +94,7 @@ export default {
         this.topBoxHeight = this.$refs.topBox.offsetHeight - 39;
         this.initListData(this.activeTag);
         window.addEventListener("scroll", this.loadeMore);
+        this.clickLog();
     },
     methods: {
         //数据初始化
@@ -205,6 +206,12 @@ export default {
             window.location.href = `${
                 Const.APP_RUL
             }hyb_task_h5/dist/index.html?t=${new Date().getTime()}/#/task/myCurrencyRule?&NEW_WVW_HYB`;
+        },
+        // 日志
+        clickLog(){
+            let type = this.$utils.GetQueryString("type");
+            console.log('日志type为：'+type);
+            
         }
     }
 };

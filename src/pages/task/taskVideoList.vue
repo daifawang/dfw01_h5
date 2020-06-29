@@ -103,7 +103,11 @@ export default {
         color: #ffffff;
         position: absolute;
         left: 1rem;
+        right: 1rem;
         top: 0.625rem;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
     & > img {
         width: 1.8125rem;

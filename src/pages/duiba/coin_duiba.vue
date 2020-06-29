@@ -22,9 +22,11 @@ export default {
         }else{
             this.initData({});
         }
-        document.title="元宝商城"
+        document.title="元宝商城";
+        this.clickLog();
     },
     methods: {
+        // 初始化数据
         initData(dataJson) {
             AppJsBridge.initSignData(dataJson, 954009, param => {
                 this.$http({
@@ -38,7 +40,7 @@ export default {
                     .then(res => {
                         console.log(res);
                         if (res.reCode == "0") {
-                            window.location.href=res.result;
+                            window.location.replace=res.result;
                         } else {
                             this.$toast(res.reInfo);
                         }
@@ -47,6 +49,12 @@ export default {
                         console.log(e);
                     });
             });
+        },
+        // 日志
+        clickLog(){
+            let type = this.$utils.GetQueryString("type");
+            console.log('日志type为：'+type);
+            
         }
     }
 };
