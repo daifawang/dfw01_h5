@@ -21,6 +21,7 @@ export default {
             this.initData({"redirect":this.redirect});
         }else{
             this.initData({});
+            this.clickLog();
         }
         document.title="元宝商城";
     },
@@ -39,7 +40,6 @@ export default {
                     .then(res => {
                         console.log(res);
                         if (res.reCode == "0") {
-                            this.clickLog();
                             window.location.replace(res.result);
                         } else {
                             this.$toast(res.reInfo);
