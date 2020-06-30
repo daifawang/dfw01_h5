@@ -442,7 +442,7 @@ export default {
           this.initExclusiveList();
       }else if(JSON.parse(_json).taskType === "1"){
           console.log("客户端返回的任务成功信息>>taskType为1的时候");          
-          this.initNewTaskListData();
+          this.initNewTaskListData('-1');
       }else if(JSON.parse(_json).taskType === "2"){
           this.initDailyTaskListData();
       }
