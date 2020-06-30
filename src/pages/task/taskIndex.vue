@@ -441,6 +441,7 @@ export default {
       if(JSON.parse(_json).taskType === "0"){
           this.initExclusiveList();
       }else if(JSON.parse(_json).taskType === "1"){
+          console.log("客户端返回的任务成功信息>>taskType为1的时候");          
           this.initNewTaskListData();
       }else if(JSON.parse(_json).taskType === "2"){
           this.initDailyTaskListData();
@@ -787,6 +788,7 @@ export default {
     },
     // 新手任务接口
     initNewTaskListData(isInit) {
+        console.log('新手任务接口isInit',isInit);
       AppJsBridge.initSignData({}, 954008, param => {
         this.$http({
         apiType: "2",
