@@ -436,11 +436,11 @@ export default {
     // 回调获取客户端返回的任务成功信息,taskType：0.专属任务 1.新手任务 2.每日任务---用来刷新哪个任务块
     window['AppJSApi_BackH5TaskOrdersInfo'] = (_json) => {
       console.log("客户端返回的任务成功信息>>",_json);
-      if(_json === "0"){
+      if(JSON.parse(_json).taskType === "0"){
           this.initExclusiveList();
-      }else if(_json === "1"){
+      }else if(JSON.parse(_json).taskType === "1"){
           this.initNewTaskListData();
-      }else if(_json === "2"){
+      }else if(JSON.parse(_json).taskType === "2"){
           this.initDailyTaskListData();
       }
     }
