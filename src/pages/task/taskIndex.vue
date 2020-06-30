@@ -56,8 +56,8 @@
                     </div>
                     <div class="task-li-line">{{ item.extra.goodsName }}{{ item.extra.goodsAmount }}{{ item.extra.goodsAmountType }}</div>
                     <div class="task-li-line">{{ item.extra.transFeeInfo }}
-                        <img class="text-logo" src="../../assets/images/task/tiqianshoukuan@2x.png">
-                        <img class="text-logo" src="../../assets/images/task/yunfeibaozhang@2x.png">
+                        <img v-if="item.extra.advancePayState && item.extra.advancePayState === '1'" class="text-logo" src="../../assets/images/task/tiqianshoukuan@2x.png">
+                        <img v-if="item.extra.advancePayState && item.extra.advancePayState === '1'" class="text-logo" src="../../assets/images/task/yunfeibaozhang@2x.png">
                     </div>
                   </div>
                   <!-- <div v-else-if="item.taskConfigId === '1007' && item.extra" class="task-li-invitecard">
