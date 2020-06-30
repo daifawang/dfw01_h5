@@ -53,6 +53,9 @@ export default {
         // 日志
         clickLog(){
             let type = this.$utils.GetQueryString("fromType");
+            if(type !== '-2'){
+                return;
+            }
             console.log('元宝商城日志fromType为：'+fromType);
             console.log('isHybAppAndroid:'+this.$utils.isHybAppAndroid());
             let clientType = this.$utils.isHybAppAndroid() ? '0' : this.$utils.isHybAppIos() ? '1': '未知'; //0 安卓  1 IOS
