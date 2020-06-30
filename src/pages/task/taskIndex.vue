@@ -641,6 +641,7 @@ export default {
       let _url = type === '0' ? this.exclusiveList[index].jumpUrl : type === '1' ? this.newTaskList[index].jumpUrl : this.dailyTaskList[index].jumpUrl;
       let taskId = type === '0' ? this.exclusiveList[index].taskId : type === '1' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
       let taskConfigId = type === '0' ? this.exclusiveList[index].taskConfigId   : type === '1' ? this.newTaskList[index].taskConfigId   : this.dailyTaskList[index].taskConfigId  ;
+      this.clickBtnLog(taskConfigId,taskId,status)
       if(taskConfigId === '1002' && this.showGuideExgTip){
           this.closeGuideExgTip()
       }
@@ -987,7 +988,38 @@ export default {
             console.log(e);
         });
       });
-     }
+     },
+    // 日志-任务按钮
+    clickBtnLog(taskConfigId,taskId,status){
+        console.log('任务按钮：'+taskConfigId);
+        let clientType = this.$utils.isHybAppAndroid() ? '0' : this.$utils.isHybAppIos() ? '1': '未知'; //0 安卓  1 IOS
+        console.log('客户端类型(0-安卓,1-IOS)为：'+clientType);
+        AppJsBridge.initSignData(
+            { type: taskConfigId, taskId:taskId,status:status,clientType: clientType },
+            954020,
+            param => {
+                this.$http({
+                    apiType: "2",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    url: "/gateway.do",
+                    data: param
+                })
+                    .then(res => {
+                        console.log(res);
+                        this.showLoading = false;
+                        if (res.reCode == "0") {
+                        } else {
+                        }
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+            }
+        );
+        
+    }
   }
 }
 </script>

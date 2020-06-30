@@ -23,7 +23,6 @@ export default {
             this.initData({});
         }
         document.title="元宝商城";
-        this.clickLog();
     },
     methods: {
         // 初始化数据
@@ -40,6 +39,7 @@ export default {
                     .then(res => {
                         console.log(res);
                         if (res.reCode == "0") {
+                            this.clickLog();
                             window.location.replace(res.result);
                         } else {
                             this.$toast(res.reInfo);
@@ -52,8 +52,35 @@ export default {
         },
         // 日志
         clickLog(){
-            let type = this.$utils.GetQueryString("type");
-            console.log('日志type为：'+type);
+            let type = this.$utils.GetQueryString("fromType");
+            console.log('元宝商城日志fromType为：'+fromType);
+            console.log('isHybAppAndroid:'+this.$utils.isHybAppAndroid());
+            let clientType = this.$utils.isHybAppAndroid() ? '0' : this.$utils.isHybAppIos() ? '1': '未知'; //0 安卓  1 IOS
+            console.log('客户端类型(0-安卓,1-IOS)为：'+clientType);
+            AppJsBridge.initSignData(
+                { type: '-2', clientType: clientType },
+                954020,
+                param => {
+                    this.$http({
+                        apiType: "2",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        url: "/gateway.do",
+                        data: param
+                    })
+                        .then(res => {
+                            console.log(res);
+                            this.showLoading = false;
+                            if (res.reCode == "0") {
+                            } else {
+                            }
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        });
+                }
+            );
             
         }
     }

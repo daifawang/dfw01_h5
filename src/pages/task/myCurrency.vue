@@ -39,7 +39,7 @@
                 </div>
             </div>
             <div :style="{height:topBoxHeight+35+'px'}"></div>
-            <div class="coin-detail" id="coinDetail" :style="{'maxHeight':coinDetail.length < 10 ? boxHeight-topBoxHeight+'px' : none}" ref="coinDetail">
+            <div class="coin-detail" id="coinDetail" :style="{'maxHeight':coinDetail.length < 10 ? boxHeight-topBoxHeight+'px' : 'none'}" ref="coinDetail">
                 <van-loading v-if="showLoading" size="24px" vertical>加载中...</van-loading>
                 <div v-if="coinDetail.length>0">
                     <div v-for="(item,index) in coinDetail" :key="index" class="coin-detail-wrapper">
@@ -75,9 +75,9 @@ export default {
             showNoData: false,
             boxHeight: document.documentElement.clientHeight, //盒子高度
             activeTag: 0, //0 全部 1 已获取  2 已使用 被选中状态
-            coinNewCount: "0", //可使用元宝数目
-            coinPoints: "0", //已消费元宝数目
-            coinSum: "0", //累计获得元宝数目
+            coinNewCount: "", //可使用元宝数目
+            coinPoints: "", //已消费元宝数目
+            coinSum: "", //累计获得元宝数目
             pageNum: 0, //分页page_num
             loadingMore: true, //到达底部加载更多开关
             topBoxHeight: 200,
@@ -87,18 +87,20 @@ export default {
     created() {
         document.title = "我的元宝";
         AppJsBridge.hidenNavigation();
-        this.initData();
     },
     mounted() {
+        this.initData();
         console.log('this.$refs.topBox.clientHeight:'+this.$refs.topBox.clientHeight);
         this.topBoxHeight = this.$refs.topBox.offsetHeight - 39;
-        this.initListData(this.activeTag);
         window.addEventListener("scroll", this.loadeMore);
-        this.clickLog();
+        setTimeout(() => {
+            this.clickLog();
+        }, 800);
     },
     methods: {
         //数据初始化
         initData() {
+            console.log('数据初始化');
             AppJsBridge.initSignData({}, 954001, param => {
                 this.$http({
                     apiType: "2",
@@ -108,20 +110,21 @@ export default {
                     url: "/gateway.do",
                     data: param
                 })
-                    .then(res => {
-                        console.log(res);
-                        if (res.reCode == "0") {
-                            this.loadSuccess = true;
-                            this.coinNewCount = res.result.coinNewCount;
-                            this.coinPoints = res.result.coinPoints;
-                            this.coinSum = res.result.coinSum;
-                        } else {
-                            this.$toast(res.reInfo);
-                        }
-                    })
-                    .catch(e => {
-                        console.log(e);
-                    });
+                .then(res => {
+                    console.log(res);
+                    if (res.reCode == "0") {
+                        this.initListData(this.activeTag);
+                        this.loadSuccess = true;
+                        this.coinNewCount = res.result.coinNewCount;
+                        this.coinPoints = res.result.coinPoints;
+                        this.coinSum = res.result.coinSum;
+                    } else {
+                        this.$toast(res.reInfo);
+                    }
+                })
+                .catch(e => {
+                    console.log(e);
+                });
             });
         },
         /* 加载更多 */
@@ -131,7 +134,7 @@ export default {
             let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
             console.log("---scrollTop:" + scrollTop + "---windowHeight:" + windowHeight + "---scrollHeight:" + scrollHeight);
             if (scrollTop + windowHeight >= scrollHeight - 2) {
-                console.log(22222222222);
+                console.log('加载更多');
                 if (this.loadingMore) {
                     this.pageNum += 1;
                     console.log(this.pageNum);
@@ -141,6 +144,7 @@ export default {
         },
         //元宝使用列表
         initListData(activeTag) {
+             console.log('元宝列表');
             AppJsBridge.initSignData(
                 { type: activeTag, pageNum: this.pageNum + "" },
                 954003,
@@ -165,7 +169,6 @@ export default {
                                     console.log(this.coinDetail);
                                 }
                                 if (this.coinDetail.length <= 0 && res.result.length <= 0) {
-                                    console.log(1111111111);
                                     this.showNoData = true;
                                 }
                                 if (this.coinDetail.length > 0 && this.pageNum === 0 && res.result.length < 10){
@@ -209,14 +212,14 @@ export default {
         },
         // 日志
         clickLog(){
-            let type = this.$utils.GetQueryString("type");
-            console.log('日志type为：'+type);
+            let fromType = this.$utils.GetQueryString("fromType");
+            console.log('我的元宝日志fromType为：'+fromType);
             console.log('isHybAppAndroid:'+this.$utils.isHybAppAndroid());
             let clientType = this.$utils.isHybAppAndroid() ? '0' : this.$utils.isHybAppIos() ? '1': '未知'; //0 安卓  1 IOS
             console.log('客户端类型(0-安卓,1-IOS)为：'+clientType);
             AppJsBridge.initSignData(
                 { type: '-1', clientType: clientType },
-                95400,
+                954020,
                 param => {
                     this.$http({
                         apiType: "2",
