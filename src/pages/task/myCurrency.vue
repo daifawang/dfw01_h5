@@ -139,8 +139,8 @@ export default {
                 }
             }
         },
+        //元宝使用列表
         initListData(activeTag) {
-            //元宝使用列表
             AppJsBridge.initSignData(
                 { type: activeTag, pageNum: this.pageNum + "" },
                 954003,
@@ -211,6 +211,33 @@ export default {
         clickLog(){
             let type = this.$utils.GetQueryString("type");
             console.log('日志type为：'+type);
+            console.log('isHybAppAndroid:'+this.$utils.isHybAppAndroid());
+            let clientType = this.$utils.isHybAppAndroid() ? '0' : this.$utils.isHybAppIos() ? '1': '未知'; //0 安卓  1 IOS
+            console.log('客户端类型(0-安卓,1-IOS)为：'+clientType);
+            AppJsBridge.initSignData(
+                { type: '-1', clientType: clientType },
+                95400,
+                param => {
+                    this.$http({
+                        apiType: "2",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        url: "/gateway.do",
+                        data: param
+                    })
+                        .then(res => {
+                            console.log(res);
+                            this.showLoading = false;
+                            if (res.reCode == "0") {
+                            } else {
+                            }
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        });
+                }
+            );
             
         }
     }

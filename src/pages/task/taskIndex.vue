@@ -463,7 +463,7 @@ export default {
   methods:{
     // 初始化是否展示新手引导--获取APP本地存储
     getGuideStoreApi(){
-      AppJsBridge.getStoreInfo('TASK_GUIDE_KEY',backData => {
+      AppJsBridge.getStoreInfo('TASK_GUIDE_KEY','1',backData => {
         console.log('callback-backData>>',backData);
         this.showGuideStore = backData.data === '1' ? false : true;
         if(this.showGuideStore){
@@ -508,7 +508,7 @@ export default {
             this.showCurypaoNum = this.showCurypaoNum+1;
             this.$set(json,'showCurypao',true);
             setTimeout(() => {
-              AppJsBridge.storeInfo('TASK_GETCURY_KEY','1');
+              AppJsBridge.storeInfo('TASK_GETCURY_KEY','1','1');
               if(this.showGuide !== 1){
                 console.log(document.getElementById(''+json.taskId).offsetTop); //getBoundingClientRect()
                 window.scrollTo(0,document.getElementById(''+json.taskId).offsetTop-18);
@@ -525,12 +525,12 @@ export default {
       AppJsBridge.getUserInfo(param =>{
         if(param){
           // 获取APP本地存储--是否展示快去领取元宝提示
-          AppJsBridge.getStoreInfo('TASK_GETCURY_KEY',backData => {
+          AppJsBridge.getStoreInfo('TASK_GETCURY_KEY','1',backData => {
             console.log('callback-backData>>',backData);
             this.showFirstGetCury = backData.data === '1' ? false : true;
           });
         //获取APP本地存储--是否展示到达卸货地，别忘了传回单哦~<br/>点击这里，即可完成回单上传
-           AppJsBridge.getStoreInfo('TASK_GUIDETXET_KEY',backData => {
+           AppJsBridge.getStoreInfo('TASK_GUIDETXET_KEY','1',backData => {
             console.log('callback-backData---TASK_GUIDETXET_KEY>>',backData);
             this.showGuideExgTip = backData.data === '1' ? false : true;
           }); 
@@ -720,7 +720,7 @@ export default {
     // 关闭快去领取元宝奖励气泡
     closeTip(){
       this.showFirstGetCury = false;
-      AppJsBridge.storeInfo('TASK_GETCURY_KEY','1');
+      AppJsBridge.storeInfo('TASK_GETCURY_KEY','1','1');
     },
     // 新手引导每一步按钮点击逻辑
     guideTo(num){
@@ -764,7 +764,7 @@ export default {
           tabMaskShow: '0',
           taskTabBtnEmpty: '0'
         }));
-        AppJsBridge.storeInfo('TASK_GUIDE_KEY','1');
+        AppJsBridge.storeInfo('TASK_GUIDE_KEY','1','1');
         console.log('--------我知道了埋点的时间戳---------');
         console.log('guideTimeA:'+this.guideTimeA+',guideTimeB:'+this.guideTimeB+',guideTimeC:'+this.guideTimeC);    
         // 1、有专属任务的用户/无接单和传回单任务的用户  clickType==1
@@ -957,7 +957,7 @@ export default {
     // 关闭文字提示
     closeGuideExgTip(){
         this.showGuideExgTip=false;
-        AppJsBridge.storeInfo('TASK_GUIDETXET_KEY','1');
+        AppJsBridge.storeInfo('TASK_GUIDETXET_KEY','1','1');
     },
     //日志-我知道了
      clickLog(blankingOne,blankingTwo,blankingThree,type){

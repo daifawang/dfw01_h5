@@ -115,9 +115,10 @@ let AppJsBridge = {
         }
     },
     // 【JS2058】H5数据存取---存数据
-    storeInfo(key,value){
+    storeInfo(key,value,status){
         let _json = JSON.stringify({
             type: '1',
+            status:status, //1（单设备永久存储存数据，卸载清除数据） 0（临时存储数据，退出登录清除数据） 默认0
             key: key, //key：数据的key,命名以KEY结尾 例如：TASK_GUIDE_KEY
             data: value
         })
@@ -133,10 +134,11 @@ let AppJsBridge = {
         }
     },
     // 【JS2058】H5数据存取---取数据 ---注意需要回调获取数据
-    getStoreInfo(key,callback){
+    getStoreInfo(key,status,callback){
         let _json = JSON.stringify({
             type: '2',
             key: key,
+            status:status,
             data: ''
         })
         // console.log(_json);
