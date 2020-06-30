@@ -335,7 +335,7 @@ export default {
         {
           taskId: '15',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '使用电子油卡',
           miniTagList: [
-            'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'
+            "https://imgt.log56.com/sq_server/otherimg/hybrenwu/jiangli@2x.png"
           ],
           taskType: '4',buttonText: '去使用',status: '0',jumpUrl: '',rewardNum: '5',
           extra: {onAddCount: '2600',lastCount: '6100'}
@@ -436,6 +436,7 @@ export default {
     // 回调获取客户端返回的任务成功信息,taskType：0.专属任务 1.新手任务 2.每日任务---用来刷新哪个任务块
     window['AppJSApi_BackH5TaskOrdersInfo'] = (_json) => {
       console.log("客户端返回的任务成功信息>>",_json);
+      console.log(JSON.parse(_json));
       if(JSON.parse(_json).taskType === "0"){
           this.initExclusiveList();
       }else if(JSON.parse(_json).taskType === "1"){
@@ -623,6 +624,7 @@ export default {
           this.dailyTaskList.splice(index, 1);
           this.dailyTaskList.push(_obj);
         } else if(type == '1'){
+            console.log("点击领取元宝奖励动画newTaskList-index:::::::"+index);
           this.newTaskList.splice(index, 1);
           if(this.newTaskList.length === 0){
             this.hasNewTask = '0';
@@ -641,7 +643,9 @@ export default {
       let _url = type === '0' ? this.exclusiveList[index].jumpUrl : type === '1' ? this.newTaskList[index].jumpUrl : this.dailyTaskList[index].jumpUrl;
       let taskId = type === '0' ? this.exclusiveList[index].taskId : type === '1' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
       let taskConfigId = type === '0' ? this.exclusiveList[index].taskConfigId   : type === '1' ? this.newTaskList[index].taskConfigId   : this.dailyTaskList[index].taskConfigId  ;
-      this.clickBtnLog(taskConfigId,taskId,status)
+      setTimeout(() => {
+          this.clickBtnLog(taskConfigId,taskId,status);
+      }, 500);
       if(taskConfigId === '1002' && this.showGuideExgTip){
           this.closeGuideExgTip()
       }
@@ -864,7 +868,7 @@ export default {
     // 领取元宝接口
     getCurrencyData(taskId,type,index,taskConfigId){
       // taskType  0 专属  1 新手  2每日
-      console.log('taskId:'+taskId+',type:'+type+',index:'+index);
+      console.log('领取元宝接口taskId:'+taskId+',type:'+type+',index:'+index);
       AppJsBridge.initSignData({taskId:taskId,taskType:type+'',taskConfigId:taskConfigId}, 954011, param => {
         this.$http({
         apiType: "2",
@@ -1737,6 +1741,7 @@ export default {
             width: 1.625rem;
             height: 1.625rem;
             margin-right: 0.6875rem;
+            align-self: flex-start;
             & img{
                 max-width: 100%;
             }
