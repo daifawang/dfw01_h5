@@ -437,6 +437,7 @@ export default {
     window['AppJSApi_BackH5TaskOrdersInfo'] = (_json) => {
       console.log("客户端返回的任务成功信息>>",_json);
       console.log(JSON.parse(_json));
+      console.log("客户端返回的任务成功信息>>taskType"+JSON.parse(_json).taskType);
       if(JSON.parse(_json).taskType === "0"){
           this.initExclusiveList();
       }else if(JSON.parse(_json).taskType === "1"){
