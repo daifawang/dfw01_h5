@@ -1,6 +1,7 @@
 <template>
     <div>
-        <div  class="my-currency">
+        <loading v-show="!loadSuccess"></loading>
+        <div v-show="loadSuccess" class="my-currency">
             <div class="top-box" ref="topBox">
                 <div class="header">
                     <div class="header-top">
@@ -38,20 +39,22 @@
                     </div>
                 </div>
             </div>
-            <div :style="{height:topBoxHeight+35+'px'}"></div>
-            <div class="coin-detail" id="coinDetail" :style="{'maxHeight':coinDetail.length < 10 ? boxHeight-topBoxHeight+'px' : 'none'}" ref="coinDetail">
-                <van-loading v-if="showLoading" size="24px" vertical>加载中...</van-loading>
-                <div v-if="coinDetail.length>0">
-                    <div v-for="(item,index) in coinDetail" :key="index" class="coin-detail-wrapper">
-                        <div>
-                            <div class="goods-name">{{item.goodsName}}</div>
-                            <div class="created-time">{{item.createdTime}}</div>
+            <div :style="{height:topBoxHeight+'px'}"></div>
+            <div  class="coin-detail" id="coinDetail" :style="{'maxHeight':coinDetail.length < 10 ? boxHeight-topBoxHeight+'px' : 'none'}" ref="coinDetail">
+                <div class="coin-detail-box">
+                    <van-loading v-if="showLoading" size="24px" vertical>加载中...</van-loading>
+                    <div v-if="coinDetail.length>0">
+                        <div v-for="(item,index) in coinDetail" :key="index" class="coin-detail-wrapper">
+                            <div class="coin-detail-wrapper-left">
+                                <div class="goods-name">{{item.goodsName}}</div>
+                                <div class="created-time">{{item.createdTime}}</div>
+                            </div>
+                            <div class="coin-num" :class="{'red-font':Number(item.coinNum)<0}"><span v-if="Number(item.coinNum)>0">+</span>{{item.coinNum}}</div>
                         </div>
-                        <div class="coin-num" :class="{'red-font':Number(item.coinNum)<0}"><span v-if="Number(item.coinNum)>0">+</span>{{item.coinNum}}</div>
                     </div>
+                    <div v-if="showNoData" class="load-more">暂无元宝数据</div>
+                    <div v-if="loadingMore && coinDetail.length>0" class="load-more">加载中~</div>
                 </div>
-                <div v-if="showNoData" class="load-more">暂无元宝数据</div>
-                <div v-if="loadingMore && coinDetail.length>0" class="load-more">加载中~</div>
             </div>
             <div v-if="!loadingMore" class="bottom">已经到底啦~</div>
         </div>
@@ -61,6 +64,7 @@
 <script>
 import { AppJsBridge, hybappObj } from "@/assets/js/hybApp_api.js";
 import Const from "@/assets/js/const";
+import loading from "@/components/loading.vue";
 export default {
     name: "myCurrency",
     data() {
@@ -84,14 +88,21 @@ export default {
             coinDetail: [] //元宝列表
         };
     },
+    components:{
+        loading:loading
+    },
     created() {
         document.title = "我的元宝";
         AppJsBridge.hidenNavigation();
     },
     mounted() {
         this.initData();
-        console.log('this.$refs.topBox.clientHeight:'+this.$refs.topBox.clientHeight);
-        this.topBoxHeight = this.$refs.topBox.offsetHeight - 39;
+        setTimeout(() => {
+            console.log('this.$refs.topBox.offsetHeight:'+this.$refs.topBox.offsetHeight);
+            this.topBoxHeight = this.$refs.topBox.offsetHeight - 39;
+            console.log('this.topBoxHeight:'+this.topBoxHeight);
+            
+        }, 500);
         window.addEventListener("scroll", this.loadeMore);
         setTimeout(() => {
             this.clickLog();
@@ -279,6 +290,7 @@ export default {
     width: 100%;
     // height: auto;
     clear:both;
+    z-index: 10;
 }
 .header {
     width: 100%;
@@ -340,10 +352,12 @@ export default {
     position: relative;
     top: -35px;
     left: 0;
-    // width: 100%;
-    width: calc(100% - 20px);
+    width: 100%;
+    box-sizing: border-box;
     height: 100%;
     padding: 0 0.625rem;
+    z-index: 10;
+    background: #f4f5f7;
     .total-box {
         padding: 0 1.0625rem;
         .space-flex(space-between);
@@ -401,24 +415,40 @@ export default {
     }
 }
 .coin-detail {
-    background: rgba(255, 255, 255, 1);
+    background: #f4f5f7;
     border-radius: 0 0 0.5rem 0.5rem;
-    padding: 0px 1rem;
+    overflow: hidden;
     box-sizing: border-box;
-    // width: 100%;
+    width: 100%;
+    padding: 0 0.625rem;
     height: auto;
     margin-top: -2.1875rem;
-    margin-left: 0.625rem;
-    margin-right: 0.5rem;
-    //   overflow-y: scroll;
+    margin: 0 auto;
+    .coin-detail-box{
+        background: #fff;
+        padding: 0px 1rem;
+        &>div div:last-child{
+            border: none;
+        }
+    }
 }
 .coin-detail-wrapper {
     .space-flex(space-between);
     height: 4.5625rem;
     border-bottom: 0.0625rem solid #e8e8e8;
+    .coin-detail-wrapper-left{
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        flex: 1;
+        margin-right: 2px;
+    }
     .goods-name {
         .font(1.125rem, #1a1a1a, 1.1875rem);
         font-weight: bold;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
     .created-time {
         .font(0.9375rem, #6c6c6c, 1.1875rem);
