@@ -660,6 +660,8 @@ export default {
         if(this.showGuide > 0 && this.showGuide < 4){
             return;
         }
+        let status = type === '0' ? this.exclusiveList[index].status : type === '1' ? this.newTaskList[index].status : this.dailyTaskList[index].status;
+        console.log('------点击整个栏跳转status原来的值:'+status);
         if(status !== '2' && status !== '3'){
             this.checkTaskStatus(type,index);
         }
