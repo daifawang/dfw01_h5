@@ -438,14 +438,16 @@ export default {
       console.log("客户端返回的任务成功信息>>",_json);
       console.log(JSON.parse(_json));
       console.log("客户端返回的任务成功信息>>taskType"+JSON.parse(_json).taskType);
-      if(JSON.parse(_json).taskType === "0"){
-          this.initExclusiveList();
-      }else if(JSON.parse(_json).taskType === "1"){
-          console.log("客户端返回的任务成功信息>>taskType为1的时候");          
-          this.initNewTaskListData('-1');
-      }else if(JSON.parse(_json).taskType === "2"){
-          this.initDailyTaskListData();
-      }
+      setTimeout(() => {
+          if(JSON.parse(_json).taskType === "0"){
+              this.initExclusiveList();
+          }else if(JSON.parse(_json).taskType === "1"){
+              console.log("客户端返回的任务成功信息>>taskType为1的时候");          
+              this.initNewTaskListData('-1');
+          }else if(JSON.parse(_json).taskType === "2"){
+              this.initDailyTaskListData();
+          }
+      }, 500);
     }
     // 回调获取客户端返回的任务Tab点击通知---用来刷新每个任务列表；jstr：0-是切换点击；1-是再次点击
     window['AppJSApi_BackH5TaskTabClick'] = (jstr) => {
