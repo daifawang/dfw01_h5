@@ -876,16 +876,16 @@ export default {
           this.loadingFlag = false;
           if (res.reCode == "0") {
             this.dailyTaskList = res.result.taskList;
-            this.dailyTaskList.forEach(item => {
-                //按钮防重复点击
-                item.canClickRightBtn = true;
-            });
-            if(this.dailyTaskList && this.dailyTaskList.length > 0){
-              this.initGetCuryPao(this.dailyTaskList);
-            }else{
-              // this.hasDailyTask = false;
-              this.dailyTaskFlag = '0';
-            }
+            // this.dailyTaskList.forEach(item => {
+            //     //按钮防重复点击
+            //     item.canClickRightBtn = true;
+            // });
+            // if(this.dailyTaskList && this.dailyTaskList.length > 0){
+            //   this.initGetCuryPao(this.dailyTaskList);
+            // }else{
+            //   // this.hasDailyTask = false;
+            //   this.dailyTaskFlag = '0';
+            // }
           } else {
             this.dailyTaskFlag = '1';
             console.log(res.reInfo);
