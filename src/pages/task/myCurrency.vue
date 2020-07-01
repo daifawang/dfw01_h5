@@ -360,6 +360,7 @@ export default {
     padding: 0 0.625rem;
     z-index: 10;
     background: #f4f5f7;
+    overflow-y: scroll;
     .total-box {
         padding: 0 1.0625rem;
         .space-flex(space-between);
