@@ -612,6 +612,11 @@ export default {
     },
     // 点击领取元宝奖励
     getCurrency(type,index){
+        console.log('点击领取元宝奖励donghua:this.canClickRightBtn----',this.canClickRightBtn);
+        if(!this.canClickRightBtn){
+            console.log("重复领取");
+            return; 
+        }
       let task_id = type === '0' ? this.exclusiveList[index].taskId : type === '1' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
       let num = type === '0' ? this.exclusiveList[index].rewardNum : type === '1' ? this.newTaskList[index].rewardNum : this.dailyTaskList[index].rewardNum;
       AppJsBridge.openIngotsReceiveDlg(task_id,num);
@@ -874,6 +879,7 @@ export default {
     // 领取元宝接口
     getCurrencyData(taskId,type,index,taskConfigId){
       // taskType  0 专属  1 新手  2每日
+       console.log('领取元宝接口:this.canClickRightBtn----',this.canClickRightBtn);
       if(!this.canClickRightBtn){
           return;
       }
