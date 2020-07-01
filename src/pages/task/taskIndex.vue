@@ -29,7 +29,7 @@
                     <img class="task-t-icon" :src="item.headImg" />
                     <div class="task-t-div">
                       <div class="task-t-name">
-                        <span>{{ item.taskName }}</span><img v-for="(item1, index1) in item.miniTagList" :key="index1" :src="item1" />
+                        <span>{{ item.taskName }}</span><img v-for="(item1, index1) in item.miniTags" :key="index1" :src="item1" />
                       </div>
                       <div v-if="item.taskNote" class="task-t-note">{{item.taskNote}}</div>
                       <div class="task-t-currency">
@@ -407,7 +407,7 @@ export default {
       setTimeout(() => {
         this.loadingFlag = false;
         this.showExclusiveList = '1';
-        this.exclusiveList = this.exclusiveList1;
+        // this.exclusiveList = this.exclusiveList1;
         this.showFirstGetCury = true;
         this.showGuideExgTip = true;
         this.guideType = 1;
