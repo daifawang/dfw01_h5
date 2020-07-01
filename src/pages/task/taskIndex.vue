@@ -29,7 +29,7 @@
                     <img class="task-t-icon" :src="item.headImg" />
                     <div class="task-t-div">
                       <div class="task-t-name">
-                        <span>{{ item.taskName }}</span><img v-for="(item1, index1) in item.miniTags" :key="index1" :src="item1" />
+                        <span>{{ item.taskName }}</span><span v-for="(item1, index1) in item.miniTags" :key="index1"><img :src="item1" /></span>
                       </div>
                       <div v-if="item.taskNote" class="task-t-note">{{item.taskNote}}</div>
                       <div class="task-t-currency">
@@ -288,7 +288,7 @@ export default {
       exclusiveList1:[ //专属任务列表
         {
           taskId: '11',taskHeadImgUrl: 'https://live-ol.log56.com/sq_server_manage/shq/20200430/478c7ae1-945f-423d-8013-9558c30e3a85.jpg',taskName: '完成接单',
-          miniTagList: [
+          miniTags: [
             'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'
           ],
           taskConfigId: '1001',taskType: '1',buttonText: '去接接单',status: '1',jumpUrl: '',rewardNum: '6',viewCount: '4000人在看',
@@ -299,7 +299,7 @@ export default {
         },
         {
           taskId: '12',taskHeadImgUrl: 'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_hz.png',taskName: '货到了，我要运费',
-          miniTagList: [
+          miniTags: [
             'http://kydd.log56.com/sq_server/mobile/home_page/img/icon_new.png'
           ],
           taskConfigId: '1002',taskType: '1',buttonText: '去传回单',status: '2',jumpUrl: '',rewardNum: '10',
@@ -310,7 +310,7 @@ export default {
         },
         {
           taskId: '19',taskHeadImgUrl: 'https://live-ol.log56.com/sq_server_manage/shq/20200430/478c7ae1-945f-423d-8013-9558c30e3a85.jpg',taskName: '绑卡收运费',
-          taskNote: '完善证件信息后可结算运费',miniTagList: [],
+          taskNote: '完善证件信息后可结算运费',miniTags: [""],
           taskType: '5',buttonText: '去绑卡',status: '2',jumpUrl: '',rewardNum: '5',viewCount: '5000人关注',
         },
         {
@@ -407,7 +407,7 @@ export default {
       setTimeout(() => {
         this.loadingFlag = false;
         this.showExclusiveList = '1';
-        // this.exclusiveList = this.exclusiveList1;
+        this.exclusiveList = this.exclusiveList1;
         this.showFirstGetCury = true;
         this.showGuideExgTip = true;
         this.guideType = 1;
