@@ -461,7 +461,7 @@ export default {
       if(jsonStr){
           let backMsgInfo = JSON.parse(jsonStr);
           if(backMsgInfo.msgType === 'HYBSJ:TaskNotifyBarMsg' && backMsgInfo.pushMsg.extra.taskType === '0'){
-              this.initExclusiveList('3',backMsgInfo.extra.taskId);
+              this.initExclusiveList('3',backMsgInfo.pushMsg.extra.taskId);
           }
       }
     } 
