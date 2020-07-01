@@ -624,18 +624,24 @@ export default {
             console.log("重复领取");
             return; 
         }
-        canClickRightBtn =false;
+        if(type === '0'){
+            this.$set(this.exclusiveList[index], 'canClickRightBtn', false);
+        } else if(type == '1'){
+            this.$set(this.newTaskList[index], 'canClickRightBtn', false);
+        } else if(type == '2'){
+            this.$set(this.dailyTaskList[index], 'canClickRightBtn', false);
+        }
       AppJsBridge.openIngotsReceiveDlg(task_id,num);
       setTimeout(() => {
         this.closeTip();
         if(type === '0'){
-            this.exclusiveList[index].canClickRightBtn = true;
+            this.$set(this.exclusiveList[index], 'canClickRightBtn',true);
           this.exclusiveList.splice(index, 1);
           if(this.exclusiveList.length === 0){
             this.showExclusiveList = '0';
           }
         } else if(type == '2' && this.dailyTaskList[index].taskNowSum >= this.dailyTaskList[index].taskNeedSum){
-            this.dailyTaskList[index].canClickRightBtn = true;
+            this.$set(this.dailyTaskList[index], 'canClickRightBtn', true);
             this.dailyTaskList[index].buttonText="已完成";
             this.dailyTaskList[index].status="3";
           let _obj = this.dailyTaskList[index];
@@ -643,7 +649,7 @@ export default {
           this.dailyTaskList.push(_obj);
         } else if(type == '1'){
             console.log("点击领取元宝奖励动画newTaskList-index:::::::"+index);
-            this.newTaskList[index].canClickRightBtn = true;
+           this.$set(this.newTaskList[index], 'canClickRightBtn', true);
           this.newTaskList.splice(index, 1);
           if(this.newTaskList.length === 0){
             this.hasNewTask = '0';
@@ -653,7 +659,7 @@ export default {
     },
     // 点击任务按钮
     clickRightBttn(type,index){
-      console.log(type,index);
+      console.log('==clickRightBttn==',type,index);
       if(this.showGuide > 0 && this.showGuide < 4){
         return;
       }
@@ -726,7 +732,7 @@ export default {
             data: param
             })
             .then(res => {
-                console.log(res);
+                console.log('==获取单个视频信息接口==',res);
                 if (res.reCode == "0") {
                     AppJsBridge.taskOpenVideoDetails(res.result[0]);
                 } else {
@@ -855,7 +861,7 @@ export default {
       });
     },
     // 每日任务接口
-    initDailyTaskListData() {
+    initDailyTaskListData() {    
       AppJsBridge.initSignData({}, 954005, param => {
         this.$http({
           apiType: "2",
@@ -906,7 +912,7 @@ export default {
         data: param
         })
         .then(res => {
-            console.log(res);
+            console.log("==getCurrencyData==",res);
             if (res.reCode == "0") {
                 this.getCurrency(type,index);
             } else {
@@ -938,7 +944,7 @@ export default {
             data: param
             })
             .then(res => {
-                console.log(res);
+                console.log("==checkTaskStatus==",res);
                 if (res.reCode == "0") {
                    
                     // if(res.result.gap === '1'){
@@ -959,7 +965,10 @@ export default {
                                 return;
                             }
                         }else if(type === '2'){
-                            this.dailyTaskList[index].status = res.result.status;
+                            if(taskConfigId !== '8' && taskConfigId !== '7'){
+                                console.log("taskConfigId !== '8' || taskConfigId !== '7'");                                
+                                this.dailyTaskList[index].status = res.result.status;
+                            }
                             if(res.result.jumpUrl === '-2'){
                                 this.$toast(res.result.bombInfo);
                                 return;
@@ -970,16 +979,18 @@ export default {
                     console.log('点击更新任务状态jumpUrl:'+_url+'-----oldStatus'+status);
                     if(taskConfigId === '8' || taskConfigId === '7'){
                         // 查看类任务，status传旧值
+                        console.log('查看类任务，status传旧值-----'+status);
                         this.goTaskUrl(index,_url,status);
                     }else{
                         this.goTaskUrl(index,_url,res.result.status);
                     }
                     // 查看类任务，H5自己刷新页面
                     setTimeout(() => {
+                        console.log('查看类任务，H5自己刷新页面');
                         if(taskConfigId === '8' || taskConfigId === '7'){
-                            this.initDailyTaskListData();
+                            // this.initDailyTaskListData('查看类任务');
                         }
-                    }, 500);
+                    }, 1500);
                 } else {
                     this.$toast(res.reInfo);
                 }
@@ -1011,7 +1022,7 @@ export default {
         data: param
         })
         .then(res => {
-            console.log(res);
+            console.log("==clickLog==",res);
             if (res.reCode == "0") {
                
             } else {
@@ -1041,7 +1052,7 @@ export default {
                     data: param
                 })
                     .then(res => {
-                        console.log(res);
+                        console.log('==clickBtnLog==',res);
                         this.showLoading = false;
                         if (res.reCode == "0") {
                         } else {
