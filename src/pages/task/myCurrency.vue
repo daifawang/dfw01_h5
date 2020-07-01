@@ -454,7 +454,7 @@ export default {
     }
     .created-time {
         .font(0.9375rem, #6c6c6c, 1.1875rem);
-        margin-top: 0.625rem;
+        margin-top: 0.3125rem;
     }
     .coin-num {
         .font(18px, #50c39c, 1.1875rem);
