@@ -460,7 +460,7 @@ export default {
       console.log("冷启动/应用进程中，点击任务通知栏消息进任务页面，客户端回调H5 JS>>",JSON.parse(jsonStr));
       if(jsonStr){
           let backMsgInfo = JSON.parse(jsonStr);
-          if(backMsgInfo.msgType === 'HYBSJ:TaskNotifyBarMsg' && backMsgInfo.extra.taskType === '0'){
+          if(backMsgInfo.msgType === 'HYBSJ:TaskNotifyBarMsg' && backMsgInfo.pushMesg.extra.taskType === '0'){
               this.initExclusiveList('3',backMsgInfo.extra.taskId);
           }
       }
@@ -966,7 +966,7 @@ export default {
                             }
                         }else if(type === '2'){
                             if(taskConfigId !== '8' && taskConfigId !== '7'){
-                                console.log("taskConfigId !== '8' || taskConfigId !== '7'");                                
+                                console.log("taskConfigId !== '8' && taskConfigId !== '7'");                                
                                 this.dailyTaskList[index].status = res.result.status;
                             }
                             if(res.result.jumpUrl === '-2'){
@@ -986,8 +986,8 @@ export default {
                     }
                     // 查看类任务，H5自己刷新页面
                     setTimeout(() => {
-                        console.log('查看类任务，H5自己刷新页面');
                         if(taskConfigId === '8' || taskConfigId === '7'){
+                            console.log('查看类任务，H5自己刷新页面');
                             this.initDailyTaskListData();
                         }
                     }, 1500);
