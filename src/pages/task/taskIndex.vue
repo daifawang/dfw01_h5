@@ -213,7 +213,7 @@
       <div v-if="hasDailyTask" id="dayTask" class="task-main">
         <div class="tasks-title">每日任务</div>
         <div class="task-wrapper" v-if="dailyTaskList && dailyTaskList.length>0">
-          <transition-group appear name="taskList" tag="div">
+          <transition-group name="taskList" tag="div">
           <div :id="dailyItem.taskId" class="task-wrapper-div" v-for="(dailyItem,index) in dailyTaskList" :key="dailyItem.taskId" @click.stop="clickUrl('2',index)">
             <div class="task-box">
               <div class="task-icon">
