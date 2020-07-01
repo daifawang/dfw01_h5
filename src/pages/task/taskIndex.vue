@@ -613,7 +613,7 @@ export default {
     // 点击领取元宝奖励
     getCurrency(type,index){
         console.log('点击领取元宝奖励donghua:this.canClickRightBtn----',this.canClickRightBtn);
-        if(!this.canClickRightBtn){
+        if(this.canClickRightBtn){
             console.log("重复领取");
             return; 
         }
@@ -660,7 +660,6 @@ export default {
           this.closeGuideExgTip()
       }
       if(status === '2'){ //领取元宝
-        // this.getCurrency(type,index);
         this.getCurrencyData(taskId,type,index,taskConfigId);
       } else if (status === '3') { //已领取-置灰点击没反应
         return;
