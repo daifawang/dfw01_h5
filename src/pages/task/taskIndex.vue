@@ -29,7 +29,7 @@
                     <img class="task-t-icon" :src="item.headImg" />
                     <div class="task-t-div">
                       <div class="task-t-name">
-                        <span>{{ item.taskName }}</span><span v-for="(item1, index1) in item.miniTags" :key="index1"><img :src="item1" /></span>
+                        <span>{{ item.taskName }}</span><span v-for="(item1, index1) in item.miniTags" :key="index1"><img v-if="item1" :src="item1" /></span>
                       </div>
                       <div v-if="item.taskNote" class="task-t-note">{{item.taskNote}}</div>
                       <div class="task-t-currency">
@@ -413,7 +413,7 @@ export default {
         this.guideType = 1;
         this.showGuide = 1;
         this.initGetCuryPao(this.exclusiveList);
-        // this.newTaskList = this.newTaskList1;
+        this.newTaskList = this.newTaskList1;
         this.initGetCuryPao(this.newTaskList);
           this.goGuideApi();
         // this.hasNewTask = '-1';
