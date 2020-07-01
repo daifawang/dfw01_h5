@@ -988,7 +988,7 @@ export default {
                     setTimeout(() => {
                         console.log('查看类任务，H5自己刷新页面');
                         if(taskConfigId === '8' || taskConfigId === '7'){
-                            // this.initDailyTaskListData('查看类任务');
+                            this.initDailyTaskListData();
                         }
                     }, 1500);
                 } else {

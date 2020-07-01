@@ -204,6 +204,8 @@ export default {
         changeTab(id) {
             //切换tab
             this.showLoading = true;
+            this.loadingMore = true;
+            this.showNoData = false;            
             this.activeTag = id;
             this.coinDetail = [];
             this.pageNum = 0;
