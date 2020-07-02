@@ -85,7 +85,7 @@
                     <div class="task-oilcard-last">余额：￥{{ item.extra.cardBalance }}</div>
                     <div class="task-oilcard-add">最新到账{{ item.extra.rechargeNum }}元</div>
                   </div>
-                  <div v-if="item.status === '2' && showFirstGetCury && item.showCurypao && isFirstFinishCurrTaskId === dailyItem.taskId" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
+                  <div v-if="item.status === '2' && showFirstGetCury && item.showCurypao && isFirstFinishCurrTaskId === item.taskId" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
                   <div v-else-if="showGuide === 4 && index === 0 && guideType === 1" @click.stop="closeGuideTip()" class="sj-tag">点击这里去接单 ×</div>
                   <div v-else-if="showGuide === 4 && index === 0 && guideType === 2" @click.stop="closeGuideTip()" class="sj-tag">点击这里传回单 ×</div>
                   <div class="right-bttn">
@@ -155,7 +155,7 @@
                     </div>
                   </div>
                   <div class="task-btn-div">
-                    <div v-if="newItem.status === '2' && showFirstGetCury && newItem.showCurypao && isFirstFinishCurrTaskId === dailyItem.taskId" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
+                    <div v-if="newItem.status === '2' && showFirstGetCury && newItem.showCurypao && isFirstFinishCurrTaskId === newItem.taskId" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
                     <div @click.stop="clickRightBttn('1',index)" class="task-btn" :class="{guideQuan2:showGuide === 3 && guideType === 0 && index === 0}">
                       <div :class="{'to-do':newItem.status=='0' || newItem.status=='1','doing':newItem.status=='2','done':newItem.status=='3',}">{{newItem.taskAction}}</div>
                     </div>
@@ -660,12 +660,19 @@ export default {
             this.showExclusiveList = '0';
           }
         } else if(type == '2' && this.dailyTaskList[index].taskNowSum >= this.dailyTaskList[index].taskNeedSum){
-            // this.$set(this.dailyTaskList[index], 'canClickRightBtn', true);
             this.dailyTaskList[index].buttonText="已完成";
             this.dailyTaskList[index].status="3";
-          let _obj = this.dailyTaskList[index];
-          this.dailyTaskList.splice(index, 1);
-          this.dailyTaskList.push(_obj);
+            let _obj = this.dailyTaskList[index];
+            if(this.dailyTaskList[index].taskConfigId === '8' || this.dailyTaskList[index].taskConfigId !== '7'){
+                console.log('查看类任务消失；');              
+                this.dailyTaskList.splice(index, 1);
+            }else if(this.dailyTaskList[index].taskConfigId === '1'){
+                console.log('打卡任务一直置顶');              
+            }else{
+                console.log('其他任务置底'); 
+                this.dailyTaskList.splice(index, 1);
+                this.dailyTaskList.push(_obj);
+            }          
         } else if(type == '1'){
             console.log("点击领取元宝奖励动画newTaskList-index:::::::"+index);
            
