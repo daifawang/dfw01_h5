@@ -659,10 +659,11 @@ export default {
             this.showExclusiveList = '0';
           }
         } else if(type == '2' && this.dailyTaskList[index].taskNowSum >= this.dailyTaskList[index].taskNeedSum){
+            console.log("点击领取元宝奖励动画dailyTaskList-index:::::::"+index,this.dailyTaskList[index].taskConfigId);
             this.dailyTaskList[index].buttonText="已完成";
             this.dailyTaskList[index].status="3";
             let _obj = this.dailyTaskList[index];
-            if(this.dailyTaskList[index].taskConfigId === '8' || this.dailyTaskList[index].taskConfigId !== '7'){
+            if(this.dailyTaskList[index].taskConfigId === '8' || this.dailyTaskList[index].taskConfigId === '7'){
                 console.log('查看类任务消失；');              
                 this.dailyTaskList.splice(index, 1);
             }else if(this.dailyTaskList[index].taskConfigId === '1'){
