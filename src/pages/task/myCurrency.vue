@@ -40,7 +40,8 @@
                 </div>
             </div>
             <div :style="{height:topBoxHeight+'px'}"></div>
-            <div  class="coin-detail" id="coinDetail" :style="{'maxHeight':coinDetail.length < 10 ? boxHeight-topBoxHeight+'px' : 'none'}" ref="coinDetail">
+            <!-- <div  class="coin-detail" id="coinDetail" :style="{'maxHeight':coinDetail.length < 10 ? boxHeight-topBoxHeight+'px' : 'none'}" ref="coinDetail"> -->
+            <div  class="coin-detail" id="coinDetail" ref="coinDetail">
                 <div class="coin-detail-box">
                     <van-loading v-if="showLoading" size="24px" vertical>加载中...</van-loading>
                     <div v-if="coinDetail.length>0">
@@ -55,8 +56,8 @@
                     <div v-if="showNoData" class="load-more">暂无元宝数据</div>
                     <div v-if="loadingMore && coinDetail.length>0" class="load-more">加载中~</div>
                 </div>
-            <div v-if="!loadingMore" class="bottom">已经到底啦~</div>
             </div>
+            <div v-if="!loadingMore" class="bottom">已经到底啦~</div>
         </div>
     </div>
 
