@@ -360,7 +360,6 @@ export default {
     padding: 0 0.625rem;
     z-index: 10;
     background: #f4f5f7;
-    overflow-y: scroll;
     .total-box {
         padding: 0 1.0625rem;
         .space-flex(space-between);
@@ -420,7 +419,7 @@ export default {
 .coin-detail {
     background: #f4f5f7;
     border-radius: 0 0 0.5rem 0.5rem;
-    overflow: hidden;
+    overflow-y: scroll;
     box-sizing: border-box;
     width: 100%;
     padding: 0 0.625rem;
