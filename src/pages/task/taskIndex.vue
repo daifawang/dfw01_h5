@@ -85,7 +85,7 @@
                     <div class="task-oilcard-last">余额：￥{{ item.extra.cardBalance }}</div>
                     <div class="task-oilcard-add">最新到账{{ item.extra.rechargeNum }}元</div>
                   </div>
-                  <div v-if="item.status === '2' && showFirstGetCury && item.showCurypao && isFirstFinishCurrTaskId === item.taskId" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
+                  <div v-if="item.status === '2' && showFirstGetCury && item.showCurypao && firstReward === item.taskId" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
                   <div v-else-if="showGuide === 4 && index === 0 && guideType === 1" @click.stop="closeGuideTip()" class="sj-tag">点击这里去接单 ×</div>
                   <div v-else-if="showGuide === 4 && index === 0 && guideType === 2" @click.stop="closeGuideTip()" class="sj-tag">点击这里传回单 ×</div>
                   <div class="right-bttn">
@@ -96,7 +96,7 @@
                         <img class="guide-img guide-img-hand" src="../../assets/images/task/shou@2x.png">
                     </div>
                   </div>
-                  <div v-if="item.taskConfigId === '1002' && item.firstTaxWaybill === '1' && showGuideExgTip" @click.stop="closeGuideExgTip()" class="sj-tag-exg">
+                  <div v-if="item.taskConfigId === '1002' && firstTaxWaybill === '1' && showGuideExgTip" @click.stop="closeGuideExgTip()" class="sj-tag-exg">
                     到达卸货地，别忘了传回单哦~<br/>点击这里，即可完成回单上传<span>×</span>
                   </div>
                   <div v-if="item.viewCount" class="task-btn-view">
@@ -155,7 +155,7 @@
                     </div>
                   </div>
                   <div class="task-btn-div">
-                    <div v-if="newItem.status === '2' && showFirstGetCury && newItem.showCurypao && isFirstFinishCurrTaskId === newItem.taskId" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
+                    <div v-if="newItem.status === '2' && showFirstGetCury && newItem.showCurypao && firstReward === newItem.taskId" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
                     <div @click.stop="clickRightBttn('1',index)" class="task-btn" :class="{guideQuan2:showGuide === 3 && guideType === 0 && index === 0}">
                       <div :class="{'to-do':newItem.status=='0' || newItem.status=='1','doing':newItem.status=='2','done':newItem.status=='3',}">{{newItem.taskAction}}</div>
                     </div>
@@ -239,7 +239,7 @@
                 </div>
               </div>
               <div class="task-btn-div">
-                <div v-if="dailyItem.status === '2' && showFirstGetCury && dailyItem.showCurypao && isFirstFinishCurrTaskId === dailyItem.taskId" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
+                <div v-if="dailyItem.status === '2' && showFirstGetCury && dailyItem.showCurypao && firstReward === dailyItem.taskId" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
                 <div @click.stop="clickRightBttn('2',index)" class="task-btn">
                   <div :class="{'to-do':dailyItem.status=='1','doing':dailyItem.status=='2','done':dailyItem.status=='3',}">{{dailyItem.buttonText}}</div>
                 </div>
@@ -396,7 +396,8 @@ export default {
       guideTimeC:'',//"我知道了"记录时间戳
       cancheckTaskStatus:true,//页面跳转按钮防重复点击
       canClickRightBtn:true, //领取奖励按钮防重复点击
-      isFirstFinishCurrTaskId:'', //快去领元宝吧 × 第一个完成的任务气泡展示
+      firstReward:'', //服务端字段 快去领元宝吧 × 第一个完成的任务气泡展示
+      firstTaxWaybill:''//服务端字段-是否展示到达卸货地，别忘了传回单哦~<br/>点击这里，即可完成回单上传
     }
   },
   components:{
@@ -573,7 +574,14 @@ export default {
             this.initNewTaskListData(isInit);
           }
           if (res.reCode === "0") {
-            this.exclusiveList = res.result;
+            this.exclusiveList = res.result.urgentTaskAOList;
+            if(res.result.firstTaxWaybill){
+                this.firstTaxWaybill = res.result.firstTaxWaybill;
+            }
+            if(res.result.firstReward && res.result.firstReward !== '-1'){
+                this.firstReward = res.result.firstReward;            
+                console.log('firstReward='+ this.firstReward);
+            } 
             // this.exclusiveList.forEach(item => {
             //     //按钮防重复点击
             //     item.canClickRightBtn = true;
@@ -854,11 +862,11 @@ export default {
           console.log('---initNewTaskListData--',res);
           this.loadingFlag = false;
           if (res.reCode === "0") {
-            this.newTaskList=res.result;
-            // this.newTaskList.forEach(item => {
-            //     //按钮防重复点击
-            //     item.canClickRightBtn = true;
-            // });
+            this.newTaskList=res.result.rookieTaskList;
+            if(res.result.firstReward && res.result.firstReward !== '-1'){
+                this.firstReward = res.result.firstReward;            
+                console.log('firstReward='+ this.firstReward);
+            } 
             if(this.newTaskList && this.newTaskList.length > 0){
               this.hasNewTask = '1';
             }else{
@@ -905,12 +913,11 @@ export default {
           console.log('---initDailyTaskListData--',res);
           this.loadingFlag = false;
           if (res.reCode == "0") {
-            this.dailyTaskList = res.result.taskList;
-            this.isFirstFinishCurrTaskId = res.result.firstReward;            
-            // this.dailyTaskList.forEach(item => {
-            //     //按钮防重复点击
-            //     item.canClickRightBtn = true;
-            // });
+            this.dailyTaskList = res.result.taskList; 
+            if(res.result.firstReward && res.result.firstReward !== '-1'){
+                this.firstReward = res.result.firstReward;            
+                console.log('firstReward='+ this.firstReward);
+            }          
             if(this.dailyTaskList && this.dailyTaskList.length > 0){
               this.initGetCuryPao(this.dailyTaskList);
             }else{
@@ -988,6 +995,12 @@ export default {
                             this.exclusiveList[index].status = res.result.status;
                             if(res.result.jumpUrl === '-2'){
                                 this.$toast(res.result.bombInfo);
+                                if(res.result.status > 2){
+                                    console.log('任务提示后要消失');
+                                    setTimeout(() => {
+                                        this.exclusiveList.splice(index, 1);
+                                    }, 1500);
+                                }
                                 return;
                             }
                             if(res.result.jumpUrl != '-1'){

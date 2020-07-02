@@ -101,9 +101,8 @@ export default {
         setTimeout(() => {
             console.log('this.$refs.topBox.offsetHeight:'+this.$refs.topBox.offsetHeight);
             this.topBoxHeight = this.$refs.topBox.offsetHeight - 39;
-            console.log('this.topBoxHeight:'+this.topBoxHeight);
-            
-        }, 500);
+            console.log('this.topBoxHeight:'+this.topBoxHeight);            
+        }, 200);
         window.addEventListener("scroll", this.loadeMore);
         setTimeout(() => {
             this.clickLog();
@@ -125,11 +124,13 @@ export default {
                 .then(res => {
                     console.log(res);
                     if (res.reCode == "0") {
-                        this.initListData(this.activeTag);
                         this.loadSuccess = true;
                         this.coinNewCount = res.result.coinNewCount;
                         this.coinPoints = res.result.coinPoints;
                         this.coinSum = res.result.coinSum;
+                        setTimeout(() => {                            
+                            this.initListData(this.activeTag);
+                        }, 200);
                     } else {
                         this.$toast(res.reInfo);
                     }
