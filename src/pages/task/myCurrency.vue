@@ -55,8 +55,8 @@
                     <div v-if="showNoData" class="load-more">暂无元宝数据</div>
                     <div v-if="loadingMore && coinDetail.length>0" class="load-more">加载中~</div>
                 </div>
-            </div>
             <div v-if="!loadingMore" class="bottom">已经到底啦~</div>
+            </div>
         </div>
     </div>
 
