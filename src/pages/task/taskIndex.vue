@@ -433,6 +433,8 @@ export default {
   mounted() {
     // 开启下拉刷新
     AppJsBridge.setClientRefresh('1');
+    // 【JS2066】点击通知栏跳转H5任务首页-- 冷启动拉起app主动调
+    AppJsBridge.taskNotifyBarMsg();
     // 初始化用户信息及任务列表
     this.initUserInfo();
 
@@ -466,7 +468,6 @@ export default {
               if(backMsgInfo.launchType === '0' ){
                   this.initExclusiveList('3',backMsgInfo.pushMsg.extra.taskId);
               }else if(backMsgInfo.launchType === '1' ){
-                  AppJsBridge.taskNotifyBarMsg();
                   this.setExclusiveListTaskTop(backMsgInfo.pushMsg.extra.taskId);
               }
           }
@@ -547,8 +548,6 @@ export default {
             console.log('callback-backData---TASK_GUIDETXET_KEY>>',backData);
             this.showGuideExgTip = backData.data === '1' ? false : true;
           }); 
-          // 【JS2066】点击通知栏跳转H5任务首页-- 冷启动拉起app
-          AppJsBridge.taskNotifyBarMsg();
           // 初始化任务-0，初始化；1，切换任务tab刷新;3-【JS2066】冷启动/应用进程中 -- 点击任务通知栏消息进任务页面，客户端回调H5 JS
           this.initExclusiveList('0');
         }else{
