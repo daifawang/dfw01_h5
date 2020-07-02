@@ -574,7 +574,11 @@ export default {
             this.initNewTaskListData(isInit);
           }
           if (res.reCode === "0") {
-            this.exclusiveList = res.result.urgentTaskAOList;
+              if(res.result.urgentTaskAOList){
+                  this.exclusiveList = res.result.urgentTaskAOList;
+              }else{
+                  this.exclusiveList = [];
+              }
             if(res.result.firstTaxWaybill){
                 this.firstTaxWaybill = res.result.firstTaxWaybill;
             }
@@ -862,7 +866,11 @@ export default {
           console.log('---initNewTaskListData--',res);
           this.loadingFlag = false;
           if (res.reCode === "0") {
-            this.newTaskList=res.result.rookieTaskList;
+              if(res.result.rookieTaskList){
+                  this.newTaskList=res.result.rookieTaskList;
+              }else{
+                  this.newTaskList=[];
+              }
             if(res.result.firstReward && res.result.firstReward !== '-1'){
                 this.firstReward = res.result.firstReward;            
                 console.log('firstReward='+ this.firstReward);
