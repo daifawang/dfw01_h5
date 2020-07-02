@@ -394,7 +394,8 @@ export default {
       guideTimeA:'',//"我知道了"记录时间戳
       guideTimeB:'',//"我知道了"记录时间戳
       guideTimeC:'',//"我知道了"记录时间戳
-      canClickRightBtn:true //按钮防重复点击
+      cancheckTaskStatus:true,//页面跳转按钮防重复点击
+      canClickRightBtn:true //领取奖励按钮防重复点击
     }
   },
   components:{
@@ -407,13 +408,13 @@ export default {
       setTimeout(() => {
         this.loadingFlag = false;
         this.showExclusiveList = '1';
-        this.exclusiveList = this.exclusiveList1;
+        // this.exclusiveList = this.exclusiveList1;
         this.showFirstGetCury = true;
         this.showGuideExgTip = true;
-        this.guideType = 1;
-        this.showGuide = 1;
+        // this.guideType = 1;
+        // this.showGuide = 1;
         this.initGetCuryPao(this.exclusiveList);
-        this.newTaskList = this.newTaskList1;
+        // this.newTaskList = this.newTaskList1;
         this.initGetCuryPao(this.newTaskList);
           this.goGuideApi();
         // this.hasNewTask = '-1';
@@ -436,7 +437,7 @@ export default {
 
     // 回调获取客户端返回的任务成功信息,taskType：0.专属任务 1.新手任务 2.每日任务---用来刷新哪个任务块
     window['AppJSApi_BackH5TaskOrdersInfo'] = (_json) => {
-      console.log("客户端返回的任务成功信息>>",_json);
+      console.log("AppJSApi_BackH5TaskOrdersInfo客户端返回的任务成功信息>>",_json);
       console.log(JSON.parse(_json));
       console.log("客户端返回的任务成功信息>>taskType"+JSON.parse(_json).taskType);
       setTimeout(() => {
@@ -568,10 +569,10 @@ export default {
           }
           if (res.reCode === "0") {
             this.exclusiveList = res.result;
-            this.exclusiveList.forEach(item => {
-                //按钮防重复点击
-                item.canClickRightBtn = true;
-            });
+            // this.exclusiveList.forEach(item => {
+            //     //按钮防重复点击
+            //     item.canClickRightBtn = true;
+            // });
             if(this.exclusiveList && this.exclusiveList.length > 0){
               this.showExclusiveList = '1';
             }else{
@@ -618,30 +619,31 @@ export default {
     getCurrency(type,index){
       let task_id = type === '0' ? this.exclusiveList[index].taskId : type === '1' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
       let num = type === '0' ? this.exclusiveList[index].rewardNum : type === '1' ? this.newTaskList[index].rewardNum : this.dailyTaskList[index].rewardNum;
-      let canClickRightBtn = type === '0' ? this.exclusiveList[index].canClickRightBtn : type === '1' ? this.newTaskList[index].canClickRightBtn : this.dailyTaskList[index].canClickRightBtn;
-        console.log('点击领取元宝奖励donghua:canClickRightBtn----',canClickRightBtn);
-        if(!canClickRightBtn){
+    //   let canClickRightBtn = type === '0' ? this.exclusiveList[index].canClickRightBtn : type === '1' ? this.newTaskList[index].canClickRightBtn : this.dailyTaskList[index].canClickRightBtn;
+        console.log('点击领取元宝奖励donghua:canClickRightBtn----',this.canClickRightBtn);
+        if(!this.canClickRightBtn){
             console.log("重复领取");
             return; 
         }
-        if(type === '0'){
-            this.$set(this.exclusiveList[index], 'canClickRightBtn', false);
-        } else if(type == '1'){
-            this.$set(this.newTaskList[index], 'canClickRightBtn', false);
-        } else if(type == '2'){
-            this.$set(this.dailyTaskList[index], 'canClickRightBtn', false);
-        }
+        this.canClickRightBtn = false;
+        // if(type === '0'){
+        //     this.$set(this.exclusiveList[index], 'canClickRightBtn', false);
+        // } else if(type == '1'){
+        //     this.$set(this.newTaskList[index], 'canClickRightBtn', false);
+        // } else if(type == '2'){
+        //     this.$set(this.dailyTaskList[index], 'canClickRightBtn', false);
+        // }
       AppJsBridge.openIngotsReceiveDlg(task_id,num);
       setTimeout(() => {
         this.closeTip();
         if(type === '0'){
-            this.$set(this.exclusiveList[index], 'canClickRightBtn',true);
+            // this.$set(this.exclusiveList[index], 'canClickRightBtn',true);
           this.exclusiveList.splice(index, 1);
           if(this.exclusiveList.length === 0){
             this.showExclusiveList = '0';
           }
         } else if(type == '2' && this.dailyTaskList[index].taskNowSum >= this.dailyTaskList[index].taskNeedSum){
-            this.$set(this.dailyTaskList[index], 'canClickRightBtn', true);
+            // this.$set(this.dailyTaskList[index], 'canClickRightBtn', true);
             this.dailyTaskList[index].buttonText="已完成";
             this.dailyTaskList[index].status="3";
           let _obj = this.dailyTaskList[index];
@@ -649,13 +651,17 @@ export default {
           this.dailyTaskList.push(_obj);
         } else if(type == '1'){
             console.log("点击领取元宝奖励动画newTaskList-index:::::::"+index);
-           this.$set(this.newTaskList[index], 'canClickRightBtn', true);
+           
+        //    this.$set(this.newTaskList[index], 'canClickRightBtn', true);
           this.newTaskList.splice(index, 1);
           if(this.newTaskList.length === 0){
             this.hasNewTask = '0';
           }
         }
       }, 3500)
+      setTimeout(() => {
+           this.canClickRightBtn = true;
+      }, 1000);
     },
     // 点击任务按钮
     clickRightBttn(type,index){
@@ -825,10 +831,10 @@ export default {
           this.loadingFlag = false;
           if (res.reCode === "0") {
             this.newTaskList=res.result;
-            this.newTaskList.forEach(item => {
-                //按钮防重复点击
-                item.canClickRightBtn = true;
-            });
+            // this.newTaskList.forEach(item => {
+            //     //按钮防重复点击
+            //     item.canClickRightBtn = true;
+            // });
             if(this.newTaskList && this.newTaskList.length > 0){
               this.hasNewTask = '1';
             }else{
@@ -876,10 +882,10 @@ export default {
           this.loadingFlag = false;
           if (res.reCode == "0") {
             this.dailyTaskList = res.result.taskList;
-            this.dailyTaskList.forEach(item => {
-                //按钮防重复点击
-                item.canClickRightBtn = true;
-            });
+            // this.dailyTaskList.forEach(item => {
+            //     //按钮防重复点击
+            //     item.canClickRightBtn = true;
+            // });
             if(this.dailyTaskList && this.dailyTaskList.length > 0){
               this.initGetCuryPao(this.dailyTaskList);
             }else{
@@ -926,8 +932,12 @@ export default {
     },
     // 点击更新任务状态
     checkTaskStatus(type,index){
-        console.log('点击更新任务状态type:'+type);
-        
+        console.log('点击更新任务状态type:'+type);     
+        if (!this.cancheckTaskStatus) {
+            console.log('cancheckTaskStatus');
+            return;
+        }
+        this.cancheckTaskStatus = false;
         // taskType  0 专属  1 新手  2每日
         let status = type === '0' ? this.exclusiveList[index].status : type === '1' ? this.newTaskList[index].status : this.dailyTaskList[index].status;
         let taskId = type === '0' ? this.exclusiveList[index].taskId : type === '1' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
@@ -999,6 +1009,9 @@ export default {
                 console.log(e);
             });
       });
+      setTimeout(() => {
+          this.cancheckTaskStatus = true;
+      }, 1000);
     },
     // 关闭文字提示
     closeGuideExgTip(){
