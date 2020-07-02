@@ -85,7 +85,7 @@
                     <div class="task-oilcard-last">余额：￥{{ item.extra.cardBalance }}</div>
                     <div class="task-oilcard-add">最新到账{{ item.extra.rechargeNum }}元</div>
                   </div>
-                  <div v-if="item.status === '2' && showFirstGetCury && item.showCurypao" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
+                  <div v-if="item.status === '2' && showFirstGetCury && item.showCurypao && isFirstFinishCurrTaskId === dailyItem.taskId" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
                   <div v-else-if="showGuide === 4 && index === 0 && guideType === 1" @click.stop="closeGuideTip()" class="sj-tag">点击这里去接单 ×</div>
                   <div v-else-if="showGuide === 4 && index === 0 && guideType === 2" @click.stop="closeGuideTip()" class="sj-tag">点击这里传回单 ×</div>
                   <div class="right-bttn">
@@ -155,7 +155,7 @@
                     </div>
                   </div>
                   <div class="task-btn-div">
-                    <div v-if="newItem.status === '2' && showFirstGetCury && newItem.showCurypao" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
+                    <div v-if="newItem.status === '2' && showFirstGetCury && newItem.showCurypao && isFirstFinishCurrTaskId === dailyItem.taskId" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
                     <div @click.stop="clickRightBttn('1',index)" class="task-btn" :class="{guideQuan2:showGuide === 3 && guideType === 0 && index === 0}">
                       <div :class="{'to-do':newItem.status=='0' || newItem.status=='1','doing':newItem.status=='2','done':newItem.status=='3',}">{{newItem.taskAction}}</div>
                     </div>
@@ -239,7 +239,7 @@
                 </div>
               </div>
               <div class="task-btn-div">
-                <div v-if="dailyItem.status === '2' && showFirstGetCury && dailyItem.showCurypao" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
+                <div v-if="dailyItem.status === '2' && showFirstGetCury && dailyItem.showCurypao && isFirstFinishCurrTaskId === dailyItem.taskId" @click.stop="closeTip()" class="sj-tag">快去领元宝吧 ×</div>
                 <div @click.stop="clickRightBttn('2',index)" class="task-btn">
                   <div :class="{'to-do':dailyItem.status=='1','doing':dailyItem.status=='2','done':dailyItem.status=='3',}">{{dailyItem.buttonText}}</div>
                 </div>
@@ -395,7 +395,8 @@ export default {
       guideTimeB:'',//"我知道了"记录时间戳
       guideTimeC:'',//"我知道了"记录时间戳
       cancheckTaskStatus:true,//页面跳转按钮防重复点击
-      canClickRightBtn:true //领取奖励按钮防重复点击
+      canClickRightBtn:true, //领取奖励按钮防重复点击
+      isFirstFinishCurrTaskId:'', //快去领元宝吧 × 第一个完成的任务气泡展示
     }
   },
   components:{
@@ -408,13 +409,13 @@ export default {
       setTimeout(() => {
         this.loadingFlag = false;
         this.showExclusiveList = '1';
-        // this.exclusiveList = this.exclusiveList1;
+        this.exclusiveList = this.exclusiveList1;
         this.showFirstGetCury = true;
         this.showGuideExgTip = true;
-        // this.guideType = 1;
-        // this.showGuide = 1;
+        this.guideType = 1;
+        this.showGuide = 1;
         this.initGetCuryPao(this.exclusiveList);
-        // this.newTaskList = this.newTaskList1;
+        this.newTaskList = this.newTaskList1;
         this.initGetCuryPao(this.newTaskList);
           this.goGuideApi();
         // this.hasNewTask = '-1';
@@ -462,7 +463,12 @@ export default {
       if(jsonStr){
           let backMsgInfo = JSON.parse(jsonStr);
           if(backMsgInfo.msgType === 'HYBSJ:TaskNotifyBarMsg' && backMsgInfo.pushMsg.extra.taskType === '0'){
-              this.initExclusiveList('3',backMsgInfo.pushMsg.extra.taskId);
+              if(backMsgInfo.launchType === '0' ){
+                  this.initExclusiveList('3',backMsgInfo.pushMsg.extra.taskId);
+              }else if(backMsgInfo.launchType === '1' ){
+                  AppJsBridge.taskNotifyBarMsg();
+                  this.setExclusiveListTaskTop(backMsgInfo.pushMsg.extra.taskId);
+              }
           }
       }
     } 
@@ -579,14 +585,15 @@ export default {
               this.showExclusiveList = '-1';
             }
             if(isInit === '3'){
-                // 【JS2066】冷启动/应用进程中 -- 点击任务通知栏消息进任务页面 刷新专属任务并根据taskId置顶任务
-                for (let index = 0; index < this.exclusiveList.length; index++) {
-                    if(taskId === this.exclusiveList[index].taskId){
-                        let _obj = this.exclusiveList[index];
-                        this.exclusiveList.splice(index, 1);
-                        this.exclusiveList.unshift(_obj);
-                    }
-                }
+                this.setExclusiveListTaskTop(taskId);
+                // // 【JS2066】冷启动/应用进程中 -- 点击任务通知栏消息进任务页面 刷新专属任务并根据taskId置顶任务
+                // for (let index = 0; index < this.exclusiveList.length; index++) {
+                //     if(taskId === this.exclusiveList[index].taskId){
+                //         let _obj = this.exclusiveList[index];
+                //         this.exclusiveList.splice(index, 1);
+                //         this.exclusiveList.unshift(_obj);
+                //     }
+                // }
             }
           } else {
             this.exclusiveFlag = '1';
@@ -602,6 +609,16 @@ export default {
           }
         });
       });
+    },
+    // 【JS2066】冷启动/应用进程中 -- 点击任务通知栏消息进任务页面 刷新专属任务并根据taskId置顶任务
+    setExclusiveListTaskTop(taskId){
+        for (let index = 0; index < this.exclusiveList.length; index++) {
+            if(taskId === this.exclusiveList[index].taskId){
+                let _obj = this.exclusiveList[index];
+                this.exclusiveList.splice(index, 1);
+                this.exclusiveList.unshift(_obj);
+            }
+        }
     },
     // 新手引导-01
     goGuideApi(){
@@ -619,7 +636,7 @@ export default {
     getCurrency(type,index){
       let task_id = type === '0' ? this.exclusiveList[index].taskId : type === '1' ? this.newTaskList[index].taskId : this.dailyTaskList[index].taskId;
       let num = type === '0' ? this.exclusiveList[index].rewardNum : type === '1' ? this.newTaskList[index].rewardNum : this.dailyTaskList[index].rewardNum;
-    //   let canClickRightBtn = type === '0' ? this.exclusiveList[index].canClickRightBtn : type === '1' ? this.newTaskList[index].canClickRightBtn : this.dailyTaskList[index].canClickRightBtn;
+        //   let canClickRightBtn = type === '0' ? this.exclusiveList[index].canClickRightBtn : type === '1' ? this.newTaskList[index].canClickRightBtn : this.dailyTaskList[index].canClickRightBtn;
         console.log('点击领取元宝奖励donghua:canClickRightBtn----',this.canClickRightBtn);
         if(!this.canClickRightBtn){
             console.log("重复领取");
@@ -882,6 +899,7 @@ export default {
           this.loadingFlag = false;
           if (res.reCode == "0") {
             this.dailyTaskList = res.result.taskList;
+            this.isFirstFinishCurrTaskId = res.result.firstReward;            
             // this.dailyTaskList.forEach(item => {
             //     //按钮防重复点击
             //     item.canClickRightBtn = true;
@@ -1808,6 +1826,9 @@ export default {
                 .space-flex(flex-start);
                 .font(1.125rem, #000000, 1.25rem);
                 font-weight: bold;
+                &>div:first-child{
+                    margin-right: 0.25rem;
+                }
                 .task-main-tag{
                     display: inline-block;
                     width: fit-content;
@@ -1887,6 +1908,7 @@ export default {
             .sj-tag {
                 top: -2.2rem;
                 right: 0;
+                width: max-content;
             }
             .guideQuan2 {
               background-color: #fff;
