@@ -433,8 +433,6 @@ export default {
   mounted() {
     // 开启下拉刷新
     AppJsBridge.setClientRefresh('1');
-    // 【JS2066】点击通知栏跳转H5任务首页-- 冷启动拉起app主动调
-    AppJsBridge.taskNotifyBarMsg();
     // 初始化用户信息及任务列表
     this.initUserInfo();
 
@@ -568,6 +566,8 @@ export default {
         })
         .then(res => {
           console.log('---ExclusiveList--',res);
+          // 【JS2066】点击通知栏跳转H5任务首页-- 冷启动拉起app主动调
+          AppJsBridge.taskNotifyBarMsg();
           // 初始化新手任务
           if(isInit === '0' || isInit === '1'){
             this.initNewTaskListData(isInit);
